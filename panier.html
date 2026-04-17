@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Panier</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -15,7 +16,7 @@
     <hr>
      <!--le boutton retour on peut modifier son effet plus tard avec javascript-->
     <p>
-    <a href="index.html">
+    <a href="produit.html">
         <button>← Retour</button>
     </a>
     </p>
@@ -23,18 +24,16 @@
     <p>
         <a href="index.html"><button>Accueil</button></a>
         <a href="produit.html"><button>Produits</button></a>
-        <a href="panier.html"><button>Panier</button></a>
         <a href="contact.html"><button>Contact</button></a>
         <a href="profile.html"><button>Profil</button></a>
     </p>
 
     <hr>
 
-    <h2>Mon panier</h2>
-    <p>Consultez vos produits sélectionnés et complétez les informations ci-dessous.</p>
+    <center><h2>Mon panier</h2></center>
+     <center><p>Consultez vos produits sélectionnés et complétez les informations ci-dessous</p></center>
 
-    <hr>
-
+          <center>
         <table border="1" width="75%" cellpadding="10" cellspacing="0">
             <tr>
                 <th>Produits sélectionnés</th>
@@ -78,14 +77,12 @@
                 <td><button>🗑</button></td>
             </tr>
         </table>
-
+        </center>
     <br>
 
-    <div>
-
+        <center>
         <p><b>Montant total à payer :</b> ...... DA</p>
-    
-    </div>
+        </center>
 
     <hr>
 
@@ -103,7 +100,7 @@
     <input type="email" id="email" name="email" placeholder="Entrez votre adresse e-mail" required><br><br>
 
     <label for="telephone">Téléphone :</label>
-    <input type="tel" id="telephone" name="telephone" placeholder="Entrez votre numéro de téléphone" required><br><br>
+    <input type="tel" id="telephone" name="telephone" placeholder="Entrez votre numéro" required><br><br>
 
     <label for="insta">Instagram :</label>
     <input type="text" id="insta" name="instagram" placeholder="optionnel"><br><br>
@@ -187,6 +184,7 @@
 
      </form>
 
+    </body>
     <hr>
 
     <footer>

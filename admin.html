@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <p>
+        <img src="......" width="20" height="20">
+        <b>Adlis</b>
+    </p>
+
+    <hr width="100%">
+
+    <!-- Bouton retour -->
+    <p>
+        <a href="index.html">
+            <button>← Retour</button>
+        </a>
+    </p>
+
+    <!-- Menu principal -->
+    <p>
+        <a href="index.html"><button>Accueil</button></a>
+        <a href="produit.html"><button>Produits</button></a>
+        <a href="contact.html"><button>Contact</button></a>
+        <a href="profile.html"><button>Profil</button></a>
+    </p>
+
+    <hr width="100%">
+
+    <center><h2>Page Administrateur</h2></center>
+    <center><p>Gestion des livres, des produits et des commandes.</p></center>
+
+    <hr>
+
+    <h3>Ajouter un produit</h3>
+
+    <form action="#" method="get">
+        <fieldset>
+            <legend>Informations du produit</legend>
+
+            <label for="nom">Nom du livre :</label>
+            <input type="text" id="nom" name="nom" placeholder="Entrez le nom du livre" required>
+            <br><br>
+
+            <label for="auteur">Auteur :</label>
+            <input type="text" id="auteur" name="auteur" placeholder="Entrez le nom de l'auteur" required>
+            <br><br>
+
+            <label for="categorie">Catégorie :</label>
+            <input type="text" id="categorie" name="categorie" placeholder="Entrez la catégorie" required>
+            <br><br>
+
+            <label for="prix">Prix :</label>
+            <input type="number" id="prix" name="prix" placeholder="Entrez le prix" required>
+            <br><br>
+
+            <label for="image">Image :</label>
+            <input type="file" id="image" name="image">
+            <br><br>
+
+            <input type="submit" value="Ajouter le produit">
+            <input type="reset" value="Réinitialiser">
+        </fieldset>
+    </form>
+
+    <hr width="80%">
+
+    <!-- Liste des produits -->
+    <h3>Liste des produits</h3>
+
+    <table border="1" cellpadding="10" cellspacing="0" width="80%">
+        <tr>
+            <th>Produit</th>
+            <th>Catégorie</th>
+            <th>Prix</th>
+            <th>Action</th>
+        </tr>
+
+        <tr>
+            <td>......</td>
+            <td>......</td>
+            <td>...... DA</td>
+            <td><button>🗑</button></td>
+        </tr>
+
+        <tr>
+            <td>......</td>
+            <td>......</td>
+            <td>...... DA</td>
+            <td><button>🗑</button></td>
+        </tr>
+
+        <tr>
+            <td>......</td>
+            <td>......</td>
+            <td>...... DA</td>
+            <td><button>🗑</button></td>
+        </tr>
+    </table>
+
+    <hr width="80%">
+
+    <!-- Gestion des commandes -->
+    <h3>Liste des commandes</h3>
+
+    <table border="1" cellpadding="10" cellspacing="0" width="80%">
+        <tr>
+            <th>Client</th>
+            <th>Téléphone</th>
+            <th>Instagram</th>
+            <th>Wilaya</th>
+            <th>Produit</th>
+            <th>Montant</th>
+            <th>État</th>
+        </tr>
+
+        <tr>
+            <td>......</td>
+            <td>......</td>
+            <td>@......</td>
+            <td>......</td>
+            <td>......</td>
+            <td>...... DA</td>
+            <td>En attente</td>
+        </tr>
+
+        <tr>
+            <td>......</td>
+            <td>......</td>
+            <td>@......</td>
+            <td>......</td>
+            <td>......</td>
+            <td>...... DA</td>
+            <td>Confirmée</td>
+        </tr>
+    </table>
+
+    <hr width="100%">
+
+    <!-- Footer -->
+    <footer>
+        <center><p>&copy; 2026 Adlis - Administration</p></center>
+    </footer>
+
+</body>
+</html>
