@@ -1,0 +1,37 @@
+LES PAGES HTML : 
+    Yani   : auth, formulaire, profile (fait)
+    Salim  : index, produit            (fait)
+    Nadjib : admin, panier             (fait)
+
+LA PAGE CSS : 
+    auth.html       (fait)
+    profile.html    (fait)
+    formulaire.html (fait)
+
+    index.html   (non)
+    panier.html  (non)
+    produit.html (non)
+    admin.html   (non)
+
+
+LES LIENS ENTRES PAGES : 
+    index  ->profile    (non)
+    index  ->panier     (non)
+    index  ->produit    (non)
+    panier ->formulaire (non)
+
+
+LE README : 
+(vide)
+
+
+TASKS : 
+- ajouter les logos des pages 
+- preparer les "name"pour le JS et la DB
+- ce metre d'accord sur les classes pour
+     unifier les style (meme style pour les boutons ...etc)
+
+
+
+
+
