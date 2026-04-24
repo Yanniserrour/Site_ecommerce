@@ -2,150 +2,121 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Admin</title>
+    <title>Page Administrateur</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+
+<body class="admin-body">
+
     <p>
-        <img src = "https://media.discordapp.net/attachments/705719269924536353/1491148996280979487/667754626_944282108317746_7284098871114949961_n.jpg?ex=69d6a438&is=69d552b8&hm=d19a1e82768926a3d5cc9e62530fdc90c69d3fbf54933f63a2fd9a16e8c1c460&=&format=webp&width=903&height=940" width = "50" height = "50">
+        <img src="https://media.discordapp.net/attachments/705719269924536353/1491148996280979487/667754626_944282108317746_7284098871114949961_n.jpg" width="50" height="50">
         
         <b>Adlis</b>
 
-
-        <img src = "https://media.discordapp.net/attachments/705719269924536353/1492263358299246744/image.png?ex=69dab20d&is=69d9608d&hm=7444f7976a5c2ce5ff7f4481f091f665b507708ecfd1541ef14251aff635eccd&=&format=webp&quality=lossless&width=640&height=640" width = "20" height = "20">
+        <img src="https://media.discordapp.net/attachments/705719269924536353/1492263358299246744/image.png" width="20" height="20">
+        
         <select>
             <option disabled selected>Mon compte</option>
             <option>Se connecter</option>
             <option>S'inscrire</option>
         </select>
-
-            <!-- Quand on arrive a JS et CSS, je vais changer le petit menu de connexion pour qu'il prend en compte quand l'utilisateur est connecte
-            Si il est connecte, il va lui donner l'option de voir son profile et le modifie
-            Pour l'instant, les options ne peuvent pas ammener quelque part parceque on a besoin de JS pour le faire -->
-
-    <hr>
-
-    <p>
-        Menu
-        <a href = ><button><button>Retour</button></a> 
-        <a href = "index.html"><button>Accueil</button></a>
-        <a href = "produits.html"><button>Produits</button></a>
-        <a href = "panier.html"><button><img src = "https://media.discordapp.net/attachments/705719269924536353/1492259925345177610/image.png?ex=69daaedb&is=69d95d5b&hm=aa22baf4a57873bf78c7ea32d6c687d094a9d8c105877ac2dd0a1f7eafdc2f64&=&format=webp&quality=lossless&width=640&height=640" width = "20" height = "20"></button></a>
     </p>
 
-    <hr width="100%">
 
-    <center><h2>Page Administrateur</h2></center>
-    <center><p>Gestion des livres, des produits et des commandes.</p></center>
+     
+    <p>
+        <span>Menu</span>
+
+        <a href="#"><button>Retour</button></a>
+        <a href="index.html"><button>Accueil</button></a>
+        <a href="produit.html"><button>Produits</button></a>
+        <a href="panier.html">
+            <button class="btn-panier-icon">
+                <img src="https://media.discordapp.net/attachments/705719269924536353/1492259925345177610/image.png" width="20">
+            </button>
+        </a>
+    </p>
+    
 
     <hr>
 
-    <h3>Ajouter un produit</h3>
 
-    <form action="#" method="get">
-        <fieldset>
-            <legend>Informations du produit</legend>
+    <center><h2>Page Administrateur</h2></center>
+    <center><p>Gérer les produits et les commandes</p></center>
 
-            <label for="nom">Nom du livre :</label>
-            <input type="text" id="nom" name="nom" placeholder="Entrez le nom du livre" required>
-            <br><br>
+    <center>
+        <h3>Ajouter un produit</h3>
 
-            <label for="auteur">Auteur :</label>
-            <input type="text" id="auteur" name="auteur" placeholder="Entrez le nom de l'auteur" required>
-            <br><br>
+        <form>
+            <fieldset>
+                <legend>Informations produit</legend>
 
-            <label for="categorie">Catégorie :</label>
-            <input type="text" id="categorie" name="categorie" placeholder="Entrez la catégorie" required>
-            <br><br>
+                <label>Nom :</label><br>
+                <input type="text"><br><br>
 
-            <label for="prix">Prix :</label>
-            <input type="number" id="prix" name="prix" placeholder="Entrez le prix" required>
-            <br><br>
+                <label>Auteur :</label><br>
+                <input type="text"><br><br>
 
-            <label for="image">Image :</label>
-            <input type="file" id="image" name="image">
-            <br><br>
+                <label>Catégorie :</label><br>
+                <input type="text"><br><br>
 
-            <input type="submit" value="Ajouter le produit">
-            <input type="reset" value="Réinitialiser">
-        </fieldset>
-    </form>
+                <label>Prix :</label><br>
+                <input type="number"><br><br>
 
-    <hr width="80%">
+                <label>Image :</label><br>
+                <input type="file"><br><br>
 
-    <!-- Liste des produits -->
-    <h3>Liste des produits</h3>
+                <input type="submit" value="Ajouter">
+                <input type="reset" value="Réinitialiser">
+            </fieldset>
+        </form>
+    </center>
 
-    <table border="1" cellpadding="10" cellspacing="0" width="80%">
-        <tr>
-            <th>Produit</th>
-            <th>Catégorie</th>
-            <th>Prix</th>
-            <th>Action</th>
-        </tr>
+    <center>
+        <h3>Liste des produits</h3>
 
-        <tr>
-            <td>......</td>
-            <td>......</td>
-            <td>...... DA</td>
-            <td><button>🗑</button></td>
-        </tr>
+        <table>
+            <tr>
+                <th>Produit</th>
+                <th>Catégorie</th>
+                <th>Prix</th>
+                <th>Action</th>
+            </tr>
 
-        <tr>
-            <td>......</td>
-            <td>......</td>
-            <td>...... DA</td>
-            <td><button>🗑</button></td>
-        </tr>
+            <tr>
+                <td>......</td>
+                <td>......</td>
+                <td>...... DA</td>
+                <td><button>🗑</button></td>
+            </tr>
+        </table>
+    </center>
 
-        <tr>
-            <td>......</td>
-            <td>......</td>
-            <td>...... DA</td>
-            <td><button>🗑</button></td>
-        </tr>
-    </table>
 
-    <hr width="80%">
+    <center>
+        <h3>Liste des commandes</h3>
 
-    <!-- Gestion des commandes -->
-    <h3>Liste des commandes</h3>
+        <table>
+            <tr>
+                <th>Client</th>
+                <th>Téléphone</th>
+                <th>Produit</th>
+                <th>Montant</th>
+                <th>État</th>
+            </tr>
 
-    <table border="1" cellpadding="10" cellspacing="0" width="80%">
-        <tr>
-            <th>Client</th>
-            <th>Téléphone</th>
-            <th>Instagram</th>
-            <th>Wilaya</th>
-            <th>Produit</th>
-            <th>Montant</th>
-            <th>État</th>
-        </tr>
+            <tr>
+                <td>......</td>
+                <td>......</td>
+                <td>......</td>
+                <td>...... DA</td>
+                <td>En attente</td>
+            </tr>
+        </table>
+    </center>
 
-        <tr>
-            <td>......</td>
-            <td>......</td>
-            <td>@......</td>
-            <td>......</td>
-            <td>......</td>
-            <td>...... DA</td>
-            <td>En attente</td>
-        </tr>
+    <hr>
 
-        <tr>
-            <td>......</td>
-            <td>......</td>
-            <td>@......</td>
-            <td>......</td>
-            <td>......</td>
-            <td>...... DA</td>
-            <td>Confirmée</td>
-        </tr>
-    </table>
-
-    <hr width="100%">
-
-    <!-- Footer -->
     <footer>
         <center><p>&copy; 2026 Adlis - Administration</p></center>
     </footer>
