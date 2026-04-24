@@ -8,9 +8,9 @@ LA PAGE CSS :
     profile.html    (fait)
     formulaire.html (fait)
     index.html      (non)
-    panier.html     (non)
+    panier.html     (fait)
     produit.html    (non)
-    admin.html      (non)
+    admin.html      (fait)
 
 
 LES LIENS ENTRES PAGES : 
@@ -25,11 +25,17 @@ LE README :
 
 
 TASKS : 
-- ajouter les logos des pages 
-- preparer les "name"pour le JS et la DB
-- ce metre d'accord sur les classes pour
-     unifier les style (meme style pour les boutons ...etc)
-- afficher l'entete du Site dans toutes les pages HTML (produit, inscription...)
+- ajouter les logos des pages. 
+- preparer les "name" pour le JS et la DB.
+- faire les liens entre pages.
+- modifier l'entete et enlever le bouton de connexion et d'inscription pour
+    chaque entete.
+- faire le logo du site.
+- optimiser le CSS (en ajoutant des classes et unifier les styles).
+- afficher l'entete du Site dans certaines pages HTML (produit, inscription...)
+    et pour les autre pages on met uniquement le logo c'est suffisant. (authentification...)
+- ajouter le README
+
 
 
 
