@@ -7,9 +7,9 @@ LA PAGE CSS :
     auth.html       (fait)
     profile.html    (fait)
     formulaire.html (fait)
-    index.html      (non)
+    index.html      (fait)
     panier.html     (fait)
-    produit.html    (non)
+    produit.html    (fait)
     admin.html      (fait)
 
 
@@ -24,20 +24,20 @@ LE README :
 (vide)
 
 
-TASKS : 
+TASKS: 
+- modifier le menu et les couleurs de toutes les pages pour que elle soient coherantes
 - ajouter les logos des pages. 
 - preparer les "name" pour le JS et la DB.
 - faire les liens entre pages.
 - modifier l'entete et enlever le bouton de connexion et d'inscription pour
     chaque entete.
-- faire le logo du site.
 - optimiser le CSS (en ajoutant des classes et unifier les styles).
 - afficher l'entete du Site dans certaines pages HTML (produit, inscription...)
     et pour les autre pages on met uniquement le logo c'est suffisant. (authentification...)
 - ajouter le README
 
-
-
+FINISHED TASKS: 
+- Le logo est fini (si vous voulez le modifier)
 
 IDENTITÉ VISUEL: 
     couleur boutons: #

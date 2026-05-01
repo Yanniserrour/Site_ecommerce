@@ -2,78 +2,252 @@
 <html>
 <head>
 	<meta charset = "UTF-8">
-	<title>Accueil</title>
+	<title>Accueil - Adlis</title>
 	<link rel = "stylesheet" href = "style.css">
 </head>
 
-<body>
-	<p>
-		<img src = "https://media.discordapp.net/attachments/705719269924536353/1491148996280979487/667754626_944282108317746_7284098871114949961_n.jpg?ex=69d6a438&is=69d552b8&hm=d19a1e82768926a3d5cc9e62530fdc90c69d3fbf54933f63a2fd9a16e8c1c460&=&format=webp&width=903&height=940" width = "50" height = "50">
-		
-		<b>Adlis</b>
-
-
-		<img src = "https://media.discordapp.net/attachments/705719269924536353/1492263358299246744/image.png?ex=69dab20d&is=69d9608d&hm=7444f7976a5c2ce5ff7f4481f091f665b507708ecfd1541ef14251aff635eccd&=&format=webp&quality=lossless&width=640&height=640" width = "20" height = "20">
-		<select>
-			<option disabled selected>Mon compte</option>
-			<option>Se connecter</option>
-			<option>S'inscrire</option>
-		</select>
-
-			<!-- Quand on arrive a JS et CSS, je vais changer le petit menu de connexion pour qu'il prend en compte quand l'utilisateur est connecte
-			Si il est connecte, il va lui donner l'option de voir son profile et le modifie
-			Pour l'instant, les options ne peuvent pas ammener quelque part parceque on a besoin de JS pour le faire -->
-
+<body class = "index-body">
 	<hr>
+	<!--Une div pour le menu complet-->
+	<div class = "menu">
+		<!--La partie menu compte et panier-->
+		<div class = "top">
+			<p>
+				<a href = ><button><button>RETOUR</button></a> 
+				<a href = "index.html"><button>ACCEUIL</button></a>
+    			<a href = "produit.html"><button>PRODUITS</button></a>
+    			<a href = "panier.html"><button><img src = "https://media.discordapp.net/attachments/705719269924536353/1492259925345177610/image.png?ex=69daaedb&is=69d95d5b&hm=aa22baf4a57873bf78c7ea32d6c687d094a9d8c105877ac2dd0a1f7eafdc2f64&=&format=webp&quality=lossless&width=640&height=640" width = "20" height = "20"></button></a>
+    		</p>
 
-	<p>
-		Menu
-		<a href = ><button><button>Retour</button></a> 
-		<a href = "index.html"><button>Accueil</button></a>
-    	<a href = "produits.html"><button>Produits</button></a>
-    	<a href = "panier.html"><button><img src = "https://media.discordapp.net/attachments/705719269924536353/1492259925345177610/image.png?ex=69daaedb&is=69d95d5b&hm=aa22baf4a57873bf78c7ea32d6c687d094a9d8c105877ac2dd0a1f7eafdc2f64&=&format=webp&quality=lossless&width=640&height=640" width = "20" height = "20"></button></a>
-   	</p>
+			<div class = "account"> 
+				<img src = "https://media.discordapp.net/attachments/705719269924536353/1492263358299246744/image.png?ex=69dab20d&is=69d9608d&hm=7444f7976a5c2ce5ff7f4481f091f665b507708ecfd1541ef14251aff635eccd&=&format=webp&quality=lossless&width=640&height=640" width = "20" height = "20">
+				<select>
+					<option disabled selected>MON COMPTE</option>
+					<option>SE CONNECTER</option>
+					<option>S'INSCRIRE</option>
+				</select>
+			</div>
+		</div>
 
-    <hr>
-	<p>
-		<select name = "categorie">
-			<option>Toutes les categories</option>
-			<option>Temporaire</option>
-			<option>Temporaire</option>
-			<option>Temporaire</option>
-		</select>
+		<hr>
 
-		<input type = "text" placeholder = "Chercher par titre: ">
-		<button type = "submit"><img src = "https://media.discordapp.net/attachments/705719269924536353/1492257204663746751/image.png?ex=69daac52&is=69d95ad2&hm=c216ed14a30438e61db9228f0df803cb71cc99ac140364f11c8ed46303f24e61&=&format=webp&quality=lossless&width=640&height=640" width = "20" height = "20"></button>	
+		<!--La partie logo et barre de recherche-->
+		<div class = "bottom">
+			<div class = "logo">
+					<img src = "https://media.discordapp.net/attachments/705719269924536353/1491148996280979487/667754626_944282108317746_7284098871114949961_n.jpg?ex=69d6a438&is=69d552b8&hm=d19a1e82768926a3d5cc9e62530fdc90c69d3fbf54933f63a2fd9a16e8c1c460&=&format=webp&width=903&height=940" width = "50" height = "50">
+			</div>
+
+			<p>ADLIS</p>
+
+			<div class = "search">
+				<p>
+					<select name = "categorie">
+						<option>Toutes les categories</option>
+						<option>Temporaire</option>
+						<option>Temporaire</option>
+						<option>Temporaire</option>
+					</select>
+
+				<input type = "text" placeholder = "Chercher par titre: ">
+				<button type = "submit"><img src = "https://media.discordapp.net/attachments/705719269924536353/	1492257204663746751/image.png?ex=69daac52&is=69d95ad2&hm=c216ed14a30438e61db9228f0df803cb71cc99ac140364f11c8ed46303f24e61&=&format=webp&quality=lossless&width=640&height=640" width = "20" height = "20"></button>	
 			
-	</p>
+				</p>
+			</div>
+		</div>
+	</div>
 
 	<hr>
 
-	<center><h1>Bienvenue chez Adlis!</h1></center>
-	<center><h3>Plusieurs genres de livre sont disponible en plusiers langues.</h3></center>
+	<p id = "index-welcome">
+	Bienvenue chez Adlis!<br>
+	Des milliers de livres, en plusieurs langues, livrés chez vous.</p>
 
-	<center><img src = "https://media.discordapp.net/attachments/705719269924536353/1492593394084614324/Untitled.png?ex=69dbe56c&is=69da93ec&hm=45c9d519bd2a98b7e001db22220cd732248542e566ea5f31202df6fe8cb8329b&=&format=webp&quality=lossless&width=1424&height=815" height = "500" width = "500"></center>
-	<!-- Ici, il y aurait des publicites sur des livres ou des evenements, mon plan c'est de le faire plusieurs images qui changent mais il faut du JS pour le faire-->
-
-
-	<h3>Best sellers: </h3>
 	<hr>
 
-	<h3>Promotion: </h3>
+	<div class = "index-gallery">
+			<button id = "index-gallery-left"><img = src = "https://media.discordapp.net/attachments/705719269924536353/1499521856225673366/image.png?ex=69f51a0e&is=69f3c88e&hm=775a3ddf6f70d4b861b7ef11d875168a26864e701937ea54f5a61b516652ca08&=&format=webp&quality=lossless&width=640&height=640" width = "50" height = "50">
+			<button id = "index-gallery-right"><img src = "https://media.discordapp.net/attachments/705719269924536353/1499523921664544798/image.png?ex=69f51bfa&is=69f3ca7a&hm=5361d07ca625fb07551290046653c25d34088ef440ff5d27bb45902f5f8422a8&=&format=webp&quality=lossless&width=640&height=640" width = "50" height = "50">
+	</div>
 	<hr>
 
-	<h3>Les mieux notés: </h3>
+
+	<p class = "index-text">Best sellers: <p>
+	<div class = "index-autre-gallery">
+		<div class = "index-book">
+		 	<img src = "https://media.discordapp.net/attachments/705719269924536353/1499662596327084164/X2RlX2Zlci5qcGc.png?ex=69f59d21&is=69f44ba1&hm=f3dc0f72a3888fbd070af56ccdedd008b3a95af8a14dc89b82033a19dcc3ca90&=&format=webp&quality=lossless&width=375&height=610">
+			 <p>Le Roi de Fer<br>
+		 	Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499663552049447032/anBn.png?ex=69f59e05&is=69f44c85&hm=731ce8a07ecf98d1033aba12892893b24b3c3504b2f3db67aab4d97ce426a673&=&format=webp&quality=lossless&width=270&height=438">
+			<p>La Reine Étranglée<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499663926093283359/Y291cm9ubmUuanBn.png?ex=69f59e5e&is=69f44cde&hm=7335790fee2eafd3c588c07d45a6e65d4d002425bcf93b7ef8a0d19b3177e829&=&format=webp&quality=lossless&width=375&height=606">
+			<p>Les Poisons de la Couronne<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499664276720189461/Zw.png?ex=69f59eb1&is=69f44d31&hm=5a639c7a32a64c218dedd03124c4a615885305f6a7aa5a24e2e83691b896444f&=&format=webp&quality=lossless&width=401&height=641">
+			<p>La Loi des Males<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499664497588310086/LmpwZw.png?ex=69f59ee6&is=69f44d66&hm=095f1438eb0a5b8869993aa85fcf424a09fb0422e1e7bf6fc9c26d11a3526469&=&format=webp&quality=lossless&width=375&height=606">
+			<p>La Louve de France<br>
+			Maurice Druon</p>
+		</div>
+	</div>
+
 	<hr>
 
-	<h3>Recemment ajoutés: </h3>
+	<p class = "index-text">Promotion: </p>
+		<div class = "index-autre-gallery">
+		<div class = "index-book">
+		 	<img src = "https://media.discordapp.net/attachments/705719269924536353/1499662596327084164/X2RlX2Zlci5qcGc.png?ex=69f59d21&is=69f44ba1&hm=f3dc0f72a3888fbd070af56ccdedd008b3a95af8a14dc89b82033a19dcc3ca90&=&format=webp&quality=lossless&width=375&height=610">
+			 <p>Le Roi de Fer<br>
+		 	Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499663552049447032/anBn.png?ex=69f59e05&is=69f44c85&hm=731ce8a07ecf98d1033aba12892893b24b3c3504b2f3db67aab4d97ce426a673&=&format=webp&quality=lossless&width=270&height=438">
+			<p>La Reine Étranglée<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499663926093283359/Y291cm9ubmUuanBn.png?ex=69f59e5e&is=69f44cde&hm=7335790fee2eafd3c588c07d45a6e65d4d002425bcf93b7ef8a0d19b3177e829&=&format=webp&quality=lossless&width=375&height=606">
+			<p>Les Poisons de la Couronne<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499664276720189461/Zw.png?ex=69f59eb1&is=69f44d31&hm=5a639c7a32a64c218dedd03124c4a615885305f6a7aa5a24e2e83691b896444f&=&format=webp&quality=lossless&width=401&height=641">
+			<p>La Loi des Males<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499664497588310086/LmpwZw.png?ex=69f59ee6&is=69f44d66&hm=095f1438eb0a5b8869993aa85fcf424a09fb0422e1e7bf6fc9c26d11a3526469&=&format=webp&quality=lossless&width=375&height=606">
+			<p>La Louve de France<br>
+			Maurice Druon</p>
+		</div>
+	</div>
+
 	<hr>
 
-	<h3>Frequenté déja: </h3>
+	<p class = "index-text">Les mieux notés: </p>
+		<div class = "index-autre-gallery">
+		<div class = "index-book">
+		 	<img src = "https://media.discordapp.net/attachments/705719269924536353/1499662596327084164/X2RlX2Zlci5qcGc.png?ex=69f59d21&is=69f44ba1&hm=f3dc0f72a3888fbd070af56ccdedd008b3a95af8a14dc89b82033a19dcc3ca90&=&format=webp&quality=lossless&width=375&height=610">
+			 <p>Le Roi de Fer<br>
+		 	Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499663552049447032/anBn.png?ex=69f59e05&is=69f44c85&hm=731ce8a07ecf98d1033aba12892893b24b3c3504b2f3db67aab4d97ce426a673&=&format=webp&quality=lossless&width=270&height=438">
+			<p>La Reine Étranglée<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499663926093283359/Y291cm9ubmUuanBn.png?ex=69f59e5e&is=69f44cde&hm=7335790fee2eafd3c588c07d45a6e65d4d002425bcf93b7ef8a0d19b3177e829&=&format=webp&quality=lossless&width=375&height=606">
+			<p>Les Poisons de la Couronne<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499664276720189461/Zw.png?ex=69f59eb1&is=69f44d31&hm=5a639c7a32a64c218dedd03124c4a615885305f6a7aa5a24e2e83691b896444f&=&format=webp&quality=lossless&width=401&height=641">
+			<p>La Loi des Males<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499664497588310086/LmpwZw.png?ex=69f59ee6&is=69f44d66&hm=095f1438eb0a5b8869993aa85fcf424a09fb0422e1e7bf6fc9c26d11a3526469&=&format=webp&quality=lossless&width=375&height=606">
+			<p>La Louve de France<br>
+			Maurice Druon</p>
+		</div>
+	</div>
+
+	<hr>
+
+	<p class = "index-text">Les plus populaires: </p>
+		<div class = "index-autre-gallery">
+		<div class = "index-book">
+		 	<img src = "https://media.discordapp.net/attachments/705719269924536353/1499662596327084164/X2RlX2Zlci5qcGc.png?ex=69f59d21&is=69f44ba1&hm=f3dc0f72a3888fbd070af56ccdedd008b3a95af8a14dc89b82033a19dcc3ca90&=&format=webp&quality=lossless&width=375&height=610">
+			 <p>Le Roi de Fer<br>
+		 	Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499663552049447032/anBn.png?ex=69f59e05&is=69f44c85&hm=731ce8a07ecf98d1033aba12892893b24b3c3504b2f3db67aab4d97ce426a673&=&format=webp&quality=lossless&width=270&height=438">
+			<p>La Reine Étranglée<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499663926093283359/Y291cm9ubmUuanBn.png?ex=69f59e5e&is=69f44cde&hm=7335790fee2eafd3c588c07d45a6e65d4d002425bcf93b7ef8a0d19b3177e829&=&format=webp&quality=lossless&width=375&height=606">
+			<p>Les Poisons de la Couronne<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499664276720189461/Zw.png?ex=69f59eb1&is=69f44d31&hm=5a639c7a32a64c218dedd03124c4a615885305f6a7aa5a24e2e83691b896444f&=&format=webp&quality=lossless&width=401&height=641">
+			<p>La Loi des Males<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499664497588310086/LmpwZw.png?ex=69f59ee6&is=69f44d66&hm=095f1438eb0a5b8869993aa85fcf424a09fb0422e1e7bf6fc9c26d11a3526469&=&format=webp&quality=lossless&width=375&height=606">
+			<p>La Louve de France<br>
+			Maurice Druon</p>
+		</div>
+	</div>
+
+	<hr>
+
+	<p class = "index-text">Recemment ajoutés: </p>
+		<div class = "index-autre-gallery">
+		<div class = "index-book">
+		 	<img src = "https://media.discordapp.net/attachments/705719269924536353/1499662596327084164/X2RlX2Zlci5qcGc.png?ex=69f59d21&is=69f44ba1&hm=f3dc0f72a3888fbd070af56ccdedd008b3a95af8a14dc89b82033a19dcc3ca90&=&format=webp&quality=lossless&width=375&height=610">
+			 <p>Le Roi de Fer<br>
+		 	Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499663552049447032/anBn.png?ex=69f59e05&is=69f44c85&hm=731ce8a07ecf98d1033aba12892893b24b3c3504b2f3db67aab4d97ce426a673&=&format=webp&quality=lossless&width=270&height=438">
+			<p>La Reine Étranglée<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499663926093283359/Y291cm9ubmUuanBn.png?ex=69f59e5e&is=69f44cde&hm=7335790fee2eafd3c588c07d45a6e65d4d002425bcf93b7ef8a0d19b3177e829&=&format=webp&quality=lossless&width=375&height=606">
+			<p>Les Poisons de la Couronne<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499664276720189461/Zw.png?ex=69f59eb1&is=69f44d31&hm=5a639c7a32a64c218dedd03124c4a615885305f6a7aa5a24e2e83691b896444f&=&format=webp&quality=lossless&width=401&height=641">
+			<p>La Loi des Males<br>
+			Maurice Druon</p>
+		</div>
+
+		<div class = "index-book">
+			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499664497588310086/LmpwZw.png?ex=69f59ee6&is=69f44d66&hm=095f1438eb0a5b8869993aa85fcf424a09fb0422e1e7bf6fc9c26d11a3526469&=&format=webp&quality=lossless&width=375&height=606">
+			<p>La Louve de France<br>
+			Maurice Druon</p>
+		</div>
+	</div>
+
 	<hr>
 
     <footer>
-        <center><p>&copy; 2026 Adlis</p></center>
+        <center><p>&copy; 2026 Adlis - Accueil</p></center>
     </footer>
 
 
