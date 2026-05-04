@@ -7,53 +7,34 @@
 </head>
 
 <body class = "produit-body">
-	<hr>
-	<div class = "menu">
-		<div class = "top">
-			<p>
-				<a href = ><button><button>RETOUR</button></a> 
-				<a href = "index.html"><button>ACCEUIL</button></a>
-    			<a href = "produit.html"><button>PRODUITS</button></a>
-    			<a href = "panier.html"><button><img src = "https://media.discordapp.net/attachments/705719269924536353/1492259925345177610/image.png?ex=69daaedb&is=69d95d5b&hm=aa22baf4a57873bf78c7ea32d6c687d094a9d8c105877ac2dd0a1f7eafdc2f64&=&format=webp&quality=lossless&width=640&height=640" width = "20" height = "20"></button></a>
-    		</p>
-
-			<div class = "account"> 
-				<img src = "https://media.discordapp.net/attachments/705719269924536353/1492263358299246744/image.png?ex=69dab20d&is=69d9608d&hm=7444f7976a5c2ce5ff7f4481f091f665b507708ecfd1541ef14251aff635eccd&=&format=webp&quality=lossless&width=640&height=640" width = "20" height = "20">
-				<select>
-					<option disabled selected>MON COMPTE</option>
-					<option>SE CONNECTER</option>
-					<option>S'INSCRIRE</option>
-				</select>
-			</div>
+	<!-- Unified Header -->
+	<div class="index-header">
+		<!-- Logo and Brand at left -->
+		<div class="index-brand">
+			<a href="index.html" class="brand-link">
+				<img src="image/LOGO_site.png" alt="Adlis Logo" class="brand-logo">
+				<span class="brand-name">ADLIS</span>
+			</a>
 		</div>
 
-		<hr>
+		<!-- Search Bar centered -->
+		<div class="search-wrapper">
+			<input type="text" class="search-input" placeholder="Chercher par titre...">
+			<button type="submit" class="search-btn">
+				<img src="image/chercher.png" alt="Rechercher">
+			</button>
+		</div>
 
-		<div class = "bottom">
-			<div class = "logo">
-					<img src = "https://media.discordapp.net/attachments/705719269924536353/1491148996280979487/667754626_944282108317746_7284098871114949961_n.jpg?ex=69d6a438&is=69d552b8&hm=d19a1e82768926a3d5cc9e62530fdc90c69d3fbf54933f63a2fd9a16e8c1c460&=&format=webp&width=903&height=940" width = "50" height = "50">
-			</div>
-
-			<p>ADLIS</p>
-
-			<div class = "search">
-				<p>
-					<select name = "categorie">
-						<option>Toutes les categories</option>
-						<option>Temporaire</option>
-						<option>Temporaire</option>
-						<option>Temporaire</option>
-					</select>
-
-				<input type = "text" placeholder = "Chercher par titre: ">
-				<button type = "submit"><img src = "https://media.discordapp.net/attachments/705719269924536353/	1492257204663746751/image.png?ex=69daac52&is=69d95ad2&hm=c216ed14a30438e61db9228f0df803cb71cc99ac140364f11c8ed46303f24e61&=&format=webp&quality=lossless&width=640&height=640" width = "20" height = "20"></button>	
-			
-				</p>
-			</div>
+		<!-- Account Section -->
+		<div class="index-account">
+			<img src="image/profil-de-lutilisateur.png" alt="Profil" class="account-icon-header">
+			<select id="accountSelectHeader">
+				<option disabled selected>MON COMPTE</option>
+				<option>SE CONNECTER</option>
+				<option>S'INSCRIRE</option>
+			</select>
 		</div>
 	</div>
-
-	<hr>
 
 	<div class = "produit-layout">
 		<div class = "produit-tab">

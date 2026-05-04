@@ -8,38 +8,47 @@
 
 <body class="admin-body">
 
-    <p>
-        <img src="https://media.discordapp.net/attachments/705719269924536353/1491148996280979487/667754626_944282108317746_7284098871114949961_n.jpg" width="50" height="50">
-        
-        <b>Adlis</b>
+    <!-- Unified Header -->
+    <div class="index-header">
+        <!-- Logo and Brand at left -->
+        <div class="index-brand">
+            <a href="index.html" class="brand-link">
+                <img src="image/LOGO_site.png" alt="Adlis Logo" class="brand-logo">
+                <span class="brand-name">ADLIS</span>
+            </a>
+        </div>
 
-        <img src="https://media.discordapp.net/attachments/705719269924536353/1492263358299246744/image.png" width="20" height="20">
-        
-        <select>
-            <option disabled selected>Mon compte</option>
-            <option>Se connecter</option>
-            <option>S'inscrire</option>
-        </select>
-    </p>
+        <!-- Search Bar centered -->
+        <div class="search-wrapper">
+            <input type="text" class="search-input" placeholder="Chercher par titre...">
+            <button type="submit" class="search-btn">
+                <img src="image/chercher.png" alt="Rechercher">
+            </button>
+        </div>
 
+        <!-- Account Section -->
+        <div class="index-account">
+            <img src="image/profil-de-lutilisateur.png" alt="Profil" class="account-icon-header">
+            <select id="accountSelectHeader">
+                <option disabled selected>MON COMPTE</option>
+                <option>SE CONNECTER</option>
+                <option>S'INSCRIRE</option>
+            </select>
+        </div>
+    </div>
 
-     
-    <p>
+    <nav class="admin-nav">
         <span>Menu</span>
-
-        <a href="#"><button>Retour</button></a>
         <a href="index.html"><button>Accueil</button></a>
         <a href="produit.html"><button>Produits</button></a>
         <a href="panier.html">
             <button class="btn-panier-icon">
-                <img src="https://media.discordapp.net/attachments/705719269924536353/1492259925345177610/image.png" width="20">
+                <img src="image/panier.png" width="20">
             </button>
         </a>
-    </p>
-    
+    </nav>
 
     <hr>
-
 
     <center><h2>Page Administrateur</h2></center>
     <center><p>Gérer les produits et les commandes</p></center>
