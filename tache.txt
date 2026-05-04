@@ -1,7 +1,36 @@
 LES PAGES HTML : 
-    Yani   : auth, formulaire, profile (fait)
-    Salim  : index, produit            (fait)
-    Nadjib : admin, panier             (fait)
+#auth: (terminé)
+#formulaire: (terminé)
+
+#profile (A FAIRE)
+    -> améliorer l'apercus de la photo de profile
+    -> ajouter l'entet du site (SANS LA BARRE DES TACHES, SANS LA BARE DE RECHERCHE)
+        uniquement le logo du site pour retour en arriére.
+
+#index (A FAIRE)
+    ->ajouter le menue "sidebar menu", a l'interieur on trouve le : 
+        panier, connexion, produit avec leurs logos qui enménent vers 
+        leurs page respectives.
+        ajouter les livres disponible dans le dossier image.
+
+#produit (A FAIRE)
+    ->enlever le logo de "mon compte sur la droite, il sert a rien.
+    ->améliorer le style de "catégorie" pour avoire un méilleur rendue.
+    ->faire la catégorie intéligente pour la recherche de livre (JS).
+    ->ajouter les livres diponible dans le dossier "image" ainsi que de nouveaux.
+
+#admin (A FAIRE)
+    ->enlever la barre de recherche et le logo authentification elle sert a rien
+    ->ajouter juste le boutton déconnexion pour deconnecté 
+    ->enlever les bouttons panier acceuil, menue, panier ils servent a rein.
+    ->le rendre intéractif avec le JS.
+
+#panier(A FAIRE)
+    ->enlever la barre de recherche elle sert a rien.
+    ->enlever le menue, panier, produit ils servent a rien.
+    ->laisser juste le logo de photo de profile pour montrer la connexion.
+    ->rendre la page intéractif (JS).
+
 
 LA PAGE CSS : 
     auth.html       (fait)
@@ -25,16 +54,11 @@ LE README :
 
 
 TASKS: 
-- modifier le menu et les couleurs de toutes les pages pour que elle soient coherantes
-- ajouter les logos des pages. 
 - preparer les "name" pour le JS et la DB.
 - faire les liens entre pages.
-- modifier l'entete et enlever le bouton de connexion et d'inscription pour
-    chaque entete.
-- optimiser le CSS (en ajoutant des classes et unifier les styles).
-- afficher l'entete du Site dans certaines pages HTML (produit, inscription...)
-    et pour les autre pages on met uniquement le logo c'est suffisant. (authentification...)
-- ajouter le README
+- ajouter le README.
+- ajouter le logo du site dans tout les anglets des pages.
+- idnetifier l'identité visuél (a ne pas ignorer).
 
 FINISHED TASKS: 
 - Le logo est fini (si vous voulez le modifier)
