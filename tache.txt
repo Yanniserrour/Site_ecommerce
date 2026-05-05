@@ -11,7 +11,9 @@ LES PAGES HTML :
     ->ajouter le menue "sidebar menu", a l'interieur on trouve le : 
         panier, connexion, produit avec leurs logos qui enménent vers 
         leurs page respectives.
-        ajouter les livres disponible dans le dossier image.
+        ajouter les livres disponible dans le dossier image. (terminé)
+    ->ajouter les page dynamique qui s'ouvrent en cliquent sur le livre on trouvera
+        le prix, les détails, le boutton ajouter au panier, et une crois pour sortire
 
 #produit (A FAIRE)
     ->enlever le logo de "mon compte sur la droite, il sert a rien.
