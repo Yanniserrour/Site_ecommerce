@@ -1,6 +1,6 @@
 LES PAGES HTML : 
-#auth: (terminé)
-#formulaire: (terminé)
+#auth:       (terminé) Yani
+#formulaire: (terminé) Yani
 
 #profile (A FAIRE)
     -> améliorer l'apercus de la photo de profile
