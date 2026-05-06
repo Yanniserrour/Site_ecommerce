@@ -959,6 +959,41 @@ body {
     margin-top: 30px;
 }
 
+.admin-header {
+    justify-content: space-between;
+}
+
+.admin-account {
+    margin-left: auto;
+}
+
+.admin-logout-btn {
+    background-color: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.admin-logout-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.admin-order-status {
+    background-color: #fff5d9 !important;
+    color: #7a5200;
+    font-weight: 700;
+}
+
+.admin-order-status.active {
+    background-color: #ddf8e8 !important;
+    color: #176534;
+}
+
 
 
 
@@ -1468,6 +1503,59 @@ footer p {
 
 
 
+
+.page-panier-body .panier-simple-header {
+    justify-content: space-between;
+}
+
+.page-panier-body .panier-account {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.page-panier-body .panier-profile-btn {
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.page-panier-body .panier-profile-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.page-panier-body .panier-empty {
+    display: none;
+    margin: 18px 0;
+    padding: 14px;
+    border-radius: 8px;
+    background: #fff4df;
+    color: #5d4321;
+    font-weight: 600;
+    text-align: center;
+}
+
+.page-panier-body .panier-empty.active {
+    display: block;
+}
+
+.page-panier-body #panierConfirmLink.disabled {
+    pointer-events: none;
+}
+
+.page-panier-body #panierConfirmLink.disabled .panier-confirm {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
 
 /* partie produits */
 .produit-body {

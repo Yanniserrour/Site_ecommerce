@@ -8,9 +8,7 @@
 
 <body class="admin-body">
 
-    <!-- Unified Header -->
-    <div class="index-header">
-        <!-- Logo and Brand at left -->
+    <div class="index-header admin-header">
         <div class="index-brand">
             <a href="index.html" class="brand-link">
                 <img src="image/LOGO_site.png" alt="Adlis Logo" class="brand-logo">
@@ -18,65 +16,40 @@
             </a>
         </div>
 
-        <!-- Search Bar centered -->
-        <div class="search-wrapper">
-            <input type="text" class="search-input" placeholder="Chercher par titre...">
-            <button type="submit" class="search-btn">
-                <img src="image/chercher.png" alt="Rechercher">
-            </button>
-        </div>
-
-        <!-- Account Section -->
-        <div class="index-account">
-            <img src="image/profil-de-lutilisateur.png" alt="Profil" class="account-icon-header">
-            <select id="accountSelectHeader">
-                <option disabled selected>MON COMPTE</option>
-                <option>SE CONNECTER</option>
-                <option>S'INSCRIRE</option>
-            </select>
+        <div class="index-account admin-account">
+            <button class="admin-logout-btn" id="adminLogoutBtn" type="button">D&eacute;connexion</button>
         </div>
     </div>
-
-    <nav class="admin-nav">
-        <span>Menu</span>
-        <a href="index.html"><button>Accueil</button></a>
-        <a href="produit.html"><button>Produits</button></a>
-        <a href="panier.html">
-            <button class="btn-panier-icon">
-                <img src="image/panier.png" width="20">
-            </button>
-        </a>
-    </nav>
 
     <hr>
 
     <center><h2>Page Administrateur</h2></center>
-    <center><p>Gérer les produits et les commandes</p></center>
+    <center><p>G&eacute;rer les produits et les commandes</p></center>
 
     <center>
         <h3>Ajouter un produit</h3>
 
-        <form>
+        <form id="adminProductForm">
             <fieldset>
                 <legend>Informations produit</legend>
 
                 <label>Nom :</label><br>
-                <input type="text"><br><br>
+                <input type="text" id="adminProductName" required><br><br>
 
                 <label>Auteur :</label><br>
-                <input type="text"><br><br>
+                <input type="text" id="adminProductAuthor" required><br><br>
 
-                <label>Catégorie :</label><br>
-                <input type="text"><br><br>
+                <label>Cat&eacute;gorie :</label><br>
+                <input type="text" id="adminProductCategory" required><br><br>
 
                 <label>Prix :</label><br>
-                <input type="number"><br><br>
+                <input type="number" id="adminProductPrice" min="0" required><br><br>
 
                 <label>Image :</label><br>
-                <input type="file"><br><br>
+                <input type="file" id="adminProductImage"><br><br>
 
                 <input type="submit" value="Ajouter">
-                <input type="reset" value="Réinitialiser">
+                <input type="reset" value="R&eacute;initialiser">
             </fieldset>
         </form>
     </center>
@@ -85,19 +58,23 @@
         <h3>Liste des produits</h3>
 
         <table>
-            <tr>
-                <th>Produit</th>
-                <th>Catégorie</th>
-                <th>Prix</th>
-                <th>Action</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Cat&eacute;gorie</th>
+                    <th>Prix</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
 
-            <tr>
-                <td>......</td>
-                <td>......</td>
-                <td>...... DA</td>
-                <td><button>🗑</button></td>
-            </tr>
+            <tbody id="adminProductsList">
+                <tr>
+                    <td>......</td>
+                    <td>......</td>
+                    <td>...... DA</td>
+                    <td><button class="admin-delete-product" type="button">Supprimer</button></td>
+                </tr>
+            </tbody>
         </table>
     </center>
 
@@ -106,21 +83,25 @@
         <h3>Liste des commandes</h3>
 
         <table>
-            <tr>
-                <th>Client</th>
-                <th>Téléphone</th>
-                <th>Produit</th>
-                <th>Montant</th>
-                <th>État</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>T&eacute;l&eacute;phone</th>
+                    <th>Produit</th>
+                    <th>Montant</th>
+                    <th>&Eacute;tat</th>
+                </tr>
+            </thead>
 
-            <tr>
-                <td>......</td>
-                <td>......</td>
-                <td>......</td>
-                <td>...... DA</td>
-                <td>En attente</td>
-            </tr>
+            <tbody id="adminOrdersList">
+                <tr>
+                    <td>......</td>
+                    <td>......</td>
+                    <td>......</td>
+                    <td>...... DA</td>
+                    <td><button class="admin-order-status" type="button">En attente</button></td>
+                </tr>
+            </tbody>
         </table>
     </center>
 
@@ -130,5 +111,6 @@
         <center><p>&copy; 2026 Adlis - Administration</p></center>
     </footer>
 
+    <script src="scripte.js"></script>
 </body>
 </html>

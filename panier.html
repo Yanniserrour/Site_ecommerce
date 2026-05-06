@@ -8,9 +8,7 @@
 
 <body class="page-panier-body">
 
-    <!-- Unified Header -->
-    <div class="index-header">
-        <!-- Logo and Brand at left -->
+    <div class="index-header panier-simple-header">
         <div class="index-brand">
             <a href="index.html" class="brand-link">
                 <img src="image/LOGO_site.png" alt="Adlis Logo" class="brand-logo">
@@ -18,93 +16,81 @@
             </a>
         </div>
 
-        <!-- Search Bar centered -->
-        <div class="search-wrapper">
-            <input type="text" class="search-input" placeholder="Chercher par titre...">
-            <button type="submit" class="search-btn">
-                <img src="image/chercher.png" alt="Rechercher">
+        <div class="index-account panier-account">
+            <button class="panier-profile-btn" id="panierProfileBtn" type="button" title="Compte">
+                <img src="image/profil-de-lutilisateur.png" alt="Profil" class="account-icon-header">
             </button>
-        </div>
-
-        <!-- Account Section -->
-        <div class="index-account">
-            <img src="image/profil-de-lutilisateur.png" alt="Profil" class="account-icon-header">
-            <select id="accountSelectHeader">
-                <option disabled selected>MON COMPTE</option>
-                <option>SE CONNECTER</option>
-                <option>S'INSCRIRE</option>
-            </select>
         </div>
     </div>
 
-    <nav class="panier-nav">
-        <span>Menu</span>
-        <a href="index.html"><button>Accueil</button></a>
-        <a href="produit.html"><button>Produits</button></a>
-        <a href="panier.html"><button class="btn-panier-icon">
-        <img src="image/panier.png" width="22"></button></a>
-
-    </nav>
-      
-     <hr>
+    <hr>
 
     <main class="panier-page">
         <section class="panier-card">
             <h1>Mon panier</h1>
-            <p>Consultez vos produits sélectionnés avant de finaliser votre achat.</p>
+            <p>Consultez vos produits s&eacute;lectionn&eacute;s avant de finaliser votre achat.</p>
 
             <table class="panier-table">
-                <tr>
-                    <th>Produits sélectionnés</th>
-                    <th>Prix</th>
-                    <th>Action</th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Produits s&eacute;lectionn&eacute;s</th>
+                        <th>Prix</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
 
-                <tr>
-                    <td>
-                        <strong>Catégorie : ......</strong><br>
-                        ......<br>
-                        ......
-                    </td>
-                    <td class="prix">...... DA</td>
-                    <td><button class="panier-delete">🗑</button></td>
-                </tr>
+                <tbody id="panierItems">
+                    <tr>
+                        <td>
+                            <strong>Cat&eacute;gorie : ......</strong><br>
+                            ......<br>
+                            ......
+                        </td>
+                        <td class="prix">...... DA</td>
+                        <td><button class="panier-delete" type="button">Supprimer</button></td>
+                    </tr>
 
-                <tr>
-                    <td>
-                        <strong>Catégorie : ......</strong><br>
-                        ......<br>
-                        ......
-                    </td>
-                    <td class="prix">...... DA</td>
-                    <td><button class="panier-delete">🗑</button></td>
-                </tr>
+                    <tr>
+                        <td>
+                            <strong>Cat&eacute;gorie : ......</strong><br>
+                            ......<br>
+                            ......
+                        </td>
+                        <td class="prix">...... DA</td>
+                        <td><button class="panier-delete" type="button">Supprimer</button></td>
+                    </tr>
 
-                <tr>
-                    <td>
-                        <strong>Catégorie : ......</strong><br>
-                        ......<br>
-                        ......
-                    </td>
-                    <td class="prix">...... DA</td>
-                    <td><button class="panier-delete">🗑</button></td>
-                </tr>
+                    <tr>
+                        <td>
+                            <strong>Cat&eacute;gorie : ......</strong><br>
+                            ......<br>
+                            ......
+                        </td>
+                        <td class="prix">...... DA</td>
+                        <td><button class="panier-delete" type="button">Supprimer</button></td>
+                    </tr>
+                </tbody>
             </table>
 
+            <p class="panier-empty" id="panierEmpty">Votre panier est vide.</p>
+
             <div class="panier-total-box">
-                <span>Montant total à payer</span>
-                <strong>...... DA</strong>
+                <span>Montant total &agrave; payer</span>
+                <strong id="panierTotal">0 DA</strong>
             </div>
 
-            <a href="formulaire.html"><button class="panier-confirm">Passer la commande</button></a>
+            <a href="formulaire.html" id="panierConfirmLink">
+                <button class="panier-confirm" type="button">Passer la commande</button>
+            </a>
         </section>
     </main>
 
-     <hr>
+    <hr>
 
     <footer class="panier-footer">
         <p>&copy; 2026 Adlis</p>
     </footer>
 
+    <script src="scripte.js"></script>
 </body>
 </html>
