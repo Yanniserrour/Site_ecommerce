@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset = "UTF-8">
+	<meta charset="UTF-8">
 	<title>Produits - Adlis</title>
-	<link rel = "stylesheet" href = "style.css">
+	<link rel="stylesheet" href="style.css">
 </head>
 
-<body class = "produit-body">
-	<!-- Unified Header -->
+<body class="produit-body">
+
+	<!-- Fixed Header (same structure as index.html) -->
 	<div class="index-header">
-		<!-- Logo and Brand at left -->
+		<!-- Logo and Brand -->
 		<div class="index-brand">
 			<a href="index.html" class="brand-link">
 				<img src="image/LOGO_site.png" alt="Adlis Logo" class="brand-logo">
@@ -17,7 +18,7 @@
 			</a>
 		</div>
 
-		<!-- Search Bar centered -->
+		<!-- Search Bar -->
 		<div class="search-wrapper">
 			<input type="text" class="search-input" placeholder="Chercher par titre...">
 			<button type="submit" class="search-btn">
@@ -25,27 +26,34 @@
 			</button>
 		</div>
 
-		<!-- Account Section -->
-		<div class="index-account">
-			<img src="image/profil-de-lutilisateur.png" alt="Profil" class="account-icon-header">
-			<select id="accountSelectHeader">
-				<option disabled selected>MON COMPTE</option>
-				<option>SE CONNECTER</option>
-				<option>S'INSCRIRE</option>
-			</select>
-		</div>
+		<!-- Burger Menu: pure CSS via <details>, no JS needed -->
+		<details class="burger-details">
+			<summary class="burger-summary">
+				<img src="image/menus.png" alt="Menu">
+			</summary>
+			<nav class="produit-dropdown-menu">
+				<a href="javascript:history.back()">Retour</a>
+				<a href="index.html">Accueil</a>
+				<a href="produit.html">Produit</a>
+				<a href="panier.html">Panier</a>
+				<a href="profil.html">Profil</a>
+			</nav>
+		</details>
 	</div>
 
-	<div class = "produit-layout">
-		<div class = "produit-tab">
-			<div class = "produit-categorie">
-				<h3>CATEGORIE: </h3>
+	<!-- Main Layout -->
+	<div class="produit-layout">
+
+		<!-- Left Sidebar: Filters -->
+		<div class="produit-tab">
+			<div class="produit-categorie">
+				<h3>CATEGORIE :</h3>
 				<p>Action</p>
 				<p>Aventure</p>
 				<p>Art</p>
 				<p>Biographie</p>
 				<p>Business</p>
-				<p>Comedie</p>
+				<p>Comédie</p>
 				<p>Drama</p>
 				<p>Fitness</p>
 				<p>Fiction</p>
@@ -55,13 +63,13 @@
 				<p>Recettes</p>
 				<p>Religion</p>
 				<p>Romance</p>
-				<p>Science Fiction & Fantasy</p>
-				<p>Science & Technologie</p>
+				<p>Science Fiction &amp; Fantasy</p>
+				<p>Science &amp; Technologie</p>
 				<p>Thrillers</p>
 			</div>
 
-			<div class = "produit-langue">
-				<h3>LANGUES: </h3>
+			<div class="produit-langue">
+				<h3>LANGUES :</h3>
 				<p>Français</p>
 				<p>Anglais</p>
 				<p>Arabe</p>
@@ -70,162 +78,124 @@
 			</div>
 		</div>
 
-		<div class = "produit-produits">
-			<div class = "produit-pmenu">
-				<p>Resultats: 1 - 20</p>
-
-				<button><img src = "https://media.discordapp.net/attachments/705719269924536353/1499702726823776308/image.png?ex=69f5c281&is=69f47101&hm=0f5b090d7b2784de171748fc66022c81870aa8d96f8fbf248f45d5a7ed78ae38&=&format=webp&quality=lossless&width=640&height=640" width = "20" height = "20"></button>
+		<!-- Product Grid -->
+		<div class="produit-produits">
+			<div class="produit-pmenu">
+				<p>Résultats : 1 - 20</p>
+				<button>
+					<img src="https://media.discordapp.net/attachments/705719269924536353/1499702726823776308/image.png?ex=69f5c281&is=69f47101&hm=0f5b090d7b2784de171748fc66022c81870aa8d96f8fbf248f45d5a7ed78ae38&=&format=webp&quality=lossless&width=640&height=640" width="20" height="20">
+				</button>
 			</div>
 
-			<div class = "produit-grid">
-				<div class = "produit-book">
-		 			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499662596327084164/	X2RlX2Zlci5qcGc.png?ex=69f59d21&is=69f44ba1&hm=f3dc0f72a3888fbd070af56ccdedd008b3a95af8a14dc89b82033a19dcc3ca90&=&format=webp&quality=lossless&width=375&height=610">
-					<p>Le Roi de Fer<br>
-		 			Auteur: Maurice Druon<br>
-		 			Prix: X DA</p>
+			<div class="produit-grid">
+
+				<div class="produit-book">
+					<img src="image/produit_livre20.png">
+					<p>Le Roi de Fer<br>Auteur: Maurice Druon<br>Prix: X DA</p>
 				</div>
 
-				<div class = "produit-book">
-					<img src = "https://media.discordapp.net/attachments/705719269924536353/1499663552049447032/anBn.png?ex=69f59e05&is=69f44c85&hm=731ce8a07ecf98d1033aba12892893b24b3c3504b2f3db67aab4d97ce426a673&=&format=webp&quality=lossless&width=270&height=438">
-					<p>La Reine Étranglée<br>
-					Auteur: Maurice Druon<br>
-					Prix: X DA<br></p>
+				<div class="produit-book">
+					<img src="image/produit_livre19.png">
+					<p>La Reine Étranglée<br>Auteur: Maurice Druon<br>Prix: X DA</p>
 				</div>
 
-				<div class = "produit-book">
-					<img src = "https://media.discordapp.net/attachments/705719269924536353/1499663926093283359/Y291cm9ubmUuanBn.png?ex=69f59e5e&is=69f44cde&hm=7335790fee2eafd3c588c07d45a6e65d4d002425bcf93b7ef8a0d19b3177e829&=&format=webp&quality=lossless&width=375&height=606">
-					<p>Les Poisons de la Couronne<br>
-					Auteur: Maurice Druon<br>
-					Prix: X DA</p>
+				<div class="produit-book">
+					<img src="image/produit_livre18.png">
+					<p>Les Poisons de la Couronne<br>Auteur: Maurice Druon<br>Prix: X DA</p>
 				</div>
 
-
-				<div class = "produit-book">
-					<img src = "https://media.discordapp.net/attachments/705719269924536353/1499664276720189461/Zw.png?	ex=69f59eb1&is=69f44d31&hm=5a639c7a32a64c218dedd03124c4a615885305f6a7aa5a24e2e83691b896444f&=&format=webp&quality=lossless&width=401&height=641">
-					<p>La Loi des Males<br>
-					Auteur: Maurice Druon<br>
-					Prix: X DA</p>
+				<div class="produit-book">
+					<img src="image/produit_livre17.png">
+					<p>La Loi des Mâles<br>Auteur: Maurice Druon<br>Prix: X DA</p>
 				</div>
 
-				<div class = "produit-book">
-					<img src = "https://media.discordapp.net/attachments/705719269924536353/1499664497588310086/LmpwZw.png?ex=69f59ee6&is=69f44d66&hm=095f1438eb0a5b8869993aa85fcf424a09fb0422e1e7bf6fc9c26d11a3526469&=&format=webp&quality=lossless&width=375&height=606">
-					<p>La Louve de France<br>
-					Auteur: Maurice Druon<br>
-					Prix: X DA</p>
+				<div class="produit-book">
+					<img src="image/produit_livre16.png">
+					<p>La Louve de France<br>Auteur: Maurice Druon<br>Prix: X DA</p>
 				</div>
 
-				<div class = "produit-book">
-					<img src = "https://media.discordapp.net/attachments/705719269924536353/1499665320179142766/anBn.png?ex=69f59faa&is=69f44e2a&hm=4ba1fe514178d236c93a8ef848ffaa6d5c0c30485238b97e567e107405e97330&=&format=webp&quality=lossless&width=375&height=606">
-        			<p>Le Lis et le Lion<br>
-       				Auteur: Maurice Druon<br>
-      	 			Prix: X DA</p>
-      			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre15.png">
+					<p>Le Lis et le Lion<br>Auteur: Maurice Druon<br>Prix: X DA</p>
+				</div>
 
-        	 	<div class = "produit-book">
-         			<img src = "https://media.discordapp.net/attachments/705719269924536353/1499665517731123300/cy1sNTAwLndlYnA.png?ex=69f59fd9&is=69f44e59&	hm=ff508f8426ddb64b020fef8e28418ddb7a022b7528aca48ae4872aff8a5263ee&=&format=webp&quality=lossless&width=376&height=625">
-        			<p>Quand un Roi Perd la France<br>
-       				Auteur: Maurice Druon<br>
-       				Prix: X DA</p>
-       			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre14.png">
+					<p>Quand un Roi Perd la France<br>Auteur: Maurice Druon<br>Prix: X DA</p>
+				</div>
 
-       			<div class = "produit-book">
-       				<img src = "https://media.discordapp.net/attachments/705719269924536353/1499825076978188298/	51YLWUbbdcL._SY445_SX342_FMwebp_.png?ex=69f63473&is=69f4e2f3&hm=e25f0cfb377e68ea18e50c17ae336309958d3b2f04dc04d1c051e0ceadbf300c&=&format=webp&quality=lossless&width=351&height=556">
-       				<p>Le Hobbit<br>
-       				Auteur: JRR Tolkein<br>
-       				Prix: X DA</p>
-       			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre13.png">
+					<p>Le Hobbit<br>Auteur: JRR Tolkien<br>Prix: X DA</p>
+				</div>
 
-       			<div class = "produit-book">
-       				<img src = "https://media.discordapp.net/attachments/705719269924536353/1499825431631630466/81efr-oLCfL._SY522_.png?ex=69f634c8&is=69f4e348&hm=777831119e9d97581af043a5981304ea7882b4e35b2dea37d8a3cf02c8786a87&=&format=webp&	quality=lossless&width=396&height=653">
-       				<p>La Fraternité de l'Anneau<br>
-       				Auteur: JRR Tolkein<br>
-       				Prix: X DA</p>	
-       			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre12.png">
+					<p>La Fraternité de l'Anneau<br>Auteur: JRR Tolkien<br>Prix: X DA</p>
+				</div>
 
-       			<div class = "produit-book">
-       				<img src = "https://media.discordapp.net/attachments/705719269924536353/1499826138103414985/YXJnZS53ZWJw.png?ex=69f63570&is=69f4e3f0&hm=67cc645e903fe51001504dc267bd43387b7858e2952845b2c77c61a4b59ecaa7&=&format=webp&quality=lossless&width=571&height=940">
-       				<p>Les Deux Tours<br>
-       				Auteur: JRR Tolkein<br>
-       				Prix: X DA</p>
-       			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre11.png">
+					<p>Les Deux Tours<br>Auteur: JRR Tolkien<br>Prix: X DA</p>
+				</div>
 
-       			<div class = "produit-book">
-       				<img src = "https://media.discordapp.net/attachments/705719269924536353/1499826744813813953/	cGc.png?ex=69f63601&is=69f4e481&hm=68d1e0d8bb9c0c75a2df2e250e694b2c1aa1de3cfa8562ffb01372624c225a50&=&format=webp&quality=lossless&width=375&height=615">
-       				<p>Le Retour du Roi<br>
-       				Auteur: JRR Tolkein<br>
-       				Prix: X DA</p>
-       			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre10.png">
+					<p>Le Retour du Roi<br>Auteur: JRR Tolkien<br>Prix: X DA</p>
+				</div>
 
-       			<div class = "produit-book">
-       				<img src = "https://media.discordapp.net/attachments/705719269924536353/1499827406163410955/	cGc.png?ex=69f6369f&is=69f4e51f&hm=e4ecc4523de610ef28c868aa1c368ac2a666f13cac9c9436ca9cc6ade12b51f5&=&format=webp&quality=lossless&width=413&height=643">
-       				<p>The Philosopher's Stone<br>
-       				Auteur: JK Rowling<br>
-       				Prix: X DA</p>
-       			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre9.png">
+					<p>The Philosopher's Stone<br>Auteur: JK Rowling<br>Prix: X DA</p>
+				</div>
 
-       			<div class = "produit-book">
-       				<img src = "https://media.discordapp.net/attachments/705719269924536353/1499827826893918268/LmpwZw.png?ex=69f63703&is=69f4e583&hm=6585fc73db8aa5ef3e95487aecf67f44209977ba635c9c8801021607d50210a2&=&format=webp&quality=lossless&width=291&height=438">
-       				<p>The Chamber of Secrets<br>
-       				Auteur: JK Rowling<br>
-       				Prix: X DA</p>
-       			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre8.png">
+					<p>The Chamber of Secrets<br>Auteur: JK Rowling<br>Prix: X DA</p>
+				</div>
 
-       			<div class = "produit-book">
-       				<img src = "https://media.discordapp.net/attachments/705719269924536353/1499828298786799807/LzIxNDkyOC5qcGc.png?ex=69f63773&is=69f4e5f3&hm=52fab43224ec1853042d77213035caeb93f0d79f6b698b580d2add311d96cc45&=&format=webp&quality=lossless&width=625&height=938">
-       				<p>The Prisoner of Azkaban<br>
-       				Auteur: JK Rowling<br>
-       				Prix: X DA</p>
-       			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre7.png">
+					<p>The Prisoner of Azkaban<br>Auteur: JK Rowling<br>Prix: X DA</p>
+				</div>
 
-       			<div class = "produit-book">
-       				<img src = "https://media.discordapp.net/attachments/705719269924536353/1499828799573852170/LmpwZw.png?ex=69f637eb&is=69f4e66b&hm=980229ede83d68e4ca6a56d8b829afd3ff24371d738e0b0b69ce7cb74135a3e0&=&format=webp&quality=lossless&width=395&height=583">
-       				<p>The Goblet of Fire<br>
-       				Auteur: JK Rowling<br>
-       				Prix: X DA</p>
-       			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre6.png">
+					<p>The Goblet of Fire<br>Auteur: JK Rowling<br>Prix: X DA</p>
+				</div>
 
-       			<div class = "produit-book">
-       				<img src = "https://media.discordapp.net/attachments/705719269924536353/1499829086577627268/MS5qcGc.png?ex=69f6382f&is=69f4e6af&hm=dd779266010be8f4c314a248caf17dffdbb762eb0e4fa5937d89e80d396e88f8&=&format=webp&	quality=lossless&width=625&height=938">
-       				<p>The Order of the Phoenix<br>
-       				Auteur: JK Rowling<br>
-       				Prix: X DA</p>
-       			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre5.png">
+					<p>The Order of the Phoenix<br>Auteur: JK Rowling<br>Prix: X DA</p>
+				</div>
 
-       			<div class = "produit-book">
-       				<img src = "https://media.discordapp.net/attachments/705719269924536353/1499829483799318591/anBn.png?ex=69f6388e&is=69f4e70e&hm=3b6935cad43448c0a94e4d3f79f44e2d5545a10a46c1a4cd54917713adc04bc1&=&format=webp&quality=lossless&width=414&height=625">
-       				<p>The Half-Blood Prince<br>
-       				Auteur: JK Rowling<br>
-       				Prix: X DA</p>
-       			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre4.png">
+					<p>The Half-Blood Prince<br>Auteur: JK Rowling<br>Prix: X DA</p>
+				</div>
 
-       			<div class = "produit-book">
-       				<img src = "https://media.discordapp.net/attachments/705719269924536353/1499830108322529310/	LmpwZw.png?ex=69f63923&is=69f4e7a3&hm=0865152cfd070226820d35785dec23cee9663e2530593cecc655d16023aeeb1b&=&format=webp&quality=lossless&width=301&height=438">
-       				<p>The Deathly Hallows<br>
-       				Auteur: JK Rowling<br>
-       				Prix: X DA</p>
-       			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre3.png">
+					<p>The Deathly Hallows<br>Auteur: JK Rowling<br>Prix: X DA</p>
+				</div>
 
-       			<div class = "produit-book">
-       				<img src = "https://media.discordapp.net/attachments/705719269924536353/1499830487181426840/Yy12MQ.png?ex=69f6397d&is=69f4e7fd&hm=a6de90ee07c299012cd2c879336608c056bd62ecc6b083120f11ca5bcb1c01a1&=&format=webp&quality=lossless&width=303&height=438">
-       				<p>The Ballad of Songbirds and Snakes<br>
-       				Auteur: Suzanne Collins<br>
-       				Prix: X DA</p>
-       			</div>
+				<div class="produit-book">
+					<img src="image/produit_livre2.png">
+					<p>The Ballad of Songbirds and Snakes<br>Auteur: Suzanne Collins<br>Prix: X DA</p>
+				</div>
 
-       			<div class = "produit-book">
-       				<img src = "https://media.discordapp.net/attachments/705719269924536353/1499830969727717517/MTE3NTQzNDM.png?ex=69f639f0&is=69f4e870&hm=6867c96de686cf5fac9bff91f10c34849b738934d2e261af717fbeb65fce6fd8&=&format=webp&quality=lossless&width=293&height=438">
-       				<p>Sunrise on the Reaping<br>
-       				Auteur: Suzanne Collins<br>
-       				Prix: X DA</p>
-       			</div>
-       		</div>
+				<div class="produit-book">
+					<img src="image/produit_livre1.png">
+					<p>Sunrise on the Reaping<br>Auteur: Suzanne Collins<br>Prix: X DA</p>
+				</div>
+
+			</div>
 		</div>
 	</div>
 
-	<hr>
-
 	<footer>
-        <center><p>&copy; 2026 Adlis - Produits</p></center>
-    </footer>
+		<p>&copy; 2026 Adlis - Produits</p>
+	</footer>
 
 </body>
+</html>
