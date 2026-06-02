@@ -53,6 +53,22 @@ window.addEventListener('load', () => {
     if (isLoggedIn === 'true' && userName && accountText) {
         accountText.textContent = userName;
     }
+
+    const welcomeVideo = document.getElementById('welcomeVideo');
+    if (welcomeVideo) {
+        welcomeVideo.muted = true;
+        welcomeVideo.playsInline = true;
+        welcomeVideo.setAttribute('playsinline', '');
+        welcomeVideo.setAttribute('disablepictureinpicture', '');
+        welcomeVideo.setAttribute('controlsList', 'nodownload nofullscreen noremoteplayback');
+        welcomeVideo.addEventListener('ended', () => {
+            welcomeVideo.pause();
+            welcomeVideo.currentTime = welcomeVideo.duration || welcomeVideo.currentTime;
+        });
+        welcomeVideo.play().catch(() => {
+            // autoplay may be blocked, but video will still show if the browser allows it
+        });
+    }
 });
 
 // Gestion de la page panier

@@ -59,14 +59,14 @@ LES LIENS ENTRES PAGES :
 
 
 TASKS: 
-- preparer les "name" pour le JS et la DB.
+- ajouter une vidéo de bienvenue dans l'index
 
 FINISHED TASKS: 
 - faire le logo du site 
 - ajouter le logo du site dans tout les anglets des pages.
 - faire les liens entre pages.
 - rendre les chemain relatifs.
-- changer la police
+- changer la police.
 - idnetifier l'identité visuel (a ne pas ignorer).
 - ajouter le README. 
 
