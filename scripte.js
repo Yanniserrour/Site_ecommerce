@@ -16,43 +16,20 @@ if (container && registerBtn && loginBtn) {
 // Sidebar Menu Toggle
 const burgerMenuBtn = document.getElementById('burgerMenuBtn');
 const sidebarMenu = document.getElementById('sidebarMenu');
-const closeMenuBtn = document.getElementById('closeMenuBtn');
 const accountBtn = document.getElementById('accountBtn');
 
-// Open sidebar
-if (burgerMenuBtn) {
-    burgerMenuBtn.addEventListener('click', () => {
-        sidebarMenu.classList.add('active');
-        document.body.style.overflow = 'hidden';
+if (burgerMenuBtn && sidebarMenu) {
+    burgerMenuBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        sidebarMenu.classList.toggle('active');
     });
-}
 
-// Close sidebar
-if (closeMenuBtn) {
-    closeMenuBtn.addEventListener('click', () => {
-        sidebarMenu.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    });
-}
-
-// Close sidebar when clicking outside
-document.addEventListener('click', (e) => {
-    if (sidebarMenu && sidebarMenu.classList.contains('active')) {
+    document.addEventListener('click', function(e) {
         if (!sidebarMenu.contains(e.target) && !burgerMenuBtn.contains(e.target)) {
             sidebarMenu.classList.remove('active');
-            document.body.style.overflow = 'auto';
         }
-    }
-});
-
-// Close sidebar when clicking on a nav link
-const sidebarLinks = document.querySelectorAll('.sidebar-link');
-sidebarLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        sidebarMenu.classList.remove('active');
-        document.body.style.overflow = 'auto';
     });
-});
+}
 
 // Account button functionality
 if (accountBtn) {
@@ -199,3 +176,74 @@ if (adminLogoutBtn) {
         window.location.href = 'auth.html';
     });
 }
+
+// Page dynamique: 
+const modalOverlay = document.createElement('div');
+modalOverlay.className = 'product-modal-overlay';
+modalOverlay.innerHTML = `
+    <div class="product-modal">
+        <button class="product-modal-close">&times;</button>
+        <img class="product-modal-img" src="" alt="">
+        <h2 class="product-modal-title"></h2>
+        <p class="product-modal-author"></p>
+        <p class="product-modal-price"></p>
+        <button class="product-modal-cart">Ajouter au panier</button>
+    </div>
+`;
+document.body.appendChild(modalOverlay);
+
+const modalImg = modalOverlay.querySelector('.product-modal-img');
+const modalTitle = modalOverlay.querySelector('.product-modal-title');
+const modalAuthor = modalOverlay.querySelector('.product-modal-author');
+const modalPrice = modalOverlay.querySelector('.product-modal-price');
+const modalCloseBtn = modalOverlay.querySelector('.product-modal-close');
+
+function openProductModal(bookElement) {
+    const img = bookElement.querySelector('img');
+    const p = bookElement.querySelector('p');
+
+    if (!img || !p) return;
+
+    const parts = p.innerHTML.split('<br>');
+
+    let title = '';
+    let author = '';
+    let price = 'X DA';
+
+    if (bookElement.classList.contains('produit-book')) {
+        title = parts[0] ? parts[0].trim() : '';
+        author = parts[1] ? parts[1].replace('Auteur:', '').trim() : '';
+        price = parts[2] ? parts[2].replace('Prix:', '').trim() : 'X DA';
+    } else {
+        title = parts[0] ? parts[0].trim() : '';
+        author = parts[1] ? parts[1].trim() : '';
+    }
+
+    modalImg.src = img.src;
+    modalTitle.textContent = title;
+    modalAuthor.textContent = author;
+    modalPrice.textContent = price;
+    modalOverlay.classList.add('active');
+}
+
+document.querySelectorAll('.index-book').forEach(function(book) {
+    book.addEventListener('click', function() {
+        openProductModal(book);
+    });
+});
+
+document.querySelectorAll('.produit-book').forEach(function(book) {
+    book.addEventListener('click', function() {
+        openProductModal(book);
+    });
+});
+
+modalCloseBtn.addEventListener('click', function() {
+    modalOverlay.classList.remove('active');
+});
+
+modalOverlay.addEventListener('click', function(e) {
+    if (e.target === modalOverlay) {
+        modalOverlay.classList.remove('active');
+    }
+});

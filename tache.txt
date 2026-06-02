@@ -1,44 +1,40 @@
 LES PAGES HTML :  
 #auth      :    (terminé) Yani
 #formulaire:    (terminé) Yani
-#Profile   :    (non)     Yani
-
+#Profile   :    (terminé) Yani
 
 #panier    :    (terminé) nadjib
 #admin     :    (terminé) nadjib
 
-#index     :    (non)     Salim
-#produit   :    (non)     Salim
+#index     :    (terminé) Salim
+#produit   :    (terminé) Salim
 
-
-
-
-#profile (A FAIRE)
-    -> améliorer l'apercus de la photo de profile
+#profile (terminé)
+    -> améliorer l'apercus de la photo de profile (terminé)
     -> ajouter l'entet du site (SANS LA BARRE DES TACHES, SANS LA BARE DE RECHERCHE)
-        uniquement le logo du site pour retour en arriére.
+        uniquement le logo du site pour retour en arriére. (terminé)
 
-#index (A FAIRE)
+#index (terminé)
     ->ajouter le menue "sidebar menu", a l'interieur on trouve le : 
         panier, connexion, produit avec leurs logos qui enménent vers 
-        leurs page respectives.
+        leurs page respectives. (termine)
         ajouter les livres disponible dans le dossier image. (terminé)
     ->ajouter les page dynamique qui s'ouvrent en cliquent sur le livre on trouvera
-        le prix, les détails, le boutton ajouter au panier, et une crois pour sortire
+        le prix, les détails, le boutton ajouter au panier, et une crois pour sortire (termine)
 
-#produit (A FAIRE)
+#produit (terminé)
     ->enlever le logo de "mon compte sur la droite, il sert a rien. (terminé)
-    ->améliorer le style de "catégorie" pour avoire un méilleur rendue. 
+    ->améliorer le style de "catégorie" pour avoire un méilleur rendue.  (termine)
     ->faire la catégorie intéligente pour la recherche de livre (JS).
     ->ajouter les livres diponible dans le dossier "image" ainsi que de nouveaux. (terminé)
 
-#admin (fait)
+#admin  (terminé)
     ->enlever la barre de recherche et le logo authentification elle sert a rien(terminé)
     ->ajouter juste le boutton déconnexion pour deconnecté (terminé)
     ->enlever les bouttons panier acceuil, menue, panier ils servent a rein.(terminé)
     ->le rendre intéractif avec le JS.(terminé)
 
-#panier(fait)
+#panier (terminé)
     ->enlever la barre de recherche elle sert a rien.(terminé)
     ->enlever le menue, panier, produit ils servent a rien.(terminé)
     ->laisser juste le logo de photo de profile pour montrer la connexion.(terminé)
@@ -62,94 +58,27 @@ LES LIENS ENTRES PAGES :
     panier ->formulaire (oui)
 
 
-LE README : 
-(vide)
-
-
 TASKS: 
 - preparer les "name" pour le JS et la DB.
-- ajouter le README. 
-- ajouter des liens conditionnel : si l'utilisateur est pas connecter, 
-    et si il clique sur panier il est diriger vers authentification, au panier
-    sinon.
 
 FINISHED TASKS: 
-- Le logo est fini
+- faire le logo du site 
 - ajouter le logo du site dans tout les anglets des pages.
 - faire les liens entre pages.
 - rendre les chemain relatifs.
 - changer la police
 - idnetifier l'identité visuel (a ne pas ignorer).
+- ajouter le README. 
 
 
-
-
+DINAMICITÉ DU SITE: 
+ -liens conditionnel
+ -ajout du livre a travers la page admin 
 
 
 IDENTITÉ VISUEL: 
-1.Police: 
-Police principale appliquée globalement : DMSerifDisplay
-Police de secours : sans-serif
-Déclaration @font-face :
-font-family: 'DMSerifDisplay'
-source : DMSerifDisplay-Regular.ttf
-autre: 
-font-family: 'Raleway', sans-serif sur certains éléments (search-input, brand-name, titres de produits, options, etc.)
-font-family: sans-serif utilisé localement sur .panier-card h1
-
-2.Couleurs:
-Couleur principale
-Violet profond : #512da8
-Couleurs secondaires / accents
-Bleu moyen : #5c6bc0
-Bleu plus foncé : #3f1d8c
-Bleu ciel / pastel : #c9d6ff
-Gris clair : #e2e2e2
-Bleu vif : #667eea
-Violet riche : #764ba2
-Blanc / quasi-blanc : #fff, #ffffff
-Très clair : #eee, #f9f9f9, #fafafa
-Gris texte : #333
-Gris neutre : #666, #555, #888
-Texte sombre accent : #155724
-Couleurs de boutons et états
-Boutons primaires :
-fond : #512da8
-hover : #3f1d8c
-Boutons secondaires / alertes :
-fond : #ffe9e9
-hover : #ffcccc
-Bouton admin logout :
-fond : rgba(255, 255, 255, 0.18)
-hover : rgba(255, 255, 255, 0.3)
-Boutons transparents :
-transparent !important
-Boutons de recherche / menu :
-fond : rgba(255, 255, 255, 0.2) / hover rgba(255, 255, 255, 0.4)
-Dégradés importants
-Fond général : linear-gradient(to right, #e2e2e2, #c9d6ff)
-Éléments de navigation/toggle : linear-gradient(to right, #5c6bc0, #512da8)
-Page index / produit : linear-gradient(135deg, #667eea 0%, #764ba2 100%)
-Menu latéral / dropdown : linear-gradient(180deg, #512da8 0%, #3f1d8c 100%)
-Bouton compte : linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3))
-Palette complémentaire
-Succès clair : #d4edda
-Succès texte : #155724
-Avertissement : #fff3cd
-Avertissement texte : #856404
-Fond alerte panier vide : #fff4df
-Texte alerte : #5d4321
-
-
-Résumé
 identité globale : violet / bleu / blanc
 police unique : DMSerifDisplay
-fallback : sans-serif
+fallback : sans-serif, Raleway
 accents : #5c6bc0, #3f1d8c, #667eea, #764ba2
 neutres : #fff, #eee, #f9f9f9, #fafafa, #333
-Toutes ces informations sont extraites directement de style.css, sans modifier la structure du site.
-
-Raptor mini (Preview) • 1.3 credits
-
-
-
