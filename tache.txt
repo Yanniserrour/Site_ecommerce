@@ -13,23 +13,21 @@ LES PAGES HTML :
         leurs page respectives.
         ajouter les livres disponible dans le dossier image. (terminé)
     ->ajouter les page dynamique qui s'ouvrent en cliquent sur le livre on trouvera
-        le prix, les détails, le boutton ajouter au panier, et une crois pour sortire.
-    ->Afficher les livres suggerer pendent la recherche (Ex: ecrire Alch, et la suggestion
-        affiche Alchimiste).
+        le prix, les détails, le boutton ajouter au panier, et une crois pour sortire
 
 #produit (A FAIRE)
     ->enlever le logo de "mon compte sur la droite, il sert a rien. (terminé)
-    ->améliorer le style de la page "catégorie" pour avoire un méilleur rendue. 
+    ->améliorer le style de "catégorie" pour avoire un méilleur rendue. 
     ->faire la catégorie intéligente pour la recherche de livre (JS).
     ->ajouter les livres diponible dans le dossier "image" ainsi que de nouveaux. (terminé)
 
-#admin (A FAIRE)
+#admin (fait)
     ->enlever la barre de recherche et le logo authentification elle sert a rien
     ->ajouter juste le boutton déconnexion pour deconnecté 
     ->enlever les bouttons panier acceuil, menue, panier ils servent a rein.
     ->le rendre intéractif avec le JS.
 
-#panier(A FAIRE)
+#panier(fait)
     ->enlever la barre de recherche elle sert a rien.
     ->enlever le menue, panier, produit ils servent a rien.
     ->laisser juste le logo de photo de profile pour montrer la connexion.
@@ -50,7 +48,7 @@ LES LIENS ENTRES PAGES :
     index  ->profile    (non)
     index  ->panier     (non)
     index  ->produit    (non)
-    panier ->formulaire (non)
+    panier ->formulaire (oui)
 
 
 LE README : 
