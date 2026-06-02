@@ -22,16 +22,16 @@ LES PAGES HTML :
     ->ajouter les livres diponible dans le dossier "image" ainsi que de nouveaux. (terminé)
 
 #admin (fait)
-    ->enlever la barre de recherche et le logo authentification elle sert a rien
-    ->ajouter juste le boutton déconnexion pour deconnecté 
-    ->enlever les bouttons panier acceuil, menue, panier ils servent a rein.
-    ->le rendre intéractif avec le JS.
+    ->enlever la barre de recherche et le logo authentification elle sert a rien(terminé)
+    ->ajouter juste le boutton déconnexion pour deconnecté (terminé)
+    ->enlever les bouttons panier acceuil, menue, panier ils servent a rein.(terminé)
+    ->le rendre intéractif avec le JS.(terminé)
 
 #panier(fait)
-    ->enlever la barre de recherche elle sert a rien.
-    ->enlever le menue, panier, produit ils servent a rien.
-    ->laisser juste le logo de photo de profile pour montrer la connexion.
-    ->rendre la page intéractif (JS).
+    ->enlever la barre de recherche elle sert a rien.(terminé)
+    ->enlever le menue, panier, produit ils servent a rien.(terminé)
+    ->laisser juste le logo de photo de profile pour montrer la connexion.(terminé)
+    ->rendre la page intéractif (JS).(terminé)
 
 
 LA PAGE CSS : 
