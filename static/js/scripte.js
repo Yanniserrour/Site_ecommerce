@@ -36,9 +36,9 @@ if (accountBtn) {
     accountBtn.addEventListener('click', () => {
         const isLoggedIn = localStorage.getItem('userLoggedIn');
         if (isLoggedIn === 'true') {
-            window.location.href = 'profile.html';
+            window.location.href = '/profile';
         } else {
-            window.location.href = 'auth.html';
+            window.location.href = '/auth';
         }
     });
 }
@@ -123,7 +123,7 @@ if (panierProfileBtn) {
     // Rediriger vers le profil ou la connexion depuis le panier
     panierProfileBtn.addEventListener('click', () => {
         const isLoggedIn = localStorage.getItem('userLoggedIn');
-        window.location.href = isLoggedIn === 'true' ? 'profile.html' : 'auth.html';
+        window.location.href = isLoggedIn === 'true' ? '/profile' : '/auth';
     });
 }
 
@@ -189,7 +189,7 @@ if (adminLogoutBtn) {
     adminLogoutBtn.addEventListener('click', () => {
         localStorage.removeItem('userLoggedIn');
         localStorage.removeItem('userName');
-        window.location.href = 'auth.html';
+        window.location.href = '/auth';
     });
 }
 
@@ -261,5 +261,19 @@ modalCloseBtn.addEventListener('click', function() {
 modalOverlay.addEventListener('click', function(e) {
     if (e.target === modalOverlay) {
         modalOverlay.classList.remove('active');
+    }
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    const video = document.getElementById("welcomeVideo");
+
+    if (video) {
+        video.addEventListener("canplay", function() {
+            video.classList.remove("is-hidden");
+        });
+        if (video.readyState >= 3) {
+            video.classList.remove("is-hidden");
+        }
     }
 });

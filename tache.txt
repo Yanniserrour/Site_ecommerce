@@ -1,3 +1,4 @@
+##FRONT-END:
 LES PAGES HTML :  
 #auth      :    (terminé) Yani
 #formulaire:    (terminé) Yani
@@ -82,3 +83,5 @@ police unique : DMSerifDisplay
 fallback : sans-serif, Raleway
 accents : #5c6bc0, #3f1d8c, #667eea, #764ba2
 neutres : #fff, #eee, #f9f9f9, #fafafa, #333
+
+##BACK-END:
