@@ -13,7 +13,9 @@ LES PAGES HTML :
         leurs page respectives.
         ajouter les livres disponible dans le dossier image. (terminé)
     ->ajouter les page dynamique qui s'ouvrent en cliquent sur le livre on trouvera
-        le prix, les détails, le boutton ajouter au panier, et une crois pour sortire
+        le prix, les détails, le boutton ajouter au panier, et une crois pour sortire.
+    ->Afficher les livres suggerer pendent la recherche (Ex: ecrire Alch, et la suggestion
+        affiche Alchimiste).
 
 #produit (A FAIRE)
     ->enlever le logo de "mon compte sur la droite, il sert a rien.
