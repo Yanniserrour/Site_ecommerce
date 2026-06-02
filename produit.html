@@ -9,10 +9,7 @@
 </head>
 
 <body class="produit-body">
-
-	<!-- Fixed Header (same structure as index.html) -->
 	<div class="index-header">
-		<!-- Logo and Brand -->
 		<div class="index-brand">
 			<a href="./index.html" class="brand-link">
 				<img src="./assets/img/LOGO_site.png" alt="Adlis Logo" class="brand-logo">
@@ -20,7 +17,6 @@
 			</a>
 		</div>
 
-		<!-- Search Bar -->
 		<div class="search-wrapper">
 			<input type="text" class="search-input" placeholder="Chercher par titre...">
 			<button type="submit" class="search-btn">
@@ -28,25 +24,35 @@
 			</button>
 		</div>
 
-		<!-- Burger Menu: pure CSS via <details>, no JS needed -->
-		<details class="burger-details">
-			<summary class="burger-summary">
-				<img src="./assets/img/menus.png" alt="Menu">
-			</summary>
-			<nav class="produit-dropdown-menu">
-				<a href="javascript:history.back()">Retour</a>
-				<a href="./index.html">Accueil</a>
-				<a href="./produit.html">Produit</a>
-				<a href="./panier.html">Panier</a>
-				<a href="./profil.html">Profil</a>
-			</nav>
-		</details>
+		<button class="burger-menu-btn" id="burgerMenuBtn">
+			<img src="./assets/img/menus.png" alt="Menu">
+		</button>
 	</div>
 
-	<!-- Main Layout -->
-	<div class="produit-layout">
 
-		<!-- Left Sidebar: Filters -->
+	<div class="sidebar-menu" id="sidebarMenu">
+		<div class="sidebar-content">
+			<nav class="sidebar-nav">
+				<a href="./produit.html" class="sidebar-link">
+					<span>PRODUITS</span>
+				</a>
+				<a href="./panier.html" class="sidebar-link">
+					<span>PANIER</span>
+				</a>
+				<a href="./profile.html" class="sidebar-link">
+					<span>PROFIL</span>
+				</a>
+			</nav>
+			<div class="sidebar-account">
+				<button class="account-btn" id="accountBtn">
+					<img src="./assets/img/profil-de-lutilisateur.png" alt="Profil" class="account-icon">
+					<span id="accountText">SE CONNECTER</span>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="produit-layout">
 		<div class="produit-tab">
 			<div class="produit-categorie">
 				<h3>CATEGORIE :</h3>
@@ -80,12 +86,11 @@
 			</div>
 		</div>
 
-		<!-- Product Grid -->
 		<div class="produit-produits">
 			<div class="produit-pmenu">
 				<p>Résultats : 1 - 20</p>
 				<button>
-					<img src="https://media.discordapp.net/attachments/705719269924536353/1499702726823776308/image.png?ex=69f5c281&is=69f47101&hm=0f5b090d7b2784de171748fc66022c81870aa8d96f8fbf248f45d5a7ed78ae38&=&format=webp&quality=lossless&width=640&height=640" width="20" height="20">
+					<img src="./assets/img/filtre.png" width="20" height="20">
 				</button>
 			</div>
 
@@ -199,5 +204,6 @@
 		<p>&copy; 2026 Adlis - Produits</p>
 	</footer>
 
+    <script src="./scripte.js"></script>
 </body>
 </html>
