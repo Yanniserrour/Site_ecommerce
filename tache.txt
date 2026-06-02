@@ -18,10 +18,10 @@ LES PAGES HTML :
         affiche Alchimiste).
 
 #produit (A FAIRE)
-    ->enlever le logo de "mon compte sur la droite, il sert a rien.
-    ->améliorer le style de "catégorie" pour avoire un méilleur rendue.
+    ->enlever le logo de "mon compte sur la droite, il sert a rien. (terminé)
+    ->améliorer le style de "catégorie" pour avoire un méilleur rendue. 
     ->faire la catégorie intéligente pour la recherche de livre (JS).
-    ->ajouter les livres diponible dans le dossier "image" ainsi que de nouveaux.
+    ->ajouter les livres diponible dans le dossier "image" ainsi que de nouveaux. (terminé)
 
 #admin (A FAIRE)
     ->enlever la barre de recherche et le logo authentification elle sert a rien
