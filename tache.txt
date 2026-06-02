@@ -1,6 +1,9 @@
-LES PAGES HTML : 
+LES PAGES HTML :  
 #auth:       (terminé) Yani
 #formulaire: (terminé) Yani
+#Profile:    (non) Yani
+
+
 
 #profile (A FAIRE)
     -> améliorer l'apercus de la photo de profile
@@ -47,10 +50,10 @@ LA PAGE CSS :
 
 
 LES LIENS ENTRES PAGES : 
-    index  ->profile    (non)
-    index  ->panier     (non)
-    index  ->produit    (non)
-    panier ->formulaire (non)
+    index  ->profile    (oui)
+    index  ->panier     (oui)
+    index  ->produit    (oui)
+    panier ->formulaire (oui)
 
 
 LE README : 
@@ -59,17 +62,85 @@ LE README :
 
 TASKS: 
 - preparer les "name" pour le JS et la DB.
-- faire les liens entre pages.
-- ajouter le README.
-- ajouter le logo du site dans tout les anglets des pages.
-- idnetifier l'identité visuél (a ne pas ignorer).
+- ajouter le README. 
 
 FINISHED TASKS: 
-- Le logo est fini (si vous voulez le modifier)
+- Le logo est fini
+- ajouter le logo du site dans tout les anglets des pages.
+- faire les liens entre pages.
+- rendre les chemain relatifs.
+- changer la police
+- idnetifier l'identité visuel (a ne pas ignorer).
+
+
+
+
+
 
 IDENTITÉ VISUEL: 
-    couleur boutons: #
-    couleurs fonds : #
+1.Police: 
+Police principale appliquée globalement : DMSerifDisplay
+Police de secours : sans-serif
+Déclaration @font-face :
+font-family: 'DMSerifDisplay'
+source : DMSerifDisplay-Regular.ttf
+autre: 
+font-family: 'Raleway', sans-serif sur certains éléments (search-input, brand-name, titres de produits, options, etc.)
+font-family: sans-serif utilisé localement sur .panier-card h1
+
+2.Couleurs:
+Couleur principale
+Violet profond : #512da8
+Couleurs secondaires / accents
+Bleu moyen : #5c6bc0
+Bleu plus foncé : #3f1d8c
+Bleu ciel / pastel : #c9d6ff
+Gris clair : #e2e2e2
+Bleu vif : #667eea
+Violet riche : #764ba2
+Blanc / quasi-blanc : #fff, #ffffff
+Très clair : #eee, #f9f9f9, #fafafa
+Gris texte : #333
+Gris neutre : #666, #555, #888
+Texte sombre accent : #155724
+Couleurs de boutons et états
+Boutons primaires :
+fond : #512da8
+hover : #3f1d8c
+Boutons secondaires / alertes :
+fond : #ffe9e9
+hover : #ffcccc
+Bouton admin logout :
+fond : rgba(255, 255, 255, 0.18)
+hover : rgba(255, 255, 255, 0.3)
+Boutons transparents :
+transparent !important
+Boutons de recherche / menu :
+fond : rgba(255, 255, 255, 0.2) / hover rgba(255, 255, 255, 0.4)
+Dégradés importants
+Fond général : linear-gradient(to right, #e2e2e2, #c9d6ff)
+Éléments de navigation/toggle : linear-gradient(to right, #5c6bc0, #512da8)
+Page index / produit : linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+Menu latéral / dropdown : linear-gradient(180deg, #512da8 0%, #3f1d8c 100%)
+Bouton compte : linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3))
+Palette complémentaire
+Succès clair : #d4edda
+Succès texte : #155724
+Avertissement : #fff3cd
+Avertissement texte : #856404
+Fond alerte panier vide : #fff4df
+Texte alerte : #5d4321
+
+
+Résumé
+identité globale : violet / bleu / blanc
+police unique : DMSerifDisplay
+fallback : sans-serif
+accents : #5c6bc0, #3f1d8c, #667eea, #764ba2
+neutres : #fff, #eee, #f9f9f9, #fafafa, #333
+Toutes ces informations sont extraites directement de style.css, sans modifier la structure du site.
+
+Raptor mini (Preview) • 1.3 credits
 
 
 
