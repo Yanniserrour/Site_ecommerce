@@ -19,7 +19,7 @@ LES PAGES HTML :
 
 #produit (A FAIRE)
     ->enlever le logo de "mon compte sur la droite, il sert a rien. (terminé)
-    ->améliorer le style de "catégorie" pour avoire un méilleur rendue. 
+    ->améliorer le style de la page "catégorie" pour avoire un méilleur rendue. 
     ->faire la catégorie intéligente pour la recherche de livre (JS).
     ->ajouter les livres diponible dans le dossier "image" ainsi que de nouveaux. (terminé)
 

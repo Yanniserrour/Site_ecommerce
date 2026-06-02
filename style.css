@@ -248,11 +248,12 @@ body {
 }
 
 
+
+
 /*partie formulaire*/
 .form-body {
     height: 100vh;
 }
-
 .form-card {
     background-color: #fff;
     border-radius: 30px;
