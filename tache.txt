@@ -1,7 +1,10 @@
 LES PAGES HTML :  
 #auth:       (terminé) Yani
 #formulaire: (terminé) Yani
-#Profile:    (non) Yani
+#Profile:    (non)     Yani
+
+
+
 
 
 
@@ -48,15 +51,9 @@ LA PAGE CSS :
 
 
 LES LIENS ENTRES PAGES : 
-<<<<<<< HEAD
     index  ->profile    (oui)
     index  ->panier     (oui)
     index  ->produit    (oui)
-=======
-    index  ->profile    (non)
-    index  ->panier     (non)
-    index  ->produit    (non)
->>>>>>> 6b9036745400e0630677a56c6e890345d3c10a39
     panier ->formulaire (oui)
 
 
@@ -67,6 +64,9 @@ LE README :
 TASKS: 
 - preparer les "name" pour le JS et la DB.
 - ajouter le README. 
+- ajouter des liens conditionnel : si l'utilisateur est pas connecter, 
+    et si il clique sur panier il est diriger vers authentification, au panier
+    sinon.
 
 FINISHED TASKS: 
 - Le logo est fini
