@@ -1,9 +1,14 @@
 LES PAGES HTML :  
-#auth:       (terminé) Yani
-#formulaire: (terminé) Yani
-#Profile:    (non)     Yani
+#auth      :    (terminé) Yani
+#formulaire:    (terminé) Yani
+#Profile   :    (non)     Yani
 
 
+#panier    :    (terminé) nadjib
+#admin     :    (terminé) nadjib
+
+#index     :    (non)     Salim
+#produit   :    (non)     Salim
 
 
 
