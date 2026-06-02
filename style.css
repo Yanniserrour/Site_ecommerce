@@ -708,7 +708,7 @@ body {
 
     padding: 18px 30px;      
 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.20); /* même ombre */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.20); 
 }
 
 .panier-nav,
@@ -1015,7 +1015,7 @@ body {
     padding-top: 80px;
 }
 
-/* NEW: Modern Header */
+
 .index-header {
     position: fixed;
     top: 0;
@@ -1132,7 +1132,8 @@ body {
     font-family: 'Raleway', sans-serif;
 }
 
-/* Account section in header */
+
+
 .index-account {
     display: flex;
     align-items: center;
@@ -1556,6 +1557,10 @@ footer p {
     opacity: 0.55;
     cursor: not-allowed;
 }
+
+
+
+
 
 /* partie produits */
 .produit-body {
