@@ -171,6 +171,7 @@ const adminProductsList = document.getElementById('adminProductsList');
 const adminOrdersList = document.getElementById('adminOrdersList');
 const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 const adminProductsKey = 'adlisAdminBooks';
+const adminProductsMaxCount = 5;
 
 function getAdminProducts() {
     const savedProducts = localStorage.getItem(adminProductsKey);
@@ -303,7 +304,7 @@ if (adminProductForm && adminProductsList) {
             };
 
             products.unshift(newProduct);
-            saveAdminProducts(products);
+            saveAdminProducts(products.slice(0, adminProductsMaxCount));
             renderAdminProductsList();
             renderDynamicBooks();
             adminProductForm.reset();

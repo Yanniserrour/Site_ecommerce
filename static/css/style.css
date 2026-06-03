@@ -866,6 +866,17 @@ body {
     box-shadow: 0 0 5px rgba(81,45,168,0.25);
 }
 
+.admin-body #adminProductPrice {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.admin-body #adminProductPrice::-webkit-outer-spin-button,
+.admin-body #adminProductPrice::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .admin-body input[type="submit"],
 .admin-body input[type="reset"] {
     background-color: #512da8;
