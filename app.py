@@ -26,7 +26,34 @@ def formulaire():
 @app.route('/profile')
 @app.route('/profile.html')
 def profile():
-    return render_template('profile.html')
+    user = {
+        'nom': 'Nadjib',
+        'prenom': 'Yani',
+        'age': 34,
+        'email': 'nadjib.yani@example.com',
+        'telephone': '0612345678',
+        'ville': 'Alger',
+        'avatar': 'profil-de-lutilisateur.png'
+    }
+
+    purchase_history = [
+        {
+            'date': '12/04/2026',
+            'produit': "L'Alchimiste",
+            'prix': '1200 DA',
+            'status': 'Livré',
+            'status_class': 'delivered'
+        },
+        {
+            'date': '20/04/2026',
+            'produit': 'Think Again',
+            'prix': '2500 DA',
+            'status': 'En cours',
+            'status_class': 'pending'
+        }
+    ]
+
+    return render_template('profile.html', user=user, purchase_history=purchase_history)
 
 # Route pour la page des produits
 @app.route('/produit')

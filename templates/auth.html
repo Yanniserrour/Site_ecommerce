@@ -13,7 +13,7 @@
     <div class="container" id="container">
         <!--le contenaire d'inscription-->
         <div class="form-container sign-up">
-            <form>
+            <form id="signupForm">
                 <h1>Crée un compte</h1>
                 <div class="social-icons">
                     <a href="#" class="icon"><i class="fa-brands fa-google"></i></a>
@@ -24,14 +24,15 @@
                 <span>Ou utilisez votre Email</span>
                 <input type="text" placeholder="Nom">
                 <input type="email" placeholder="Mail">
+                <input type="date" placeholder="Date de naissance" id="signupBirthDate">
                 <input type="password" placeholder="Mot de passe">
-                <button>Inscription</button>
+                <button type="submit">Inscription</button>
             </form>
         </div>
 
         <!--le contenaire de connexion-->
         <div class="form-container sign-in">
-            <form>
+            <form id="loginForm">
                 <h1>Conectez vous</h1>
                 <div class="social-icons">
                     <a href="#" class="icon"><i class="fa-brands fa-google"></i></a>
@@ -43,7 +44,7 @@
                 <input type="email" placeholder="Mail">
                 <input type="password" placeholder="Mot de passe">
                 <a href="#">Mot de passe oublier?</a>
-                <button>Conexion</button>
+                <button type="submit">Conexion</button>
             </form>
         </div>
 

@@ -17,6 +17,7 @@ if (container && registerBtn && loginBtn) {
 const burgerMenuBtn = document.getElementById('burgerMenuBtn');
 const sidebarMenu = document.getElementById('sidebarMenu');
 const accountBtn = document.getElementById('accountBtn');
+const defaultUserAvatar = '/static/img/profil-de-lutilisateur.png';
 
 if (burgerMenuBtn && sidebarMenu) {
     burgerMenuBtn.addEventListener('click', function(e) {
@@ -41,6 +42,7 @@ if (accountBtn) {
         if (isLoggedIn === 'true') {
             localStorage.removeItem('userLoggedIn');
             localStorage.removeItem('userName');
+            localStorage.removeItem('userAvatar');
             window.location.href = 'profile.html';
             return;
         }
@@ -62,13 +64,21 @@ window.addEventListener('load', () => {
     const accountName = document.getElementById('account-nom');
     
     if (isLoggedIn === 'true' && userName && accountText) {
-    accountText.textContent = 'SE DECONNECTER';
-    accountName.textContent = userName;
+        accountText.textContent = 'SE DECONNECTER';
+        accountName.textContent = userName;
+        if (accountIcon) {
+            accountIcon.src = localStorage.getItem('userAvatar') || defaultUserAvatar;
+        }
     } 
     else {
         if(accountText) accountText.textContent = 'SE CONNECTER';
         if(accountName) accountName.textContent = 'PROFIL';
+        if (accountIcon) {
+            accountIcon.src = defaultUserAvatar;
+        }
     }
+
+    populateProfileAge();
 
     const welcomeVideo = document.getElementById('welcomeVideo');
     if (welcomeVideo) {
@@ -244,7 +254,9 @@ function updatePanier() {
     const rows = Array.from(panierItems.querySelectorAll('tr'));
     const total = rows.reduce((sum, row) => {
         const prix = row.querySelector('.prix');
-        return sum + getPrixValue(prix ? prix.textContent : '0');
+        const qtyInput = row.querySelector('.panier-quantity');
+        const quantity = qtyInput ? Number(qtyInput.value) : 1;
+        return sum + getPrixValue(prix ? prix.textContent : '0') * (quantity > 0 ? quantity : 1);
     }, 0);
 
     panierTotal.textContent = total.toLocaleString('fr-DZ') + ' DA';
@@ -255,9 +267,11 @@ function updatePanier() {
 function createPanierRow(item) {
     const row = document.createElement('tr');
     const infoCell = document.createElement('td');
+    const quantityCell = document.createElement('td');
     const priceCell = document.createElement('td');
     const actionCell = document.createElement('td');
     const title = document.createElement('strong');
+    const quantityInput = document.createElement('input');
     const deleteBtn = document.createElement('button');
 
     row.dataset.cartId = item.id;
@@ -269,13 +283,33 @@ function createPanierRow(item) {
         document.createElement('br'),
         item.author || ''
     );
+
+    quantityInput.type = 'number';
+    quantityInput.min = '1';
+    quantityInput.value = item.quantity || 1;
+    quantityInput.className = 'panier-quantity';
+    quantityInput.addEventListener('change', () => {
+        const newQuantity = Number(quantityInput.value) || 1;
+        const storedItems = getStoredItems(cartItemsKey);
+        const currentItem = storedItems.find((stored) => stored.id === item.id);
+
+        if (currentItem) {
+            currentItem.quantity = newQuantity;
+            saveStoredItems(cartItemsKey, storedItems);
+        }
+
+        updatePanier();
+    });
+
+    quantityCell.appendChild(quantityInput);
+
     priceCell.className = 'prix';
     priceCell.textContent = item.price || '0 DA';
     deleteBtn.className = 'panier-delete';
     deleteBtn.type = 'button';
     deleteBtn.textContent = 'Supprimer';
     actionCell.appendChild(deleteBtn);
-    row.append(infoCell, priceCell, actionCell);
+    row.append(infoCell, quantityCell, priceCell, actionCell);
 
     return row;
 }
@@ -785,14 +819,25 @@ modalOverlay.addEventListener('click', function(e) {
 modalCartBtn.addEventListener('click', function() {
     if (selectedProduct) {
         const cartItems = getStoredItems(cartItemsKey);
+        const existingItem = cartItems.find((item) =>
+            item.title === selectedProduct.title &&
+            item.author === selectedProduct.author &&
+            item.price === selectedProduct.price
+        );
 
-        cartItems.push({
-            id: Date.now().toString(),
-            title: selectedProduct.title,
-            author: selectedProduct.author,
-            category: selectedProduct.category,
-            price: selectedProduct.price
-        });
+        if (existingItem) {
+            existingItem.quantity = (existingItem.quantity || 1) + 1;
+        } else {
+            cartItems.push({
+                id: Date.now().toString(),
+                title: selectedProduct.title,
+                author: selectedProduct.author,
+                category: selectedProduct.category,
+                price: selectedProduct.price,
+                quantity: 1
+            });
+        }
+
         saveStoredItems(cartItemsKey, cartItems);
     }
 
@@ -808,7 +853,84 @@ if (panierConfirmLink) {
     });
 }
 
+const loginForm = document.getElementById('loginForm');
+const signupForm = document.getElementById('signupForm');
 const orderForm = document.getElementById('commandeForm');
+
+function saveLoggedUser(name, birthDate) {
+    localStorage.setItem('userLoggedIn', 'true');
+    localStorage.setItem('userName', name);
+    localStorage.setItem('userAvatar', defaultUserAvatar);
+    if (birthDate) {
+        localStorage.setItem('userBirthDate', birthDate);
+    }
+}
+
+function calculateAge(birthDateString) {
+    if (!birthDateString) {
+        return null;
+    }
+
+    const birthDate = new Date(birthDateString);
+    if (Number.isNaN(birthDate.getTime())) {
+        return null;
+    }
+
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() - birthDate.getDate();
+
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age -= 1;
+    }
+
+    return age;
+}
+
+function populateProfileAge() {
+    const birthDate = localStorage.getItem('userBirthDate');
+    const profileAge = document.getElementById('profileAge');
+    const profileBirthDate = document.getElementById('profileBirthDate');
+
+    if (!profileAge || !profileBirthDate) {
+        return;
+    }
+
+    if (birthDate) {
+        const age = calculateAge(birthDate);
+        if (age !== null) {
+            profileAge.textContent = age;
+            profileBirthDate.textContent = birthDate;
+            return;
+        }
+    }
+
+    profileBirthDate.textContent = 'Non défini';
+}
+
+if (loginForm) {
+    loginForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const emailInput = this.querySelector('input[type="email"]');
+        const userName = emailInput ? emailInput.value.split('@')[0] || 'Utilisateur' : 'Utilisateur';
+        saveLoggedUser(userName);
+        window.location.href = 'index.html';
+    });
+}
+
+if (signupForm) {
+    signupForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const nameInput = this.querySelector('input[type="text"]');
+        const birthDateInput = document.getElementById('signupBirthDate');
+        const userName = nameInput ? nameInput.value.trim() || 'Utilisateur' : 'Utilisateur';
+        const birthDate = birthDateInput ? birthDateInput.value : '';
+        saveLoggedUser(userName, birthDate);
+        window.location.href = 'index.html';
+    });
+}
+
 if (orderForm) {
     orderForm.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -828,8 +950,14 @@ if (orderForm) {
         const phone = inputs[3] ? inputs[3].value.trim() : '';
 
         const existingOrders = getStoredItems(adminOrdersKey);
-        const orderProducts = cartItems.map((item) => item.title || 'Produit inconnu').join(', ');
-        const orderTotal = cartItems.reduce((sum, item) => sum + getPrixValue(item.price), 0);
+        const orderProducts = cartItems.map((item) => {
+            const quantity = item.quantity || 1;
+            return `${item.title || 'Produit inconnu'} x${quantity}`;
+        }).join(', ');
+        const orderTotal = cartItems.reduce((sum, item) => {
+            const quantity = item.quantity || 1;
+            return sum + getPrixValue(item.price) * quantity;
+        }, 0);
 
         existingOrders.push({
             id: Date.now().toString() + Math.random().toString(16).slice(2),
