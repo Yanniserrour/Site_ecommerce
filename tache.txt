@@ -86,11 +86,10 @@ neutres : #fff, #eee, #f9f9f9, #fafafa, #333
         les intérogation DB, les controles"
 
 DINAMICITÉ DU SITE: 
--liens conditionnel (terminé) 
- -possibilité de deconnexion (terminé)
- -ajout du livre a travers la page admin, et la la db. (sans la db pour l'instant)
- -ajouter le livre au panier en cas de commande (termine)
- -filtrer les livre selon la catégorie (termine)
+ -liens conditionnel (terminé)
+ -possibilité de deconnexion 
+ -ajout du livre a travers la page admin, et la la db.
+ -afficher la photo de l'utilisateur en cas de connexion.
  -ajouter le livre au panier en cas de commande 
  -filtrer les livre selon la catégorie
  -ajouter le livre au panier 
@@ -98,13 +97,13 @@ DINAMICITÉ DU SITE:
  -afficher les information sur le profile 
  -calculer l'age de la personne 
  -en cas d'achat, ajouter le livre dans l'historique d'achat avec le controle
-        suivant : en cours par defaut, et livré deux jours plus tard.
- -afficher l'avatard de l'utilisateur
+        suivant : en cours par defaut, et livré deux jours plus tard.( terminé)
+ -afficher l'avatard de l'utilisateur(terminé)
  -ajouter l'enmplacement du livre dans acceuil (ajouter recement par défaut)
- -ajouter long dans la page admin pour chaque livre.
+ -ajouter long dans la page admin pour chaque livre.(terminé)
  -ajouter les commande dans la page admin. 
- -ajouter le choix d'avatar dans le profile(une fois ajouter il ce deplace en bd)
- -afficher le prix total dans panier.(terminé)
+ -ajouter le choix d'avatar dans le profile(une fois ajouter il ce deplace en bd) (terminé)
+ -afficher le prix total dans panier.(terminée)
  -afficher aussi le prix total dans admin.(terminé)
  -colorier la catégorie choisi.(terminé)
  -ajouter des disigne de confirmation(ajouter au panier, commander) (terminé)
