@@ -131,48 +131,172 @@ const adminProductForm = document.getElementById('adminProductForm');
 const adminProductsList = document.getElementById('adminProductsList');
 const adminOrdersList = document.getElementById('adminOrdersList');
 const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+const adminProductsKey = 'adlisAdminBooks';
+
+function getAdminProducts() {
+    const savedProducts = localStorage.getItem(adminProductsKey);
+
+    if (!savedProducts) {
+        return [];
+    }
+
+    try {
+        return JSON.parse(savedProducts);
+    } catch (error) {
+        return [];
+    }
+}
+
+function saveAdminProducts(products) {
+    localStorage.setItem(adminProductsKey, JSON.stringify(products));
+}
+
+function formatAdminPrice(price) {
+    return Number(price).toLocaleString('fr-DZ') + ' DA';
+}
+
+function createAdminProductRow(product) {
+    const row = document.createElement('tr');
+    const nameCell = document.createElement('td');
+    const categoryCell = document.createElement('td');
+    const priceCell = document.createElement('td');
+    const actionCell = document.createElement('td');
+    const deleteBtn = document.createElement('button');
+
+    row.dataset.productId = product.id;
+    nameCell.textContent = product.name;
+    categoryCell.textContent = product.category;
+    priceCell.textContent = formatAdminPrice(product.price);
+    deleteBtn.className = 'admin-delete-product';
+    deleteBtn.type = 'button';
+    deleteBtn.textContent = 'Supprimer';
+
+    actionCell.appendChild(deleteBtn);
+    row.append(nameCell, categoryCell, priceCell, actionCell);
+
+    return row;
+}
+
+function renderAdminProductsList() {
+    if (!adminProductsList) {
+        return;
+    }
+
+    adminProductsList.innerHTML = '';
+
+    getAdminProducts().forEach((product) => {
+        adminProductsList.appendChild(createAdminProductRow(product));
+    });
+}
+
+function createBookElement(product, className) {
+    const book = document.createElement('div');
+    const image = document.createElement('img');
+    const description = document.createElement('p');
+
+    book.className = className + ' admin-dynamic-book';
+    image.src = product.image || '../static/img/logo_englet.png';
+    image.alt = product.name;
+    description.append(
+        product.name,
+        document.createElement('br'),
+        className === 'produit-book' ? 'Auteur: ' + product.author : product.author
+    );
+
+    if (className === 'produit-book') {
+        description.append(
+            document.createElement('br'),
+            'Prix: ' + formatAdminPrice(product.price)
+        );
+    }
+
+    book.append(image, description);
+
+    return book;
+}
+
+function renderDynamicBooks() {
+    const products = getAdminProducts();
+    const produitGrid = document.querySelector('.produit-grid');
+    const indexGalleries = document.querySelectorAll('.index-autre-gallery');
+    const recentGallery = indexGalleries[indexGalleries.length - 1];
+
+    if (produitGrid) {
+        produitGrid.querySelectorAll('.admin-dynamic-book').forEach((book) => book.remove());
+        products.slice().reverse().forEach((product) => {
+            produitGrid.prepend(createBookElement(product, 'produit-book'));
+        });
+    }
+
+    if (recentGallery) {
+        recentGallery.querySelectorAll('.admin-dynamic-book').forEach((book) => book.remove());
+        products.slice(0, 5).reverse().forEach((product) => {
+            recentGallery.prepend(createBookElement(product, 'index-book'));
+        });
+    }
+}
 
 if (adminProductForm && adminProductsList) {
+    renderAdminProductsList();
+
     adminProductForm.addEventListener('submit', (event) => {
         event.preventDefault();
 
         const productName = document.getElementById('adminProductName').value.trim();
+        const productAuthor = document.getElementById('adminProductAuthor').value.trim();
         const productCategory = document.getElementById('adminProductCategory').value.trim();
         const productPrice = document.getElementById('adminProductPrice').value.trim();
+        const productImage = document.getElementById('adminProductImage').files[0];
 
-        if (!productName || !productCategory || !productPrice) {
+        if (!productName || !productAuthor || !productCategory || !productPrice) {
             return;
         }
 
-        const row = document.createElement('tr');
-        const nameCell = document.createElement('td');
-        const categoryCell = document.createElement('td');
-        const priceCell = document.createElement('td');
-        const actionCell = document.createElement('td');
-        const deleteBtn = document.createElement('button');
+        const saveProduct = (imageSrc) => {
+            const products = getAdminProducts();
+            const newProduct = {
+                id: Date.now().toString(),
+                name: productName,
+                author: productAuthor,
+                category: productCategory,
+                price: productPrice,
+                image: imageSrc
+            };
 
-        nameCell.textContent = productName;
-        categoryCell.textContent = productCategory;
-        priceCell.textContent = Number(productPrice).toLocaleString('fr-DZ') + ' DA';
-        deleteBtn.className = 'admin-delete-product';
-        deleteBtn.type = 'button';
-        deleteBtn.textContent = 'Supprimer';
+            products.unshift(newProduct);
+            saveAdminProducts(products);
+            renderAdminProductsList();
+            renderDynamicBooks();
+            adminProductForm.reset();
+        };
 
-        actionCell.appendChild(deleteBtn);
-        row.append(nameCell, categoryCell, priceCell, actionCell);
+        if (productImage) {
+            const reader = new FileReader();
 
-        adminProductsList.appendChild(row);
-        adminProductForm.reset();
+            reader.addEventListener('load', () => {
+                saveProduct(reader.result);
+            });
+            reader.readAsDataURL(productImage);
+        } else {
+            saveProduct('../static/img/logo_englet.png');
+        }
     });
 
     adminProductsList.addEventListener('click', (event) => {
         const deleteBtn = event.target.closest('.admin-delete-product');
 
         if (deleteBtn) {
-            deleteBtn.closest('tr').remove();
+            const row = deleteBtn.closest('tr');
+            const productId = row.dataset.productId;
+
+            saveAdminProducts(getAdminProducts().filter((product) => product.id !== productId));
+            renderAdminProductsList();
+            renderDynamicBooks();
         }
     });
 }
+
+renderDynamicBooks();
 
 if (adminOrdersList) {
     adminOrdersList.addEventListener('click', (event) => {
