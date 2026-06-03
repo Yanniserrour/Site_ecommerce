@@ -105,7 +105,7 @@ DINAMICITÉ DU SITE:
  -ajouter le choix d'avatar dans le profile(une fois ajouter il ce deplace en bd)
  -afficher le prix total dans panier.
  -afficher aussi le prix total dans admin.
- -colorier la catégorie choisi.
+ -colorier la catégorie choisi.(terminé)
  -ajouter des disigne de confirmation(ajouter au panier, commander) (terminé)
  -suprimer l'anciens livre ajouter si il n'ya plus de place (terminé)
 

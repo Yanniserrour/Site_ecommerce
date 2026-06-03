@@ -1579,6 +1579,14 @@ footer p {
     text-decoration: none;
 }
 
+.produit-categorie > p.active {
+    color: #512da8;
+    background: #ffffff;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+    font-weight: 900;
+    transform: translateX(4px);
+}
+
 .produit-langue {
     padding-top: 10px;
 }

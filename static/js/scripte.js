@@ -109,6 +109,16 @@ if (linkProfil) {
     });
 }
 
+document.querySelectorAll('.produit-categorie > p').forEach((category) => {
+    category.addEventListener('click', () => {
+        document.querySelectorAll('.produit-categorie > p').forEach((item) => {
+            item.classList.remove('active');
+        });
+
+        category.classList.add('active');
+    });
+});
+
 
 // Gestion de la page panier
 const panierItems = document.getElementById('panierItems');
