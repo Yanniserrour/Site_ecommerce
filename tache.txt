@@ -99,7 +99,7 @@ DINAMICITÉ DU SITE:
  -en cas d'achat, ajouter le livre dans l'historique d'achat avec le controle
         suivant : en cours par defaut, et livré deux jours plus tard.( terminé)
  -afficher l'avatard de l'utilisateur(terminé)
- -ajouter l'enmplacement du livre dans acceuil (ajouter recement par défaut)
+ -ajouter l'enmplacement du livre dans acceuil (ajouter recement par défaut)(terminé)
  -ajouter long dans la page admin pour chaque livre.(terminé)
  -ajouter les commande dans la page admin. (terminé)
  -ajouter le choix d'avatar dans le profile(une fois ajouter il ce deplace en bd) (terminé)

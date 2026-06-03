@@ -510,8 +510,7 @@ function createBookElement(product, className) {
 function renderDynamicBooks() {
     const products = getAdminProducts();
     const produitGrid = document.querySelector('.produit-grid');
-    const indexGalleries = document.querySelectorAll('.index-autre-gallery');
-    const recentGallery = indexGalleries[indexGalleries.length - 1];
+    const recentGallery = document.getElementById('recentBooksGallery') || document.querySelector('.index-autre-gallery:last-of-type');
 
     if (produitGrid) {
         produitGrid.querySelectorAll('.admin-dynamic-book').forEach((book) => book.remove());
