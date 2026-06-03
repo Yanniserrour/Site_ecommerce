@@ -86,10 +86,11 @@ neutres : #fff, #eee, #f9f9f9, #fafafa, #333
         les intérogation DB, les controles"
 
 DINAMICITÉ DU SITE: 
- -liens conditionnel (terminé)
- -possibilité de deconnexion 
- -ajout du livre a travers la page admin, et la la db.
- -afficher la photo de l'utilisateur en cas de connexion.
+-liens conditionnel (terminé) 
+ -possibilité de deconnexion (terminé)
+ -ajout du livre a travers la page admin, et la la db. (sans la db pour l'instant)
+ -ajouter le livre au panier en cas de commande (termine)
+ -filtrer les livre selon la catégorie (termine)
  -ajouter le livre au panier en cas de commande 
  -filtrer les livre selon la catégorie
  -ajouter le livre au panier 

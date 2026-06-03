@@ -494,6 +494,27 @@ const modalLangue = modalOverlay.querySelector('.product-modal-langue');
 const modalPrice = modalOverlay.querySelector('.product-modal-price');
 const modalCloseBtn = modalOverlay.querySelector('.product-modal-close');
  
+modalCartBtn.addEventListener('click', function() {
+    modalOverlay.classList.remove('active');
+    showConfirmationMessage('Livre ajoute au panier avec succes');
+});
+
+if (panierConfirmLink) {
+    panierConfirmLink.addEventListener('click', function() {
+        if (!panierConfirmLink.classList.contains('disabled')) {
+            sessionStorage.setItem(confirmationMessageKey, 'Vous pouvez maintenant confirmer votre commande');
+        }
+    });
+}
+
+document.addEventListener('submit', function(event) {
+    if (event.target.querySelector('.btn-commande')) {
+        event.preventDefault();
+        showConfirmationMessage('Commande confirmee avec succes');
+        event.target.reset();
+    }
+});
+ 
 function openProductModal(bookElement) {
     const img = bookElement.querySelector('img');
     const p = bookElement.querySelector('p');
