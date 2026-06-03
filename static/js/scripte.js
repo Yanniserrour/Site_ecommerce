@@ -33,13 +33,22 @@ if (burgerMenuBtn && sidebarMenu) {
 
 // Account button functionality
 if (accountBtn) {
-    accountBtn.addEventListener('click', () => {
+    accountBtn.addEventListener('click', (e) => {
+        // If the element is an anchor with an href, let the default navigation occur
+        const isAnchor = accountBtn.tagName && accountBtn.tagName.toLowerCase() === 'a';
         const isLoggedIn = localStorage.getItem('userLoggedIn');
+
         if (isLoggedIn === 'true') {
-            window.location.href = '/profile';
-        } else {
-            window.location.href = '/auth';
+            // go to profile page (static file)
+            window.location.href = 'profile.html';
+            return;
         }
+
+        if (!isAnchor) {
+            // for non-anchor elements, navigate to auth page
+            window.location.href = 'auth.html';
+        }
+        // if it's an anchor, allow its href (auth.html) to handle navigation
     });
 }
 
@@ -123,7 +132,7 @@ if (panierProfileBtn) {
     // Rediriger vers le profil ou la connexion depuis le panier
     panierProfileBtn.addEventListener('click', () => {
         const isLoggedIn = localStorage.getItem('userLoggedIn');
-        window.location.href = isLoggedIn === 'true' ? '/profile' : '/auth';
+        window.location.href = isLoggedIn === 'true' ? 'profile.html' : 'auth.html';
     });
 }
 
@@ -189,7 +198,7 @@ if (adminLogoutBtn) {
     adminLogoutBtn.addEventListener('click', () => {
         localStorage.removeItem('userLoggedIn');
         localStorage.removeItem('userName');
-        window.location.href = '/auth';
+        window.location.href = 'auth.html';
     });
 }
 
