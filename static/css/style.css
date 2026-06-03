@@ -1012,6 +1012,12 @@ body {
     transition: 0.3s;
 }
 
+.admin-orders-empty {
+    padding: 24px 0;
+    color: #555;
+    font-style: italic;
+}
+
 .admin-body td button:hover {
     background-color: #ffcccc;
     transform: scale(1.08);

@@ -101,7 +101,7 @@ DINAMICITÉ DU SITE:
  -afficher l'avatard de l'utilisateur(terminé)
  -ajouter l'enmplacement du livre dans acceuil (ajouter recement par défaut)
  -ajouter long dans la page admin pour chaque livre.(terminé)
- -ajouter les commande dans la page admin. 
+ -ajouter les commande dans la page admin. (terminé)
  -ajouter le choix d'avatar dans le profile(une fois ajouter il ce deplace en bd) (terminé)
  -afficher le prix total dans panier.(terminée)
  -afficher aussi le prix total dans admin.(terminé)
