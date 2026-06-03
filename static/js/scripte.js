@@ -217,6 +217,7 @@ if (commandeForm) {
 const adminProductForm = document.getElementById('adminProductForm');
 const adminProductsList = document.getElementById('adminProductsList');
 const adminOrdersList = document.getElementById('adminOrdersList');
+const adminOrdersTotal = document.getElementById('adminOrdersTotal');
 const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 const adminProductsKey = 'adlisAdminBooks';
 const adminProductsMaxCount = 5;
@@ -241,6 +242,19 @@ function saveAdminProducts(products) {
 
 function formatAdminPrice(price) {
     return Number(price).toLocaleString('fr-DZ') + ' DA';
+}
+
+function updateAdminOrdersTotal() {
+    if (!adminOrdersList || !adminOrdersTotal) {
+        return;
+    }
+
+    const total = Array.from(adminOrdersList.querySelectorAll('tr')).reduce((sum, row) => {
+        const amountCell = row.querySelector('td:nth-child(4)');
+        return sum + getPrixValue(amountCell ? amountCell.textContent : '0');
+    }, 0);
+
+    adminOrdersTotal.textContent = total.toLocaleString('fr-DZ') + ' DA';
 }
 
 function createAdminProductRow(product) {
@@ -387,6 +401,8 @@ if (adminProductForm && adminProductsList) {
 renderDynamicBooks();
 
 if (adminOrdersList) {
+    updateAdminOrdersTotal();
+
     adminOrdersList.addEventListener('click', (event) => {
         const statusBtn = event.target.closest('.admin-order-status');
 

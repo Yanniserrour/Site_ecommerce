@@ -950,6 +950,11 @@ body {
     box-shadow: 0 5px 15px rgba(0,0,0,0.20);
 }
 
+.admin-orders-table {
+    margin-bottom: 0 !important;
+    border-radius: 18px 18px 0 0 !important;
+}
+
 .admin-body th {
     background-color: #512da8;
     color: white;
@@ -967,6 +972,23 @@ body {
 
 .admin-body tr:hover td {
     background-color: #f0ecff;
+}
+
+.admin-orders-total {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto 35px;
+    padding: 18px;
+    background-color: #fff;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.14);
+    color: #333;
+    font-weight: 700;
+    text-align: center;
+}
+
+.admin-orders-total strong {
+    color: #512da8;
 }
 
 .admin-body td button {
