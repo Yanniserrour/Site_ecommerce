@@ -109,7 +109,52 @@ if (linkProfil) {
     });
 }
 
-//Filtrer par categorie
+// Les deux en meme temps
+var currentSearch = '';
+var currentCategory = '';
+var currentLangue = '';
+
+function applyFilters() {
+    var books = document.querySelectorAll('.produit-book, .index-book');
+
+    books.forEach(function(book) {
+        var p = book.querySelector('p');
+        if (!p) return;
+
+        var parts = p.innerHTML.split('<br>');
+        var title = (parts[0] || '').trim().toLowerCase();
+
+        var matchSearch = !currentSearch || title.includes(currentSearch.toLowerCase());
+
+        var matchCategory = true;
+        var matchLangue = true;
+
+        if (book.classList.contains('produit-book')) {
+            matchCategory = !currentCategory || (book.dataset.category || '') === currentCategory;
+            matchLangue = !currentLangue || (book.dataset.langue || '') === currentLangue;
+        }
+
+        if (matchSearch && matchCategory && matchLangue) {
+            book.style.display = '';
+        } else {
+            book.style.display = 'none';
+        }
+    });
+}
+
+// Barre de recherche
+var searchInput = document.querySelector('.search-input');
+var searchBtn = document.querySelector('.search-btn');
+
+if (searchInput && searchBtn) {
+    searchBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        currentSearch = searchInput.value.trim();
+        applyFilters();
+    });
+}
+
+// Filtrer par categorie
 document.querySelectorAll('.category-filter').forEach(function(filter) {
     filter.addEventListener('click', function() {
         document.querySelectorAll('.category-filter').forEach(function(f) {
@@ -117,25 +162,16 @@ document.querySelectorAll('.category-filter').forEach(function(filter) {
         });
         filter.classList.add('active-filter');
 
-        var selectedCategory = filter.textContent.trim();
-        var allBooks = document.querySelectorAll('.produit-book');
         if (filter.classList.contains('category-reset')) {
-            allBooks.forEach(function(book) {
-                book.style.display = '';
-            });
-            return;
+            currentCategory = '';
+        } else {
+            currentCategory = filter.textContent.trim();
         }
-        allBooks.forEach(function(book) {
-            if (book.dataset.category === selectedCategory) {
-                book.style.display = '';
-            } else {
-                book.style.display = 'none';
-            }
-        });
+        applyFilters();
     });
 });
 
-//Filtrer par langue:
+// Filtrer par langue
 document.querySelectorAll('.langue-filter').forEach(function(filter) {
     filter.addEventListener('click', function() {
         document.querySelectorAll('.langue-filter').forEach(function(f) {
@@ -143,21 +179,12 @@ document.querySelectorAll('.langue-filter').forEach(function(filter) {
         });
         filter.classList.add('active-filter');
 
-        var selectedLangue = filter.textContent.trim();
-        var allBooks = document.querySelectorAll('.produit-book');
         if (filter.classList.contains('langue-reset')) {
-            allBooks.forEach(function(book) {
-                book.style.display = '';
-            });
-            return;
+            currentLangue = '';
+        } else {
+            currentLangue = filter.textContent.trim();
         }
-        allBooks.forEach(function(book) {
-            if (book.dataset.langue === selectedLangue) {
-                book.style.display = '';
-            } else {
-                book.style.display = 'none';
-            }
-        });
+        applyFilters();
     });
 });
 
@@ -733,7 +760,6 @@ modalOverlay.addEventListener('click', function(e) {
         modalOverlay.classList.remove('active');
     }
 });
-<<<<<<< HEAD
 
 modalCartBtn.addEventListener('click', function() {
     if (selectedProduct) {
