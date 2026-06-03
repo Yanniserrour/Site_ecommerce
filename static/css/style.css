@@ -1773,21 +1773,26 @@ footer p {
 }
 
 .product-modal-title {
-    font-family: 'Raleway', sans-serif;
+    font-family: 'DMSerifDisplay', sans-serif;
     font-size: 20px;
-    color: #333;
     margin: 10px 0 5px 0;
 }
 
 .product-modal-author {
-    font-family: 'Raleway', sans-serif;
+    font-family: 'DMSerifDisplay', sans-serif;
     font-size: 14px;
-    color: #666;
+    margin: 0 0 5px 0;
+}
+
+.product-modal-category,
+.product-modal-langue {
+    font-family: 'DMSerifDisplay', sans-serif;
+    font-size: 14px;
     margin: 0 0 5px 0;
 }
 
 .product-modal-price {
-    font-family: 'Raleway', sans-serif;
+    font-family: 'DMSerifDisplay', sans-serif;
     font-size: 18px;
     font-weight: bold;
     color: #512da8;
@@ -1801,7 +1806,7 @@ footer p {
     padding: 12px 30px;
     border-radius: 8px;
     font-size: 16px;
-    font-family: 'Raleway', sans-serif;
+    font-family: 'DMSerifDisplay', sans-serif;
     cursor: pointer;
     transition: background 0.3s ease;
 }

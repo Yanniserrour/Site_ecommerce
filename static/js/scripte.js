@@ -39,7 +39,8 @@ if (accountBtn) {
         const isLoggedIn = localStorage.getItem('userLoggedIn');
 
         if (isLoggedIn === 'true') {
-            // go to profile page (static file)
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('userName');
             window.location.href = 'profile.html';
             return;
         }
@@ -58,9 +59,15 @@ window.addEventListener('load', () => {
     const userName = localStorage.getItem('userName');
     const accountText = document.getElementById('accountText');
     const accountIcon = document.querySelector('.account-icon');
+    const accountName = document.getElementById('account-nom');
     
     if (isLoggedIn === 'true' && userName && accountText) {
-        accountText.textContent = userName;
+    accountText.textContent = 'SE DECONNECTER';
+    accountName.textContent = userName;
+    } 
+    else {
+        if(accountText) accountText.textContent = 'SE CONNECTER';
+        if(accountName) accountName.textContent = 'PROFIL';
     }
 
     const welcomeVideo = document.getElementById('welcomeVideo');
@@ -79,6 +86,29 @@ window.addEventListener('load', () => {
         });
     }
 });
+
+//Bloquage de panier et profil
+const linkPanier = document.getElementById('linkPanier');
+const linkProfil = document.getElementById('linkProfil');
+
+if (linkPanier) {
+    linkPanier.addEventListener('click', function(e) {
+        if (localStorage.getItem('userLoggedIn') !== 'true') {
+            e.preventDefault();
+            window.location.href = 'auth.html';
+        }
+    });
+}
+
+if (linkProfil) {
+    linkProfil.addEventListener('click', function(e) {
+        if (localStorage.getItem('userLoggedIn') !== 'true') {
+            e.preventDefault();
+            window.location.href = 'auth.html';
+        }
+    });
+}
+
 
 // Gestion de la page panier
 const panierItems = document.getElementById('panierItems');
@@ -335,30 +365,34 @@ modalOverlay.innerHTML = `
         <img class="product-modal-img" src="" alt="">
         <h2 class="product-modal-title"></h2>
         <p class="product-modal-author"></p>
+        <p class="product-modal-category"></p>
+        <p class="product-modal-langue"></p>
         <p class="product-modal-price"></p>
         <button class="product-modal-cart">Ajouter au panier</button>
     </div>
 `;
 document.body.appendChild(modalOverlay);
-
+ 
 const modalImg = modalOverlay.querySelector('.product-modal-img');
 const modalTitle = modalOverlay.querySelector('.product-modal-title');
 const modalAuthor = modalOverlay.querySelector('.product-modal-author');
+const modalCategory = modalOverlay.querySelector('.product-modal-category');
+const modalLangue = modalOverlay.querySelector('.product-modal-langue');
 const modalPrice = modalOverlay.querySelector('.product-modal-price');
 const modalCloseBtn = modalOverlay.querySelector('.product-modal-close');
-
+ 
 function openProductModal(bookElement) {
     const img = bookElement.querySelector('img');
     const p = bookElement.querySelector('p');
-
+ 
     if (!img || !p) return;
-
+ 
     const parts = p.innerHTML.split('<br>');
-
+ 
     let title = '';
     let author = '';
     let price = 'X DA';
-
+ 
     if (bookElement.classList.contains('produit-book')) {
         title = parts[0] ? parts[0].trim() : '';
         author = parts[1] ? parts[1].replace('Auteur:', '').trim() : '';
@@ -367,40 +401,42 @@ function openProductModal(bookElement) {
         title = parts[0] ? parts[0].trim() : '';
         author = parts[1] ? parts[1].trim() : '';
     }
-
+ 
     modalImg.src = img.src;
     modalTitle.textContent = title;
     modalAuthor.textContent = author;
+    modalCategory.textContent = 'Categorie: X';
+    modalLangue.textContent = 'Langue: X';
     modalPrice.textContent = price;
     modalOverlay.classList.add('active');
 }
-
+ 
 document.querySelectorAll('.index-book').forEach(function(book) {
     book.addEventListener('click', function() {
         openProductModal(book);
     });
 });
-
+ 
 document.querySelectorAll('.produit-book').forEach(function(book) {
     book.addEventListener('click', function() {
         openProductModal(book);
     });
 });
-
+ 
 modalCloseBtn.addEventListener('click', function() {
     modalOverlay.classList.remove('active');
 });
-
+ 
 modalOverlay.addEventListener('click', function(e) {
     if (e.target === modalOverlay) {
         modalOverlay.classList.remove('active');
     }
 });
-
-
+ 
+ 
 document.addEventListener("DOMContentLoaded", function() {
     const video = document.getElementById("welcomeVideo");
-
+ 
     if (video) {
         video.addEventListener("canplay", function() {
             video.classList.remove("is-hidden");
