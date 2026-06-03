@@ -109,17 +109,6 @@ if (linkProfil) {
     });
 }
 
-document.querySelectorAll('.produit-categorie > p').forEach((category) => {
-    category.addEventListener('click', () => {
-        document.querySelectorAll('.produit-categorie > p').forEach((item) => {
-            item.classList.remove('active');
-        });
-
-        category.classList.add('active');
-    });
-});
-
-
 // Gestion de la page panier
 const panierItems = document.getElementById('panierItems');
 const panierTotal = document.getElementById('panierTotal');
@@ -404,6 +393,10 @@ function createBookElement(product, className) {
     book.className = className + ' admin-dynamic-book';
     image.src = product.image || '../static/img/logo_englet.png';
     image.alt = product.name;
+    book.dataset.category = product.category;
+    book.dataset.langue = product.language;
+
+
     description.append(
         product.name,
         document.createElement('br'),
@@ -443,6 +436,59 @@ function renderDynamicBooks() {
     }
 }
 
+//Filtrer par categorie
+document.querySelectorAll('.category-filter').forEach(function(filter) {
+    filter.addEventListener('click', function() {
+        document.querySelectorAll('.category-filter').forEach(function(f) {
+            f.classList.remove('active-filter');
+        });
+        filter.classList.add('active-filter');
+
+        var selectedCategory = filter.textContent.trim();
+        var allBooks = document.querySelectorAll('.produit-book');
+        if (filter.classList.contains('category-reset')) {
+            allBooks.forEach(function(book) {
+                book.style.display = '';
+            });
+            return;
+        }
+        allBooks.forEach(function(book) {
+            if (book.dataset.category === selectedCategory) {
+                book.style.display = '';
+            } else {
+                book.style.display = 'none';
+            }
+        });
+    });
+});
+
+
+//Filtrer par langue:
+document.querySelectorAll('.langue-filter').forEach(function(filter) {
+    filter.addEventListener('click', function() {
+        document.querySelectorAll('.langue-filter').forEach(function(f) {
+            f.classList.remove('active-filter');
+        });
+        filter.classList.add('active-filter');
+
+        var selectedLangue = filter.textContent.trim();
+        var allBooks = document.querySelectorAll('.produit-book');
+        if (filter.classList.contains('langue-reset')) {
+            allBooks.forEach(function(book) {
+                book.style.display = '';
+            });
+            return;
+        }
+        allBooks.forEach(function(book) {
+            if (book.dataset.langue === selectedLangue) {
+                book.style.display = '';
+            } else {
+                book.style.display = 'none';
+            }
+        });
+    });
+});
+
 if (adminProductForm && adminProductsList) {
     renderAdminProductsList();
 
@@ -452,6 +498,7 @@ if (adminProductForm && adminProductsList) {
         const productName = document.getElementById('adminProductName').value.trim();
         const productAuthor = document.getElementById('adminProductAuthor').value.trim();
         const productCategory = document.getElementById('adminProductCategory').value.trim();
+        const productLanguage = document.getElementById('adminProductLanguage').value.trim();
         const productPrice = document.getElementById('adminProductPrice').value.trim();
         const productImage = document.getElementById('adminProductImage').files[0];
 
@@ -466,6 +513,7 @@ if (adminProductForm && adminProductsList) {
                 name: productName,
                 author: productAuthor,
                 category: productCategory,
+                language: productLanguage,
                 price: productPrice,
                 image: imageSrc
             };
@@ -550,8 +598,32 @@ const modalCategory = modalOverlay.querySelector('.product-modal-category');
 const modalLangue = modalOverlay.querySelector('.product-modal-langue');
 const modalPrice = modalOverlay.querySelector('.product-modal-price');
 const modalCloseBtn = modalOverlay.querySelector('.product-modal-close');
+<<<<<<< HEAD
 const modalCartBtn = modalOverlay.querySelector('.product-modal-cart');
 let selectedProduct = null;
+=======
+ 
+modalCartBtn.addEventListener('click', function() {
+    modalOverlay.classList.remove('active');
+    showConfirmationMessage('Livre ajoute au panier avec succes');
+});
+
+if (panierConfirmLink) {
+    panierConfirmLink.addEventListener('click', function() {
+        if (!panierConfirmLink.classList.contains('disabled')) {
+            sessionStorage.setItem(confirmationMessageKey, 'Vous pouvez maintenant confirmer votre commande');
+        }
+    });
+}
+
+document.addEventListener('submit', function(event) {
+    if (event.target.querySelector('.btn-commande')) {
+        event.preventDefault();
+        showConfirmationMessage('Commande confirmee avec succes');
+        event.target.reset();
+    }
+});
+>>>>>>> 2955626f0f3417abaa75a010bc0bee5bd0ccbd6d
  
 function openProductModal(bookElement) {
     const img = bookElement.querySelector('img');
@@ -577,8 +649,8 @@ function openProductModal(bookElement) {
     modalImg.src = img.src;
     modalTitle.textContent = title;
     modalAuthor.textContent = author;
-    modalCategory.textContent = 'Categorie: X';
-    modalLangue.textContent = 'Langue: X';
+    modalCategory.textContent = 'Categorie: ' + (bookElement.dataset.category || 'X');
+    modalLangue.textContent = 'Langue: ' + (bookElement.dataset.langue || 'X');
     modalPrice.textContent = price;
     selectedProduct = {
         title: title,
@@ -594,6 +666,8 @@ document.querySelectorAll('.index-book').forEach(function(book) {
         openProductModal(book);
     });
 });
+
+
  
 document.querySelectorAll('.produit-book').forEach(function(book) {
     book.addEventListener('click', function() {
@@ -610,6 +684,7 @@ modalOverlay.addEventListener('click', function(e) {
         modalOverlay.classList.remove('active');
     }
 });
+<<<<<<< HEAD
 
 modalCartBtn.addEventListener('click', function() {
     if (selectedProduct) {
@@ -663,6 +738,8 @@ document.addEventListener('submit', function(event) {
         event.target.reset();
     }
 });
+=======
+>>>>>>> 2955626f0f3417abaa75a010bc0bee5bd0ccbd6d
  
  
 document.addEventListener("DOMContentLoaded", function() {
