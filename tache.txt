@@ -130,6 +130,9 @@ DINAMICITÉ DU SITE:
  RETOUCHE: 
  -police
  -ajouter un footer
+ -ajouter les liens avec flask
+ 
+
 
 
  
