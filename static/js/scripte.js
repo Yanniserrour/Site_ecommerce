@@ -109,6 +109,58 @@ if (linkProfil) {
     });
 }
 
+//Filtrer par categorie
+document.querySelectorAll('.category-filter').forEach(function(filter) {
+    filter.addEventListener('click', function() {
+        document.querySelectorAll('.category-filter').forEach(function(f) {
+            f.classList.remove('active-filter');
+        });
+        filter.classList.add('active-filter');
+
+        var selectedCategory = filter.textContent.trim();
+        var allBooks = document.querySelectorAll('.produit-book');
+        if (filter.classList.contains('category-reset')) {
+            allBooks.forEach(function(book) {
+                book.style.display = '';
+            });
+            return;
+        }
+        allBooks.forEach(function(book) {
+            if (book.dataset.category === selectedCategory) {
+                book.style.display = '';
+            } else {
+                book.style.display = 'none';
+            }
+        });
+    });
+});
+
+//Filtrer par langue:
+document.querySelectorAll('.langue-filter').forEach(function(filter) {
+    filter.addEventListener('click', function() {
+        document.querySelectorAll('.langue-filter').forEach(function(f) {
+            f.classList.remove('active-filter');
+        });
+        filter.classList.add('active-filter');
+
+        var selectedLangue = filter.textContent.trim();
+        var allBooks = document.querySelectorAll('.produit-book');
+        if (filter.classList.contains('langue-reset')) {
+            allBooks.forEach(function(book) {
+                book.style.display = '';
+            });
+            return;
+        }
+        allBooks.forEach(function(book) {
+            if (book.dataset.langue === selectedLangue) {
+                book.style.display = '';
+            } else {
+                book.style.display = 'none';
+            }
+        });
+    });
+});
+
 // Gestion de la page panier
 const panierItems = document.getElementById('panierItems');
 const panierTotal = document.getElementById('panierTotal');
@@ -493,6 +545,7 @@ const modalCategory = modalOverlay.querySelector('.product-modal-category');
 const modalLangue = modalOverlay.querySelector('.product-modal-langue');
 const modalPrice = modalOverlay.querySelector('.product-modal-price');
 const modalCloseBtn = modalOverlay.querySelector('.product-modal-close');
+const modalCartBtn = modalOverlay.querySelector('.product-modal-cart');
  
 modalCartBtn.addEventListener('click', function() {
     modalOverlay.classList.remove('active');
