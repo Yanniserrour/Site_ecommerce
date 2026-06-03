@@ -166,6 +166,44 @@ if (panierProfileBtn) {
     });
 }
 
+const confirmationMessageKey = 'adlisConfirmationMessage';
+
+function showConfirmationMessage(message) {
+    let confirmation = document.getElementById('confirmationMessage');
+
+    if (!confirmation) {
+        confirmation = document.createElement('div');
+        confirmation.id = 'confirmationMessage';
+        confirmation.className = 'confirmation-message';
+        document.body.appendChild(confirmation);
+    }
+
+    confirmation.textContent = message;
+    confirmation.classList.add('active');
+
+    clearTimeout(confirmation.hideTimer);
+    confirmation.hideTimer = setTimeout(() => {
+        confirmation.classList.remove('active');
+    }, 2600);
+}
+
+window.addEventListener('load', () => {
+    const savedMessage = sessionStorage.getItem(confirmationMessageKey);
+
+    if (savedMessage) {
+        sessionStorage.removeItem(confirmationMessageKey);
+        showConfirmationMessage(savedMessage);
+    }
+});
+
+const commandeForm = document.getElementById('commandeForm');
+
+if (commandeForm) {
+    commandeForm.querySelectorAll('input, select').forEach((field) => {
+        field.required = true;
+    });
+}
+
 const adminProductForm = document.getElementById('adminProductForm');
 const adminProductsList = document.getElementById('adminProductsList');
 const adminOrdersList = document.getElementById('adminOrdersList');
@@ -381,6 +419,7 @@ const modalCategory = modalOverlay.querySelector('.product-modal-category');
 const modalLangue = modalOverlay.querySelector('.product-modal-langue');
 const modalPrice = modalOverlay.querySelector('.product-modal-price');
 const modalCloseBtn = modalOverlay.querySelector('.product-modal-close');
+const modalCartBtn = modalOverlay.querySelector('.product-modal-cart');
  
 function openProductModal(bookElement) {
     const img = bookElement.querySelector('img');
@@ -431,6 +470,27 @@ modalCloseBtn.addEventListener('click', function() {
 modalOverlay.addEventListener('click', function(e) {
     if (e.target === modalOverlay) {
         modalOverlay.classList.remove('active');
+    }
+});
+
+modalCartBtn.addEventListener('click', function() {
+    modalOverlay.classList.remove('active');
+    showConfirmationMessage('Livre ajoute au panier avec succes');
+});
+
+if (panierConfirmLink) {
+    panierConfirmLink.addEventListener('click', function() {
+        if (!panierConfirmLink.classList.contains('disabled')) {
+            sessionStorage.setItem(confirmationMessageKey, 'Vous pouvez maintenant confirmer votre commande');
+        }
+    });
+}
+
+document.addEventListener('submit', function(event) {
+    if (event.target.querySelector('.btn-commande')) {
+        event.preventDefault();
+        showConfirmationMessage('Commande confirmee avec succes');
+        event.target.reset();
     }
 });
  

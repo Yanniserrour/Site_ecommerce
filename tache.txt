@@ -106,8 +106,8 @@ DINAMICITÉ DU SITE:
  -afficher le prix total dans panier.
  -afficher aussi le prix total dans admin.
  -colorier la catégorie choisi.
- -ajouter des disigne de confirmation(ajouter au panier, commander)
- -suprimer l'anciens livre ajouter si il n'ya plus de place.
+ -ajouter des disigne de confirmation(ajouter au panier, commander) (terminé)
+ -suprimer l'anciens livre ajouter si il n'ya plus de place (terminé)
 
  INTEROGATION DB: 
  -iscription/connexion
@@ -130,9 +130,6 @@ DINAMICITÉ DU SITE:
  RETOUCHE: 
  -police
  -ajouter un footer
- -ajouter les liens avec flask
- 
-
 
 
  

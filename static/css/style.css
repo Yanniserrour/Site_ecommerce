@@ -330,6 +330,46 @@ body {
     transform: scale(0.98);
 }
 
+.confirmation-message {
+    position: fixed;
+    top: 95px;
+    left: 50%;
+    z-index: 10000;
+    max-width: min(360px, calc(100vw - 32px));
+    padding: 14px 18px;
+    border-radius: 10px;
+    background-color: #1f9d55;
+    color: #fff;
+    box-shadow: 0 12px 30px rgba(31, 157, 85, 0.28);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -12px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.confirmation-message.active {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+@media (max-width: 600px) {
+    .confirmation-message {
+        top: 88px;
+        left: 16px;
+        right: 16px;
+        max-width: none;
+        text-align: center;
+        transform: translateY(-12px);
+    }
+
+    .confirmation-message.active {
+        transform: translateY(0);
+    }
+}
+
  
 /* partie profil*/
 .profile-body {

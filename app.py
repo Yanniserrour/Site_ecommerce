@@ -5,36 +5,44 @@ app.secret_key = 'adlis_secret_key_pour_les_sessions'
 
 # Route pour la page d'accueil (index)
 @app.route('/')
+@app.route('/index')
+@app.route('/index.html')
 def index():
     return render_template('index.html')
 
 # Route pour la page d'authentification
 @app.route('/auth')
+@app.route('/auth.html')
 def auth():
     return render_template('auth.html')
 
 # Route pour la page de formulaire de commande
 @app.route('/formulaire')
+@app.route('/formulaire.html')
 def formulaire():
     return render_template('formulaire.html')
 
 # Route pour la page de profil
 @app.route('/profile')
+@app.route('/profile.html')
 def profile():
     return render_template('profile.html')
 
 # Route pour la page des produits
 @app.route('/produit')
+@app.route('/produit.html')
 def produit():
     return render_template('produit.html')
 
 # Route pour la page du panier
 @app.route('/panier')
+@app.route('/panier.html')
 def panier():
     return render_template('panier.html')
 
 # Route pour la page administrateur
 @app.route('/admin')
+@app.route('/admin.html')
 def admin():
     return render_template('admin.html')
 
