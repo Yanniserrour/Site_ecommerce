@@ -1650,31 +1650,6 @@ footer p {
     flex: 1;
 }
 
-.produit-pmenu {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    width: 100%;
-}
-
-.produit-pmenu > p {
-    font-size: 16px;
-    font-family: 'DMSerifDisplay', sans-serif;
-    margin: 0;
-    color: white;
-    font-weight: 600;
-}
-
-.produit-pmenu button {
-    padding: 8px 16px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    margin-left: auto;
-}
-
 .produit-book {
     display: flex;
     flex-direction: column;

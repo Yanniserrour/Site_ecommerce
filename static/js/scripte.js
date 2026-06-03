@@ -149,9 +149,26 @@ var searchBtn = document.querySelector('.search-btn');
 if (searchInput && searchBtn) {
     searchBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        currentSearch = searchInput.value.trim();
-        applyFilters();
+        var query = searchInput.value.trim();
+
+        if (!document.querySelector('.produit-grid')) {
+            window.location.href = 'produit.html?search=' + encodeURIComponent(query);
+        } else {
+            currentSearch = query;
+            applyFilters();
+        }
     });
+}
+
+if (document.querySelector('.produit-grid')) {
+    var urlParams = new URLSearchParams(window.location.search);
+    var searchParam = urlParams.get('search');
+
+    if (searchParam && searchInput) {
+        searchInput.value = searchParam;
+        currentSearch = searchParam;
+        applyFilters();
+    }
 }
 
 // Filtrer par categorie

@@ -91,8 +91,8 @@ DINAMICITÉ DU SITE:
  -ajout du livre a travers la page admin, et la la db. (sans la db pour l'instant)
  -ajouter le livre au panier en cas de commande (termine)
  -filtrer les livre selon la catégorie (termine)
- -ajouter le livre au panier en cas de commande 
- -filtrer les livre selon la catégorie
+ -ajouter le livre au panier en cas de commande (termine)
+ -filtrer les livre selon la catégorie (termine)
  -ajouter le livre au panier 
  -ajouter une cantité de commande.
  -afficher les information sur le profile 
