@@ -126,6 +126,26 @@ const panierTotal = document.getElementById('panierTotal');
 const panierEmpty = document.getElementById('panierEmpty');
 const panierConfirmLink = document.getElementById('panierConfirmLink');
 const panierProfileBtn = document.getElementById('panierProfileBtn');
+const cartItemsKey = 'adlisCartItems';
+const adminOrdersKey = 'adlisOrders';
+
+function getStoredItems(key) {
+    const savedItems = localStorage.getItem(key);
+
+    if (!savedItems) {
+        return [];
+    }
+
+    try {
+        return JSON.parse(savedItems);
+    } catch (error) {
+        return [];
+    }
+}
+
+function saveStoredItems(key, items) {
+    localStorage.setItem(key, JSON.stringify(items));
+}
 
 // Transformer le texte du prix en nombre utilisable
 function getPrixValue(text) {
@@ -147,13 +167,62 @@ function updatePanier() {
     panierConfirmLink.classList.toggle('disabled', rows.length === 0);
 }
 
+function createPanierRow(item) {
+    const row = document.createElement('tr');
+    const infoCell = document.createElement('td');
+    const priceCell = document.createElement('td');
+    const actionCell = document.createElement('td');
+    const title = document.createElement('strong');
+    const deleteBtn = document.createElement('button');
+
+    row.dataset.cartId = item.id;
+    title.textContent = 'Categorie : ' + (item.category || 'X');
+    infoCell.append(
+        title,
+        document.createElement('br'),
+        item.title || '',
+        document.createElement('br'),
+        item.author || ''
+    );
+    priceCell.className = 'prix';
+    priceCell.textContent = item.price || '0 DA';
+    deleteBtn.className = 'panier-delete';
+    deleteBtn.type = 'button';
+    deleteBtn.textContent = 'Supprimer';
+    actionCell.appendChild(deleteBtn);
+    row.append(infoCell, priceCell, actionCell);
+
+    return row;
+}
+
+function renderPanierItems() {
+    if (!panierItems) {
+        return;
+    }
+
+    panierItems.innerHTML = '';
+
+    getStoredItems(cartItemsKey).forEach((item) => {
+        panierItems.appendChild(createPanierRow(item));
+    });
+}
+
 if (panierItems && panierTotal && panierEmpty && panierConfirmLink) {
+    renderPanierItems();
+
     // Supprimer un produit du panier
     panierItems.addEventListener('click', (event) => {
         const deleteBtn = event.target.closest('.panier-delete');
 
         if (deleteBtn) {
-            deleteBtn.closest('tr').remove();
+            const row = deleteBtn.closest('tr');
+            const cartId = row.dataset.cartId;
+
+            saveStoredItems(
+                cartItemsKey,
+                getStoredItems(cartItemsKey).filter((item) => item.id !== cartId)
+            );
+            row.remove();
             updatePanier();
         }
     });
@@ -255,6 +324,42 @@ function updateAdminOrdersTotal() {
     }, 0);
 
     adminOrdersTotal.textContent = total.toLocaleString('fr-DZ') + ' DA';
+}
+
+function createAdminOrderRow(order) {
+    const row = document.createElement('tr');
+    const clientCell = document.createElement('td');
+    const phoneCell = document.createElement('td');
+    const productCell = document.createElement('td');
+    const amountCell = document.createElement('td');
+    const statusCell = document.createElement('td');
+    const statusBtn = document.createElement('button');
+
+    clientCell.textContent = order.client || '......';
+    phoneCell.textContent = order.phone || '......';
+    productCell.textContent = order.product || '......';
+    amountCell.textContent = order.amount || '0 DA';
+    statusBtn.className = 'admin-order-status';
+    statusBtn.type = 'button';
+    statusBtn.textContent = order.status || 'En attente';
+    statusCell.appendChild(statusBtn);
+    row.append(clientCell, phoneCell, productCell, amountCell, statusCell);
+
+    return row;
+}
+
+function renderAdminOrdersList() {
+    if (!adminOrdersList) {
+        return;
+    }
+
+    adminOrdersList.innerHTML = '';
+
+    getStoredItems(adminOrdersKey).forEach((order) => {
+        adminOrdersList.appendChild(createAdminOrderRow(order));
+    });
+
+    updateAdminOrdersTotal();
 }
 
 function createAdminProductRow(product) {
@@ -401,7 +506,7 @@ if (adminProductForm && adminProductsList) {
 renderDynamicBooks();
 
 if (adminOrdersList) {
-    updateAdminOrdersTotal();
+    renderAdminOrdersList();
 
     adminOrdersList.addEventListener('click', (event) => {
         const statusBtn = event.target.closest('.admin-order-status');
@@ -446,6 +551,7 @@ const modalLangue = modalOverlay.querySelector('.product-modal-langue');
 const modalPrice = modalOverlay.querySelector('.product-modal-price');
 const modalCloseBtn = modalOverlay.querySelector('.product-modal-close');
 const modalCartBtn = modalOverlay.querySelector('.product-modal-cart');
+let selectedProduct = null;
  
 function openProductModal(bookElement) {
     const img = bookElement.querySelector('img');
@@ -474,6 +580,12 @@ function openProductModal(bookElement) {
     modalCategory.textContent = 'Categorie: X';
     modalLangue.textContent = 'Langue: X';
     modalPrice.textContent = price;
+    selectedProduct = {
+        title: title,
+        author: author,
+        category: 'X',
+        price: price
+    };
     modalOverlay.classList.add('active');
 }
  
@@ -500,6 +612,19 @@ modalOverlay.addEventListener('click', function(e) {
 });
 
 modalCartBtn.addEventListener('click', function() {
+    if (selectedProduct) {
+        const cartItems = getStoredItems(cartItemsKey);
+
+        cartItems.push({
+            id: Date.now().toString(),
+            title: selectedProduct.title,
+            author: selectedProduct.author,
+            category: selectedProduct.category,
+            price: selectedProduct.price
+        });
+        saveStoredItems(cartItemsKey, cartItems);
+    }
+
     modalOverlay.classList.remove('active');
     showConfirmationMessage('Livre ajoute au panier avec succes');
 });
@@ -515,6 +640,25 @@ if (panierConfirmLink) {
 document.addEventListener('submit', function(event) {
     if (event.target.querySelector('.btn-commande')) {
         event.preventDefault();
+        const fields = event.target.querySelectorAll('input');
+        const cartItems = getStoredItems(cartItemsKey);
+        const existingOrders = getStoredItems(adminOrdersKey);
+        const clientName = Array.from(fields).slice(0, 2).map((field) => field.value.trim()).join(' ').trim();
+        const phone = fields[3] ? fields[3].value.trim() : '';
+
+        cartItems.forEach((item) => {
+            existingOrders.push({
+                id: Date.now().toString() + Math.random().toString(16).slice(2),
+                client: clientName,
+                phone: phone,
+                product: item.title,
+                amount: item.price,
+                status: 'En attente'
+            });
+        });
+
+        saveStoredItems(adminOrdersKey, existingOrders);
+        saveStoredItems(cartItemsKey, []);
         showConfirmationMessage('Commande confirmee avec succes');
         event.target.reset();
     }
