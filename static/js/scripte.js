@@ -438,9 +438,22 @@ function renderAdminOrdersList() {
         return;
     }
 
+    const orders = getStoredItems(adminOrdersKey);
     adminOrdersList.innerHTML = '';
 
-    getStoredItems(adminOrdersKey).forEach((order) => {
+    if (orders.length === 0) {
+        const emptyRow = document.createElement('tr');
+        const emptyCell = document.createElement('td');
+        emptyCell.setAttribute('colspan', '5');
+        emptyCell.className = 'admin-orders-empty';
+        emptyCell.textContent = 'Aucune commande pour le moment.';
+        emptyRow.appendChild(emptyCell);
+        adminOrdersList.appendChild(emptyRow);
+        adminOrdersTotal.textContent = '0 DA';
+        return;
+    }
+
+    orders.forEach((order) => {
         adminOrdersList.appendChild(createAdminOrderRow(order));
     });
 
@@ -514,8 +527,7 @@ function createBookElement(product, className) {
 function renderDynamicBooks() {
     const products = getAdminProducts();
     const produitGrid = document.querySelector('.produit-grid');
-    const indexGalleries = document.querySelectorAll('.index-autre-gallery');
-    const recentGallery = indexGalleries[indexGalleries.length - 1];
+    const recentGallery = document.getElementById('recentBooksGallery') || document.querySelector('.index-autre-gallery:last-of-type');
 
     if (produitGrid) {
         produitGrid.querySelectorAll('.admin-dynamic-book').forEach((book) => book.remove());
@@ -710,14 +722,6 @@ if (panierConfirmLink) {
     });
 }
 
-document.addEventListener('submit', function(event) {
-    if (event.target.querySelector('.btn-commande')) {
-        event.preventDefault();
-        showConfirmationMessage('Commande confirmee avec succes');
-        event.target.reset();
-    }
-});
- 
 function openProductModal(bookElement) {
     const img = bookElement.querySelector('img');
     const p = bookElement.querySelector('p');
@@ -804,34 +808,45 @@ if (panierConfirmLink) {
     });
 }
 
-document.addEventListener('submit', function(event) {
-    if (event.target.querySelector('.btn-commande')) {
+const orderForm = document.getElementById('commandeForm');
+if (orderForm) {
+    orderForm.addEventListener('submit', function(event) {
         event.preventDefault();
-        const fields = event.target.querySelectorAll('input');
-        const cartItems = getStoredItems(cartItemsKey);
-        const existingOrders = getStoredItems(adminOrdersKey);
-        const clientName = Array.from(fields).slice(0, 2).map((field) => field.value.trim()).join(' ').trim();
-        const phone = fields[3] ? fields[3].value.trim() : '';
 
-        cartItems.forEach((item) => {
-            existingOrders.push({
-                id: Date.now().toString() + Math.random().toString(16).slice(2),
-                client: clientName,
-                phone: phone,
-                product: item.title,
-                amount: item.price,
-                status: 'En attente'
-            });
+        const cartItems = getStoredItems(cartItemsKey);
+        if (cartItems.length === 0) {
+            showConfirmationMessage('Votre panier est vide.');
+            return;
+        }
+
+        const inputs = orderForm.querySelectorAll('input[type="text"]');
+        const clientName = Array.from(inputs)
+            .slice(0, 2)
+            .map((field) => field.value.trim())
+            .filter(Boolean)
+            .join(' ');
+        const phone = inputs[3] ? inputs[3].value.trim() : '';
+
+        const existingOrders = getStoredItems(adminOrdersKey);
+        const orderProducts = cartItems.map((item) => item.title || 'Produit inconnu').join(', ');
+        const orderTotal = cartItems.reduce((sum, item) => sum + getPrixValue(item.price), 0);
+
+        existingOrders.push({
+            id: Date.now().toString() + Math.random().toString(16).slice(2),
+            client: clientName || 'Client inconnu',
+            phone: phone || 'Non renseigné',
+            product: orderProducts,
+            amount: formatAdminPrice(orderTotal),
+            status: 'En attente'
         });
 
         saveStoredItems(adminOrdersKey, existingOrders);
         saveStoredItems(cartItemsKey, []);
-        showConfirmationMessage('Commande confirmee avec succes');
-        event.target.reset();
-    }
-});
- 
- 
+        showConfirmationMessage('Commande confirmée avec succès');
+        orderForm.reset();
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     const video = document.getElementById("welcomeVideo");
  
