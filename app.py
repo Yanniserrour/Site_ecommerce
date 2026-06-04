@@ -177,8 +177,4 @@ def connexion():
             connexion.close()
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-    app.run(debug=True, port=50000)
-=======
     app.run(debug=True)
->>>>>>> 0a01e4b00e6e73a64e8506490e37dd097b64b26f
