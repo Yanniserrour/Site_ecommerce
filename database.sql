@@ -11,7 +11,7 @@ CREATE TABLE utilisateur(
     date_naissance DATE,
     mot_de_passe VARCHAR(255) NOT NULL,
     num_telephone BIGINT,
-    avatar LONGBLOB
+    avatar VARCHAR(255) DEFAULT NULL 
 );
 
 CREATE TABLE livre(
