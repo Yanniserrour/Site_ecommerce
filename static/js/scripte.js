@@ -585,66 +585,128 @@ document.querySelectorAll('.langue-filter').forEach(function(filter) {
 });
 
 if (adminProductForm && adminProductsList) {
+
     renderAdminProductsList();
 
+
+
     adminProductForm.addEventListener('submit', (event) => {
+
         event.preventDefault();
 
+
+
         const productName = document.getElementById('adminProductName').value.trim();
+
         const productAuthor = document.getElementById('adminProductAuthor').value.trim();
+
         const productCategory = document.getElementById('adminProductCategory').value.trim();
+
         const productLanguage = document.getElementById('adminProductLanguage').value.trim();
+
         const productPrice = document.getElementById('adminProductPrice').value.trim();
+
         const productImage = document.getElementById('adminProductImage').files[0];
 
+
+
         if (!productName || !productAuthor || !productCategory || !productPrice) {
+
             return;
+
         }
+
+
 
         const saveProduct = (imageSrc) => {
+
             const products = getAdminProducts();
+
             const newProduct = {
+
                 id: Date.now().toString(),
+
                 name: productName,
+
                 author: productAuthor,
+
                 category: productCategory,
+
                 language: productLanguage,
+
                 price: productPrice,
+
                 image: imageSrc
+
             };
 
+
+
             products.unshift(newProduct);
+
             saveAdminProducts(products.slice(0, adminProductsMaxCount));
+
             renderAdminProductsList();
+
             renderDynamicBooks();
+
             adminProductForm.reset();
+
         };
 
+
+
         if (productImage) {
+
             const reader = new FileReader();
 
+
+
             reader.addEventListener('load', () => {
+
                 saveProduct(reader.result);
+
             });
+
             reader.readAsDataURL(productImage);
+
         } else {
+
             saveProduct('../static/img/logo_englet.png');
+
         }
+
     });
+
+
 
     adminProductsList.addEventListener('click', (event) => {
+
         const deleteBtn = event.target.closest('.admin-delete-product');
 
+
+
         if (deleteBtn) {
+
             const row = deleteBtn.closest('tr');
+
             const productId = row.dataset.productId;
 
+
+
             saveAdminProducts(getAdminProducts().filter((product) => product.id !== productId));
+
             renderAdminProductsList();
+
             renderDynamicBooks();
+
         }
+
     });
-}
+
+} 
+
+
 
 renderDynamicBooks();
 

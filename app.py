@@ -22,7 +22,7 @@ ENV = 'DEVELOPPEMENT'
 if ENV == "DEVELOPPEMENT":
     DB_HOST     = "localhost"
     DB_USER     = "root"
-    DB_PASSWORD = "admin123"
+    DB_PASSWORD = "Yani2003@"
     DB_NAME     = "adlis"
 else: 
     DB_HOST     = "serveur_debergement"  #a changer
@@ -113,6 +113,8 @@ def admin():
         flash("Accès refusé. Cette zone est réservée aux administrateurs.", "error")
         return redirect(url_for('index'))
     return render_template('admin.html')
+
+
 
 #DB inscription
 @app.route('/inscription', methods=['POST'])
