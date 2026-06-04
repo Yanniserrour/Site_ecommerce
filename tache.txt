@@ -132,7 +132,6 @@ DINAMICITÉ DU SITE:
  RETOUCHE: 
  -police
  -ajouter un footer
-<<<<<<< HEAD
  -ajouter les liens avec flask
  -pdf de conception
  -ajouter des citations.
@@ -140,8 +139,6 @@ DINAMICITÉ DU SITE:
  -netoyer le message d'authentification
 
 
-=======
->>>>>>> 0a01e4b00e6e73a64e8506490e37dd097b64b26f
 
 
  
