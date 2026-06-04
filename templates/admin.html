@@ -29,27 +29,27 @@
     <center>
         <h3>Ajouter un produit</h3>
 
-        <form id="adminProductForm">
+        <form id="adminProductForm" action="{{ url_for('ajouter_produit') }}" method="POST" enctype="multipart/form-data">
             <fieldset>
                 <legend>Informations produit</legend>
 
                 <label>Nom :</label><br>
-                <input type="text" id="adminProductName" required><br><br>
+                <input type="text" id="adminProductName" name="nom" required><br><br>
 
                 <label>Auteur :</label><br>
-                <input type="text" id="adminProductAuthor" required><br><br>
+                <input type="text" id="adminProductAuthor" name="auteur" required><br><br>
 
                 <label>Cat&eacute;gorie :</label><br>
-                <input type="text" id="adminProductCategory" required><br><br>
+                <input type="text" id="adminProductCategory" name="categorie" required><br><br>
 
                 <label>Langue :</label><br>
-                <input type="text" id="adminProductLanguage" required><br><br>
+                <input type="text" id="adminProductLanguage" name="langue" required><br><br>
 
                 <label>Prix :</label><br>
-                <input type="number" id="adminProductPrice" min="0" required><br><br>
+                <input type="number" id="adminProductPrice" name="prix" min="0" required><br><br>
 
                 <label>Image :</label><br>
-                <input type="file" id="adminProductImage"><br><br>
+                <input type="file" id="adminProductImage" name="image_fichier" accept="image/*"><br><br>
 
                 <input type="submit" value="Ajouter">
                 <input type="reset" value="R&eacute;initialiser">

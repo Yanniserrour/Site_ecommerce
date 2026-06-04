@@ -133,6 +133,38 @@ body {
     outline: none;
 }
 
+.auth-flash-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    margin: 8px 0 0 0;
+    padding: 0;
+    text-align: center;
+}
+
+.flash-message {
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.2;
+    max-width: calc(100% - 16px);
+    margin: 0 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.flash-success {
+    color: #5a1a87;
+    background-color: rgba(127, 63, 191, 0.12);
+}
+
+.flash-error {
+    color: #8b0000;
+    background-color: rgba(255, 182, 193, 0.18);
+}
+
 .form-container{
     position: absolute;
     top: 0;

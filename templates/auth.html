@@ -13,11 +13,7 @@
     <div class="container" id="container">
         <!--le contenaire d'inscription-->
         <div class="form-container sign-up">
-<<<<<<< HEAD
-            <form action="/inscription" method="POST">
-=======
-            <form id="signupForm">
->>>>>>> 0a01e4b00e6e73a64e8506490e37dd097b64b26f
+            <form action="/inscription" method="POST" id="signupForm">
                 <h1>Crée un compte</h1>
                 <div class="social-icons">
                     <a href="#" class="icon"><i class="fa-brands fa-google"></i></a>
@@ -26,29 +22,17 @@
                     <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
                 <span>Ou utilisez votre Email</span>
-<<<<<<< HEAD
                 <input type="text" name="nom" placeholder="Nom" required>
                 <input type="email" name="email" placeholder="Mail" required>
                 <input type="password" name="mot_de_passe" placeholder="Mot de passe" required>
 
                 <button>Inscription</button>
-=======
-                <input type="text" placeholder="Nom">
-                <input type="email" placeholder="Mail">
-                <input type="date" placeholder="Date de naissance" id="signupBirthDate">
-                <input type="password" placeholder="Mot de passe">
-                <button type="submit">Inscription</button>
->>>>>>> 0a01e4b00e6e73a64e8506490e37dd097b64b26f
             </form>
         </div>
 
         <!--le contenaire de connexion-->
         <div class="form-container sign-in">
-<<<<<<< HEAD
-            <form action="/connexion" method="POST">
-=======
-            <form id="loginForm">
->>>>>>> 0a01e4b00e6e73a64e8506490e37dd097b64b26f
+            <form action="/connexion" method="POST" id="loginForm">
                 <h1>Conectez vous</h1>
                 <div class="social-icons">
                     <a href="#" class="icon"><i class="fa-brands fa-google"></i></a>
@@ -81,17 +65,15 @@
         </div>
     </div>
 
-    <footer>
-            {% with messages = get_flashed_messages() %}
-                  {% if messages %}
-                    <div style="color: red; font-size: 13px; margin: 5px 0;">
-                      {% for message in messages %}
-                        <p>{{ message }}</p>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-                {% endwith %}
-    </footer>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages auth-flash-footer">
+                {% for category, message in messages %}
+                    <p class="flash-message flash-{{ category | default('error') }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
     <!--l'appelle du JS-->
     <script src="{{ url_for('static', filename='js/scripte.js') }}"></script>

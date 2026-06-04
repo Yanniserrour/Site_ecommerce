@@ -33,51 +33,14 @@ if (burgerMenuBtn && sidebarMenu) {
 }
 
 // Account button functionality
-if (accountBtn) {
-    accountBtn.addEventListener('click', (e) => {
-        // If the element is an anchor with an href, let the default navigation occur
-        const isAnchor = accountBtn.tagName && accountBtn.tagName.toLowerCase() === 'a';
-        const isLoggedIn = localStorage.getItem('userLoggedIn');
-
-        if (isLoggedIn === 'true') {
-            localStorage.removeItem('userLoggedIn');
-            localStorage.removeItem('userName');
-            localStorage.removeItem('userAvatar');
-            window.location.href = 'profile.html';
-            return;
-        }
-
-        if (!isAnchor) {
-            // for non-anchor elements, navigate to auth page
-            window.location.href = 'auth.html';
-        }
-        // if it's an anchor, allow its href (auth.html) to handle navigation
+if (accountBtn && accountBtn.tagName && accountBtn.tagName.toLowerCase() !== 'a') {
+    accountBtn.addEventListener('click', () => {
+        window.location.href = 'auth.html';
     });
 }
 
-// Check if user is logged in and update account button
+// Check page state and run initialization
 window.addEventListener('load', () => {
-    const isLoggedIn = localStorage.getItem('userLoggedIn');
-    const userName = localStorage.getItem('userName');
-    const accountText = document.getElementById('accountText');
-    const accountIcon = document.querySelector('.account-icon');
-    const accountName = document.getElementById('account-nom');
-    
-    if (isLoggedIn === 'true' && userName && accountText) {
-        accountText.textContent = 'SE DECONNECTER';
-        accountName.textContent = userName;
-        if (accountIcon) {
-            accountIcon.src = localStorage.getItem('userAvatar') || defaultUserAvatar;
-        }
-    } 
-    else {
-        if(accountText) accountText.textContent = 'SE CONNECTER';
-        if(accountName) accountName.textContent = 'PROFIL';
-        if (accountIcon) {
-            accountIcon.src = defaultUserAvatar;
-        }
-    }
-
     populateProfileAge();
 
     const welcomeVideo = document.getElementById('welcomeVideo');
@@ -102,21 +65,11 @@ const linkPanier = document.getElementById('linkPanier');
 const linkProfil = document.getElementById('linkProfil');
 
 if (linkPanier) {
-    linkPanier.addEventListener('click', function(e) {
-        if (localStorage.getItem('userLoggedIn') !== 'true') {
-            e.preventDefault();
-            window.location.href = 'auth.html';
-        }
-    });
+    // Le serveur gère l'accès aux pages sensibles.
 }
 
 if (linkProfil) {
-    linkProfil.addEventListener('click', function(e) {
-        if (localStorage.getItem('userLoggedIn') !== 'true') {
-            e.preventDefault();
-            window.location.href = 'auth.html';
-        }
-    });
+    // Le serveur gère l'accès au profil.
 }
 
 // Les deux en meme temps
@@ -857,15 +810,6 @@ const loginForm = document.getElementById('loginForm');
 const signupForm = document.getElementById('signupForm');
 const orderForm = document.getElementById('commandeForm');
 
-function saveLoggedUser(name, birthDate) {
-    localStorage.setItem('userLoggedIn', 'true');
-    localStorage.setItem('userName', name);
-    localStorage.setItem('userAvatar', defaultUserAvatar);
-    if (birthDate) {
-        localStorage.setItem('userBirthDate', birthDate);
-    }
-}
-
 function calculateAge(birthDateString) {
     if (!birthDateString) {
         return null;
@@ -907,28 +851,6 @@ function populateProfileAge() {
     }
 
     profileBirthDate.textContent = 'Non défini';
-}
-
-if (loginForm) {
-    loginForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const emailInput = this.querySelector('input[type="email"]');
-        const userName = emailInput ? emailInput.value.split('@')[0] || 'Utilisateur' : 'Utilisateur';
-        saveLoggedUser(userName);
-        window.location.href = 'index.html';
-    });
-}
-
-if (signupForm) {
-    signupForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const nameInput = this.querySelector('input[type="text"]');
-        const birthDateInput = document.getElementById('signupBirthDate');
-        const userName = nameInput ? nameInput.value.trim() || 'Utilisateur' : 'Utilisateur';
-        const birthDate = birthDateInput ? birthDateInput.value : '';
-        saveLoggedUser(userName, birthDate);
-        window.location.href = 'index.html';
-    });
 }
 
 if (orderForm) {

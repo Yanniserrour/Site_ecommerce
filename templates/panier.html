@@ -33,15 +33,22 @@
                  <span>PANIER</span>
                 </a>
                 <a href="{{ url_for('profile') }}" class="sidebar-link" id="linkProfil">
-                    <span id="account-nom">PROFIL</span>
+                    <span id="account-nom">{{ session.get('user_name') or session.get('nom') or 'PROFIL' }}</span>
                 </a>
             </nav>
 
             <div class="sidebar-account">
+                {% if session.get('logged_in') %}
+                <a href="{{ url_for('deconnxion') }}" class="account-btn" id="accountBtn">
+                    <img src="{{ url_for('static', filename='img/profil-de-lutilisateur.png') }}" alt="Profil" class="account-icon">
+                    <span id="accountText">SE DÉCONNECTER</span>
+                </a>
+                {% else %}
                 <a href="{{ url_for('auth') }}" class="account-btn" id="accountBtn">
                     <img src="{{ url_for('static', filename='img/profil-de-lutilisateur.png') }}" alt="Profil" class="account-icon">
                     <span id="accountText">SE CONNECTER</span>
                 </a>
+                {% endif %}
             </div>
         </div>
     </div>
