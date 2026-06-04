@@ -17,6 +17,7 @@ if (container && registerBtn && loginBtn) {
 const burgerMenuBtn = document.getElementById('burgerMenuBtn');
 const sidebarMenu = document.getElementById('sidebarMenu');
 const accountBtn = document.getElementById('accountBtn');
+const defaultUserAvatar = '/static/img/profil-de-lutilisateur.png';
 
 if (burgerMenuBtn && sidebarMenu) {
     burgerMenuBtn.addEventListener('click', function(e) {
@@ -41,6 +42,7 @@ if (accountBtn) {
         if (isLoggedIn === 'true') {
             localStorage.removeItem('userLoggedIn');
             localStorage.removeItem('userName');
+            localStorage.removeItem('userAvatar');
             window.location.href = 'profile.html';
             return;
         }
@@ -62,13 +64,21 @@ window.addEventListener('load', () => {
     const accountName = document.getElementById('account-nom');
     
     if (isLoggedIn === 'true' && userName && accountText) {
-    accountText.textContent = 'SE DECONNECTER';
-    accountName.textContent = userName;
+        accountText.textContent = 'SE DECONNECTER';
+        accountName.textContent = userName;
+        if (accountIcon) {
+            accountIcon.src = localStorage.getItem('userAvatar') || defaultUserAvatar;
+        }
     } 
     else {
         if(accountText) accountText.textContent = 'SE CONNECTER';
         if(accountName) accountName.textContent = 'PROFIL';
+        if (accountIcon) {
+            accountIcon.src = defaultUserAvatar;
+        }
     }
+
+    populateProfileAge();
 
     const welcomeVideo = document.getElementById('welcomeVideo');
     if (welcomeVideo) {
@@ -109,6 +119,101 @@ if (linkProfil) {
     });
 }
 
+// Les deux en meme temps
+var currentSearch = '';
+var currentCategory = '';
+var currentLangue = '';
+
+function applyFilters() {
+    var books = document.querySelectorAll('.produit-book, .index-book');
+
+    books.forEach(function(book) {
+        var p = book.querySelector('p');
+        if (!p) return;
+
+        var parts = p.innerHTML.split('<br>');
+        var title = (parts[0] || '').trim().toLowerCase();
+
+        var matchSearch = !currentSearch || title.includes(currentSearch.toLowerCase());
+
+        var matchCategory = true;
+        var matchLangue = true;
+
+        if (book.classList.contains('produit-book')) {
+            matchCategory = !currentCategory || (book.dataset.category || '') === currentCategory;
+            matchLangue = !currentLangue || (book.dataset.langue || '') === currentLangue;
+        }
+
+        if (matchSearch && matchCategory && matchLangue) {
+            book.style.display = '';
+        } else {
+            book.style.display = 'none';
+        }
+    });
+}
+
+// Barre de recherche
+var searchInput = document.querySelector('.search-input');
+var searchBtn = document.querySelector('.search-btn');
+
+if (searchInput && searchBtn) {
+    searchBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var query = searchInput.value.trim();
+
+        if (!document.querySelector('.produit-grid')) {
+            window.location.href = 'produit.html?search=' + encodeURIComponent(query);
+        } else {
+            currentSearch = query;
+            applyFilters();
+        }
+    });
+}
+
+if (document.querySelector('.produit-grid')) {
+    var urlParams = new URLSearchParams(window.location.search);
+    var searchParam = urlParams.get('search');
+
+    if (searchParam && searchInput) {
+        searchInput.value = searchParam;
+        currentSearch = searchParam;
+        applyFilters();
+    }
+}
+
+// Filtrer par categorie
+document.querySelectorAll('.category-filter').forEach(function(filter) {
+    filter.addEventListener('click', function() {
+        document.querySelectorAll('.category-filter').forEach(function(f) {
+            f.classList.remove('active-filter');
+        });
+        filter.classList.add('active-filter');
+
+        if (filter.classList.contains('category-reset')) {
+            currentCategory = '';
+        } else {
+            currentCategory = filter.textContent.trim();
+        }
+        applyFilters();
+    });
+});
+
+// Filtrer par langue
+document.querySelectorAll('.langue-filter').forEach(function(filter) {
+    filter.addEventListener('click', function() {
+        document.querySelectorAll('.langue-filter').forEach(function(f) {
+            f.classList.remove('active-filter');
+        });
+        filter.classList.add('active-filter');
+
+        if (filter.classList.contains('langue-reset')) {
+            currentLangue = '';
+        } else {
+            currentLangue = filter.textContent.trim();
+        }
+        applyFilters();
+    });
+});
 
 // Gestion de la page panier
 const panierItems = document.getElementById('panierItems');
@@ -116,6 +221,26 @@ const panierTotal = document.getElementById('panierTotal');
 const panierEmpty = document.getElementById('panierEmpty');
 const panierConfirmLink = document.getElementById('panierConfirmLink');
 const panierProfileBtn = document.getElementById('panierProfileBtn');
+const cartItemsKey = 'adlisCartItems';
+const adminOrdersKey = 'adlisOrders';
+
+function getStoredItems(key) {
+    const savedItems = localStorage.getItem(key);
+
+    if (!savedItems) {
+        return [];
+    }
+
+    try {
+        return JSON.parse(savedItems);
+    } catch (error) {
+        return [];
+    }
+}
+
+function saveStoredItems(key, items) {
+    localStorage.setItem(key, JSON.stringify(items));
+}
 
 // Transformer le texte du prix en nombre utilisable
 function getPrixValue(text) {
@@ -129,7 +254,9 @@ function updatePanier() {
     const rows = Array.from(panierItems.querySelectorAll('tr'));
     const total = rows.reduce((sum, row) => {
         const prix = row.querySelector('.prix');
-        return sum + getPrixValue(prix ? prix.textContent : '0');
+        const qtyInput = row.querySelector('.panier-quantity');
+        const quantity = qtyInput ? Number(qtyInput.value) : 1;
+        return sum + getPrixValue(prix ? prix.textContent : '0') * (quantity > 0 ? quantity : 1);
     }, 0);
 
     panierTotal.textContent = total.toLocaleString('fr-DZ') + ' DA';
@@ -137,13 +264,84 @@ function updatePanier() {
     panierConfirmLink.classList.toggle('disabled', rows.length === 0);
 }
 
+function createPanierRow(item) {
+    const row = document.createElement('tr');
+    const infoCell = document.createElement('td');
+    const quantityCell = document.createElement('td');
+    const priceCell = document.createElement('td');
+    const actionCell = document.createElement('td');
+    const title = document.createElement('strong');
+    const quantityInput = document.createElement('input');
+    const deleteBtn = document.createElement('button');
+
+    row.dataset.cartId = item.id;
+    title.textContent = 'Categorie : ' + (item.category || 'X');
+    infoCell.append(
+        title,
+        document.createElement('br'),
+        item.title || '',
+        document.createElement('br'),
+        item.author || ''
+    );
+
+    quantityInput.type = 'number';
+    quantityInput.min = '1';
+    quantityInput.value = item.quantity || 1;
+    quantityInput.className = 'panier-quantity';
+    quantityInput.addEventListener('change', () => {
+        const newQuantity = Number(quantityInput.value) || 1;
+        const storedItems = getStoredItems(cartItemsKey);
+        const currentItem = storedItems.find((stored) => stored.id === item.id);
+
+        if (currentItem) {
+            currentItem.quantity = newQuantity;
+            saveStoredItems(cartItemsKey, storedItems);
+        }
+
+        updatePanier();
+    });
+
+    quantityCell.appendChild(quantityInput);
+
+    priceCell.className = 'prix';
+    priceCell.textContent = item.price || '0 DA';
+    deleteBtn.className = 'panier-delete';
+    deleteBtn.type = 'button';
+    deleteBtn.textContent = 'Supprimer';
+    actionCell.appendChild(deleteBtn);
+    row.append(infoCell, quantityCell, priceCell, actionCell);
+
+    return row;
+}
+
+function renderPanierItems() {
+    if (!panierItems) {
+        return;
+    }
+
+    panierItems.innerHTML = '';
+
+    getStoredItems(cartItemsKey).forEach((item) => {
+        panierItems.appendChild(createPanierRow(item));
+    });
+}
+
 if (panierItems && panierTotal && panierEmpty && panierConfirmLink) {
+    renderPanierItems();
+
     // Supprimer un produit du panier
     panierItems.addEventListener('click', (event) => {
         const deleteBtn = event.target.closest('.panier-delete');
 
         if (deleteBtn) {
-            deleteBtn.closest('tr').remove();
+            const row = deleteBtn.closest('tr');
+            const cartId = row.dataset.cartId;
+
+            saveStoredItems(
+                cartItemsKey,
+                getStoredItems(cartItemsKey).filter((item) => item.id !== cartId)
+            );
+            row.remove();
             updatePanier();
         }
     });
@@ -166,11 +364,51 @@ if (panierProfileBtn) {
     });
 }
 
+const confirmationMessageKey = 'adlisConfirmationMessage';
+
+function showConfirmationMessage(message) {
+    let confirmation = document.getElementById('confirmationMessage');
+
+    if (!confirmation) {
+        confirmation = document.createElement('div');
+        confirmation.id = 'confirmationMessage';
+        confirmation.className = 'confirmation-message';
+        document.body.appendChild(confirmation);
+    }
+
+    confirmation.textContent = message;
+    confirmation.classList.add('active');
+
+    clearTimeout(confirmation.hideTimer);
+    confirmation.hideTimer = setTimeout(() => {
+        confirmation.classList.remove('active');
+    }, 2600);
+}
+
+window.addEventListener('load', () => {
+    const savedMessage = sessionStorage.getItem(confirmationMessageKey);
+
+    if (savedMessage) {
+        sessionStorage.removeItem(confirmationMessageKey);
+        showConfirmationMessage(savedMessage);
+    }
+});
+
+const commandeForm = document.getElementById('commandeForm');
+
+if (commandeForm) {
+    commandeForm.querySelectorAll('input, select').forEach((field) => {
+        field.required = true;
+    });
+}
+
 const adminProductForm = document.getElementById('adminProductForm');
 const adminProductsList = document.getElementById('adminProductsList');
 const adminOrdersList = document.getElementById('adminOrdersList');
+const adminOrdersTotal = document.getElementById('adminOrdersTotal');
 const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 const adminProductsKey = 'adlisAdminBooks';
+const adminProductsMaxCount = 5;
 
 function getAdminProducts() {
     const savedProducts = localStorage.getItem(adminProductsKey);
@@ -192,6 +430,68 @@ function saveAdminProducts(products) {
 
 function formatAdminPrice(price) {
     return Number(price).toLocaleString('fr-DZ') + ' DA';
+}
+
+function updateAdminOrdersTotal() {
+    if (!adminOrdersList || !adminOrdersTotal) {
+        return;
+    }
+
+    const total = Array.from(adminOrdersList.querySelectorAll('tr')).reduce((sum, row) => {
+        const amountCell = row.querySelector('td:nth-child(4)');
+        return sum + getPrixValue(amountCell ? amountCell.textContent : '0');
+    }, 0);
+
+    adminOrdersTotal.textContent = total.toLocaleString('fr-DZ') + ' DA';
+}
+
+function createAdminOrderRow(order) {
+    const row = document.createElement('tr');
+    const clientCell = document.createElement('td');
+    const phoneCell = document.createElement('td');
+    const productCell = document.createElement('td');
+    const amountCell = document.createElement('td');
+    const statusCell = document.createElement('td');
+    const statusBtn = document.createElement('button');
+
+    clientCell.textContent = order.client || '......';
+    phoneCell.textContent = order.phone || '......';
+    productCell.textContent = order.product || '......';
+    amountCell.textContent = order.amount || '0 DA';
+    statusBtn.className = 'admin-order-status';
+    statusBtn.type = 'button';
+    statusBtn.textContent = order.status || 'En attente';
+    statusCell.appendChild(statusBtn);
+    row.append(clientCell, phoneCell, productCell, amountCell, statusCell);
+
+    return row;
+}
+
+function renderAdminOrdersList() {
+    if (!adminOrdersList) {
+        return;
+    }
+
+    const orders = getStoredItems(adminOrdersKey);
+    adminOrdersList.innerHTML = '';
+
+    if (orders.length === 0) {
+        const emptyRow = document.createElement('tr');
+        const emptyCell = document.createElement('td');
+        emptyCell.setAttribute('colspan', '5');
+        emptyCell.className = 'admin-orders-empty';
+        emptyCell.textContent = 'Aucune commande pour le moment.';
+        emptyRow.appendChild(emptyCell);
+        adminOrdersList.appendChild(emptyRow);
+        adminOrdersTotal.textContent = '0 DA';
+        return;
+    }
+
+    orders.forEach((order) => {
+        adminOrdersList.appendChild(createAdminOrderRow(order));
+    });
+
+    updateAdminOrdersTotal();
 }
 
 function createAdminProductRow(product) {
@@ -236,6 +536,10 @@ function createBookElement(product, className) {
     book.className = className + ' admin-dynamic-book';
     image.src = product.image || '../static/img/logo_englet.png';
     image.alt = product.name;
+    book.dataset.category = product.category;
+    book.dataset.langue = product.language;
+
+
     description.append(
         product.name,
         document.createElement('br'),
@@ -257,8 +561,7 @@ function createBookElement(product, className) {
 function renderDynamicBooks() {
     const products = getAdminProducts();
     const produitGrid = document.querySelector('.produit-grid');
-    const indexGalleries = document.querySelectorAll('.index-autre-gallery');
-    const recentGallery = indexGalleries[indexGalleries.length - 1];
+    const recentGallery = document.getElementById('recentBooksGallery') || document.querySelector('.index-autre-gallery:last-of-type');
 
     if (produitGrid) {
         produitGrid.querySelectorAll('.admin-dynamic-book').forEach((book) => book.remove());
@@ -275,6 +578,59 @@ function renderDynamicBooks() {
     }
 }
 
+//Filtrer par categorie
+document.querySelectorAll('.category-filter').forEach(function(filter) {
+    filter.addEventListener('click', function() {
+        document.querySelectorAll('.category-filter').forEach(function(f) {
+            f.classList.remove('active-filter');
+        });
+        filter.classList.add('active-filter');
+
+        var selectedCategory = filter.textContent.trim();
+        var allBooks = document.querySelectorAll('.produit-book');
+        if (filter.classList.contains('category-reset')) {
+            allBooks.forEach(function(book) {
+                book.style.display = '';
+            });
+            return;
+        }
+        allBooks.forEach(function(book) {
+            if (book.dataset.category === selectedCategory) {
+                book.style.display = '';
+            } else {
+                book.style.display = 'none';
+            }
+        });
+    });
+});
+
+
+//Filtrer par langue:
+document.querySelectorAll('.langue-filter').forEach(function(filter) {
+    filter.addEventListener('click', function() {
+        document.querySelectorAll('.langue-filter').forEach(function(f) {
+            f.classList.remove('active-filter');
+        });
+        filter.classList.add('active-filter');
+
+        var selectedLangue = filter.textContent.trim();
+        var allBooks = document.querySelectorAll('.produit-book');
+        if (filter.classList.contains('langue-reset')) {
+            allBooks.forEach(function(book) {
+                book.style.display = '';
+            });
+            return;
+        }
+        allBooks.forEach(function(book) {
+            if (book.dataset.langue === selectedLangue) {
+                book.style.display = '';
+            } else {
+                book.style.display = 'none';
+            }
+        });
+    });
+});
+
 if (adminProductForm && adminProductsList) {
     renderAdminProductsList();
 
@@ -284,6 +640,7 @@ if (adminProductForm && adminProductsList) {
         const productName = document.getElementById('adminProductName').value.trim();
         const productAuthor = document.getElementById('adminProductAuthor').value.trim();
         const productCategory = document.getElementById('adminProductCategory').value.trim();
+        const productLanguage = document.getElementById('adminProductLanguage').value.trim();
         const productPrice = document.getElementById('adminProductPrice').value.trim();
         const productImage = document.getElementById('adminProductImage').files[0];
 
@@ -298,12 +655,13 @@ if (adminProductForm && adminProductsList) {
                 name: productName,
                 author: productAuthor,
                 category: productCategory,
+                language: productLanguage,
                 price: productPrice,
                 image: imageSrc
             };
 
             products.unshift(newProduct);
-            saveAdminProducts(products);
+            saveAdminProducts(products.slice(0, adminProductsMaxCount));
             renderAdminProductsList();
             renderDynamicBooks();
             adminProductForm.reset();
@@ -338,6 +696,8 @@ if (adminProductForm && adminProductsList) {
 renderDynamicBooks();
 
 if (adminOrdersList) {
+    renderAdminOrdersList();
+
     adminOrdersList.addEventListener('click', (event) => {
         const statusBtn = event.target.closest('.admin-order-status');
 
@@ -380,7 +740,22 @@ const modalCategory = modalOverlay.querySelector('.product-modal-category');
 const modalLangue = modalOverlay.querySelector('.product-modal-langue');
 const modalPrice = modalOverlay.querySelector('.product-modal-price');
 const modalCloseBtn = modalOverlay.querySelector('.product-modal-close');
+const modalCartBtn = modalOverlay.querySelector('.product-modal-cart');
+let selectedProduct = null;
  
+modalCartBtn.addEventListener('click', function() {
+    modalOverlay.classList.remove('active');
+    showConfirmationMessage('Livre ajoute au panier avec succes');
+});
+
+if (panierConfirmLink) {
+    panierConfirmLink.addEventListener('click', function() {
+        if (!panierConfirmLink.classList.contains('disabled')) {
+            sessionStorage.setItem(confirmationMessageKey, 'Vous pouvez maintenant confirmer votre commande');
+        }
+    });
+}
+
 function openProductModal(bookElement) {
     const img = bookElement.querySelector('img');
     const p = bookElement.querySelector('p');
@@ -405,9 +780,15 @@ function openProductModal(bookElement) {
     modalImg.src = img.src;
     modalTitle.textContent = title;
     modalAuthor.textContent = author;
-    modalCategory.textContent = 'Categorie: X';
-    modalLangue.textContent = 'Langue: X';
+    modalCategory.textContent = 'Categorie: ' + (bookElement.dataset.category || 'X');
+    modalLangue.textContent = 'Langue: ' + (bookElement.dataset.langue || 'X');
     modalPrice.textContent = price;
+    selectedProduct = {
+        title: title,
+        author: author,
+        category: 'X',
+        price: price
+    };
     modalOverlay.classList.add('active');
 }
  
@@ -416,6 +797,8 @@ document.querySelectorAll('.index-book').forEach(function(book) {
         openProductModal(book);
     });
 });
+
+
  
 document.querySelectorAll('.produit-book').forEach(function(book) {
     book.addEventListener('click', function() {
@@ -432,8 +815,166 @@ modalOverlay.addEventListener('click', function(e) {
         modalOverlay.classList.remove('active');
     }
 });
- 
- 
+
+modalCartBtn.addEventListener('click', function() {
+    if (selectedProduct) {
+        const cartItems = getStoredItems(cartItemsKey);
+        const existingItem = cartItems.find((item) =>
+            item.title === selectedProduct.title &&
+            item.author === selectedProduct.author &&
+            item.price === selectedProduct.price
+        );
+
+        if (existingItem) {
+            existingItem.quantity = (existingItem.quantity || 1) + 1;
+        } else {
+            cartItems.push({
+                id: Date.now().toString(),
+                title: selectedProduct.title,
+                author: selectedProduct.author,
+                category: selectedProduct.category,
+                price: selectedProduct.price,
+                quantity: 1
+            });
+        }
+
+        saveStoredItems(cartItemsKey, cartItems);
+    }
+
+    modalOverlay.classList.remove('active');
+    showConfirmationMessage('Livre ajoute au panier avec succes');
+});
+
+if (panierConfirmLink) {
+    panierConfirmLink.addEventListener('click', function() {
+        if (!panierConfirmLink.classList.contains('disabled')) {
+            sessionStorage.setItem(confirmationMessageKey, 'Vous pouvez maintenant confirmer votre commande');
+        }
+    });
+}
+
+const loginForm = document.getElementById('loginForm');
+const signupForm = document.getElementById('signupForm');
+const orderForm = document.getElementById('commandeForm');
+
+function saveLoggedUser(name, birthDate) {
+    localStorage.setItem('userLoggedIn', 'true');
+    localStorage.setItem('userName', name);
+    localStorage.setItem('userAvatar', defaultUserAvatar);
+    if (birthDate) {
+        localStorage.setItem('userBirthDate', birthDate);
+    }
+}
+
+function calculateAge(birthDateString) {
+    if (!birthDateString) {
+        return null;
+    }
+
+    const birthDate = new Date(birthDateString);
+    if (Number.isNaN(birthDate.getTime())) {
+        return null;
+    }
+
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() - birthDate.getDate();
+
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age -= 1;
+    }
+
+    return age;
+}
+
+function populateProfileAge() {
+    const birthDate = localStorage.getItem('userBirthDate');
+    const profileAge = document.getElementById('profileAge');
+    const profileBirthDate = document.getElementById('profileBirthDate');
+
+    if (!profileAge || !profileBirthDate) {
+        return;
+    }
+
+    if (birthDate) {
+        const age = calculateAge(birthDate);
+        if (age !== null) {
+            profileAge.textContent = age;
+            profileBirthDate.textContent = birthDate;
+            return;
+        }
+    }
+
+    profileBirthDate.textContent = 'Non défini';
+}
+
+if (loginForm) {
+    loginForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const emailInput = this.querySelector('input[type="email"]');
+        const userName = emailInput ? emailInput.value.split('@')[0] || 'Utilisateur' : 'Utilisateur';
+        saveLoggedUser(userName);
+        window.location.href = 'index.html';
+    });
+}
+
+if (signupForm) {
+    signupForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const nameInput = this.querySelector('input[type="text"]');
+        const birthDateInput = document.getElementById('signupBirthDate');
+        const userName = nameInput ? nameInput.value.trim() || 'Utilisateur' : 'Utilisateur';
+        const birthDate = birthDateInput ? birthDateInput.value : '';
+        saveLoggedUser(userName, birthDate);
+        window.location.href = 'index.html';
+    });
+}
+
+if (orderForm) {
+    orderForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const cartItems = getStoredItems(cartItemsKey);
+        if (cartItems.length === 0) {
+            showConfirmationMessage('Votre panier est vide.');
+            return;
+        }
+
+        const inputs = orderForm.querySelectorAll('input[type="text"]');
+        const clientName = Array.from(inputs)
+            .slice(0, 2)
+            .map((field) => field.value.trim())
+            .filter(Boolean)
+            .join(' ');
+        const phone = inputs[3] ? inputs[3].value.trim() : '';
+
+        const existingOrders = getStoredItems(adminOrdersKey);
+        const orderProducts = cartItems.map((item) => {
+            const quantity = item.quantity || 1;
+            return `${item.title || 'Produit inconnu'} x${quantity}`;
+        }).join(', ');
+        const orderTotal = cartItems.reduce((sum, item) => {
+            const quantity = item.quantity || 1;
+            return sum + getPrixValue(item.price) * quantity;
+        }, 0);
+
+        existingOrders.push({
+            id: Date.now().toString() + Math.random().toString(16).slice(2),
+            client: clientName || 'Client inconnu',
+            phone: phone || 'Non renseigné',
+            product: orderProducts,
+            amount: formatAdminPrice(orderTotal),
+            status: 'En attente'
+        });
+
+        saveStoredItems(adminOrdersKey, existingOrders);
+        saveStoredItems(cartItemsKey, []);
+        showConfirmationMessage('Commande confirmée avec succès');
+        orderForm.reset();
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     const video = document.getElementById("welcomeVideo");
  

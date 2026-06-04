@@ -330,6 +330,46 @@ body {
     transform: scale(0.98);
 }
 
+.confirmation-message {
+    position: fixed;
+    top: 95px;
+    left: 50%;
+    z-index: 10000;
+    max-width: min(360px, calc(100vw - 32px));
+    padding: 14px 18px;
+    border-radius: 10px;
+    background-color: #1f9d55;
+    color: #fff;
+    box-shadow: 0 12px 30px rgba(31, 157, 85, 0.28);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -12px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.confirmation-message.active {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+@media (max-width: 600px) {
+    .confirmation-message {
+        top: 88px;
+        left: 16px;
+        right: 16px;
+        max-width: none;
+        text-align: center;
+        transform: translateY(-12px);
+    }
+
+    .confirmation-message.active {
+        transform: translateY(0);
+    }
+}
+
  
 /* partie profil*/
 .profile-body {
@@ -822,6 +862,18 @@ body {
     max-width: 1000px;
 }
 
+.admin-body #adminProductPrice {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.admin-body #adminProductPrice::-webkit-outer-spin-button,
+.admin-body #adminProductPrice::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
 .admin-body form {
     background-color: #fff;
     border-radius: 30px;
@@ -866,6 +918,17 @@ body {
     box-shadow: 0 0 5px rgba(81,45,168,0.25);
 }
 
+.admin-body #adminProductPrice {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.admin-body #adminProductPrice::-webkit-outer-spin-button,
+.admin-body #adminProductPrice::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .admin-body input[type="submit"],
 .admin-body input[type="reset"] {
     background-color: #512da8;
@@ -899,6 +962,11 @@ body {
     box-shadow: 0 5px 15px rgba(0,0,0,0.20);
 }
 
+.admin-orders-table {
+    margin-bottom: 0 !important;
+    border-radius: 18px 18px 0 0 !important;
+}
+
 .admin-body th {
     background-color: #512da8;
     color: white;
@@ -918,6 +986,23 @@ body {
     background-color: #f0ecff;
 }
 
+.admin-orders-total {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto 35px;
+    padding: 18px;
+    background-color: #fff;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.14);
+    color: #333;
+    font-weight: 700;
+    text-align: center;
+}
+
+.admin-orders-total strong {
+    color: #512da8;
+}
+
 .admin-body td button {
     background-color: #ffe9e9;
     border: none;
@@ -925,6 +1010,12 @@ body {
     border-radius: 10px;
     cursor: pointer;
     transition: 0.3s;
+}
+
+.admin-orders-empty {
+    padding: 24px 0;
+    color: #555;
+    font-style: italic;
 }
 
 .admin-body td button:hover {
@@ -1565,31 +1656,6 @@ footer p {
     flex: 1;
 }
 
-.produit-pmenu {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    width: 100%;
-}
-
-.produit-pmenu > p {
-    font-size: 16px;
-    font-family: 'DMSerifDisplay', sans-serif;
-    margin: 0;
-    color: white;
-    font-weight: 600;
-}
-
-.produit-pmenu button {
-    padding: 8px 16px;
-    border: none;
-    background: none;
-    cursor: pointer;
-    margin-left: auto;
-}
-
 .produit-book {
     display: flex;
     flex-direction: column;
@@ -1604,6 +1670,8 @@ footer p {
     width: 100%;
     object-fit: cover;
     border-radius: 12px;
+    min-height: 400px;
+    max-height: 400px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
     border: 2px solid rgba(255, 255, 255, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -1630,46 +1698,6 @@ footer p {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-}
-
-/* --- Menu burger produit.html : <details> + slide vers le bas --- */
-
-.burger-details {
-    position: relative;
-    flex: 0 0 auto;
-}
-
-/* On retire le marqueur natif du <summary> */
-.burger-details > summary {
-    list-style: none;
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
-    padding: 10px 15px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s ease, transform 0.2s ease;
-    user-select: none;
-}
-
-.burger-details > summary::-webkit-details-marker,
-.burger-details > summary::marker {
-    display: none;
-}
-
-.burger-details > summary img {
-    width: 28px;
-    height: 28px;
-    filter: invert(1);
-    display: block;
-    pointer-events: none;
-}
-
-.burger-details > summary:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: scale(1.05);
 }
 
 /* Menu déroulant */
@@ -1813,4 +1841,17 @@ footer p {
 
 .product-modal-cart:hover {
     background: #764ba2;
+}
+
+.category-filter,
+.langue-filter {
+    cursor: pointer;
+}
+
+.category-filter.active-filter,
+.langue-filter.active-filter {
+    background: #512da8;
+    color: white;
+    border-radius: 6px;
+    padding: 4px 10px;
 }

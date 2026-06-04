@@ -4,24 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="../static/css/style.css">
-    <link rel="shortcut icon" href="../static/img/logo_englet.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_englet.png') }}"> 
     <title>Mon Profil - Adlis</title>
 </head>
 <body class = "profile-body">
     <div class="index-header">
         <div class="index-brand">
-            <a href="/index" class="brand-link">
-                <img src="../static/img/logo_englet.png" alt="Adlis Logo" class="brand-logo">
+            <a href="{{ url_for('index') }}" class="brand-link">
+                <img src="{{ url_for('static', filename='img/LOGO_site.png') }}" alt="Adlis Logo" class="brand-logo">
                 <span class="brand-name">ADLIS</span>
             </a>
         </div>
-        <button class="admin-logout-btn">Déconnexion</button>
+        <button class="admin-logout-btn">SE DECONNECTER</button>
     </div>
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-pic-container">
-                <img src="../static/img/profil-de-lutilisateur.png" alt="Photo de profil" class="profile-pic">
+                <img src="{{ url_for('static', filename='img/' ~ user.avatar) }}" alt="Photo de profil" class="profile-pic">
                 <div class="add-avatar-btn" title="Choisir un avatar">
                     <i class="fa-solid fa-plus"></i>
                 </div>
@@ -32,15 +32,31 @@
         <div class="profile-info">
             <h3>Informations personnelles</h3>
             <div class="info-row">
-                <p><strong>Nom :</strong>Nadjib</p>
+                <p><strong>Nom :</strong> {{ user.nom }}</p>
                 <i class="fa-solid fa-pen edit-icon"></i>
             </div>
             <div class="info-row">
-                <p><strong>Prénom :</strong>Yani</p>
+                <p><strong>Prénom :</strong> {{ user.prenom }}</p>
                 <i class="fa-solid fa-pen edit-icon"></i>
             </div>
             <div class="info-row">
-                <p><strong>Âge :</strong> 34ans</p>
+                <p><strong>Âge :</strong> <span id="profileAge">{{ user.age }}</span> ans</p>
+                <i class="fa-solid fa-pen edit-icon"></i>
+            </div>
+            <div class="info-row">
+                <p><strong>Date de naissance :</strong> <span id="profileBirthDate">{{ user.birth_date or 'Non défini' }}</span></p>
+                <i class="fa-solid fa-pen edit-icon"></i>
+            </div>
+            <div class="info-row">
+                <p><strong>Email :</strong> {{ user.email }}</p>
+                <i class="fa-solid fa-pen edit-icon"></i>
+            </div>
+            <div class="info-row">
+                <p><strong>Téléphone :</strong> {{ user.telephone }}</p>
+                <i class="fa-solid fa-pen edit-icon"></i>
+            </div>
+            <div class="info-row">
+                <p><strong>Ville :</strong> {{ user.ville }}</p>
                 <i class="fa-solid fa-pen edit-icon"></i>
             </div>
         </div>
@@ -57,21 +73,22 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for item in purchase_history %}
                     <tr>
-                        <td>12/04/2026</td>
-                        <td>L'Alchimiste</td>
-                        <td>1200 DA</td>
-                        <td><span class="status delivered">Livré</span></td>
+                        <td>{{ item.date }}</td>
+                        <td>{{ item.produit }}</td>
+                        <td>{{ item.prix }}</td>
+                        <td><span class="status {{ item.status_class }}">{{ item.status }}</span></td>
                     </tr>
+                    {% else %}
                     <tr>
-                        <td>20/04/2026</td>
-                        <td>think again</td>
-                        <td>2500 DA</td>
-                        <td><span class="status pending">En cours</span></td>
+                        <td colspan="4">Aucun achat enregistré.</td>
                     </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+    <script src="{{ url_for('static', filename='js/scripte.js') }}"></script>
 </body> 
 </html>

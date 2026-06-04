@@ -4,15 +4,14 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Produits - Adlis</title>
-	<link rel="stylesheet" href="../static/css/style.css">
-	<link rel="shortcut icon" href="../static/img/logo_englet.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_englet.png') }}">
 </head>
-
 <body class="produit-body">
 	<div class="index-header">
 		<div class="index-brand">
-			<a href="/index" class="brand-link">
-				<img src="../static/img/LOGO_site.png" alt="Adlis Logo" class="brand-logo">
+			<a href="{{ url_for('index') }}" class="brand-link">
+				<img src="{{ url_for('static', filename='img/LOGO_site.png') }}" alt="Adlis Logo" class="brand-logo">
 				<span class="brand-name">ADLIS</span>
 			</a>
 		</div>
@@ -20,34 +19,34 @@
 		<div class="search-wrapper">
 			<input type="text" class="search-input" placeholder="Chercher par titre...">
 			<button type="submit" class="search-btn">
-				<img src="../static/img/chercher.png" alt="Rechercher">
+				<img src="{{ url_for('static', filename='img/chercher.png') }}"  alt="Rechercher">
 			</button>
 		</div>
 
 		<button class="burger-menu-btn" id="burgerMenuBtn">
-			<img src="../static/img/menus.png" alt="Menu">
+			<img src="{{ url_for('static', filename='img/menus.png') }}"   alt="Menu">
 		</button>
 	</div>
-
 
 	<div class="sidebar-menu" id="sidebarMenu">
 		<div class="sidebar-content">
 			<nav class="sidebar-nav">
-				<a href="produit.html" class="sidebar-link">
+				<a href="{{ url_for('produit') }}" class="sidebar-link">
     				<span>PRODUITS</span>
 				</a>
-				<a href="panier.html" class="sidebar-link" id="linkPanier">
-   			 		<span>PANIER</span>
+				<a href="{{ url_for('panier') }}" class="sidebar-link" id="linkPanier">
+	   			 <span>PANIER</span>
 				</a>
-				<a href="profile.html" class="sidebar-link" id="linkProfil">
-    				<span id="account-nom">PROFIL</span>
+				<a href="{{ url_for('profile') }}" class="sidebar-link" id="linkProfil">
+	    			<span id="account-nom">PROFIL</span>
 				</a>
 			</nav>
+
 			<div class="sidebar-account">
-				<button class="account-btn" id="accountBtn">
-					<img src="../static/img/profil-de-lutilisateur.png" alt="Profil" class="account-icon">
+				<a href="{{ url_for('auth') }}" class="account-btn" id="accountBtn">
+					<img src="{{ url_for('static', filename='img/profil-de-lutilisateur.png') }}" alt="Profil" class="account-icon">
 					<span id="accountText">SE CONNECTER</span>
-				</button>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -55,147 +54,141 @@
 	<div class="produit-layout">
 		<div class="produit-tab">
 			<div class="produit-categorie">
-				<h3>CATEGORIE :</h3>
-				<p>Action</p>
-				<p>Aventure</p>
-				<p>Art</p>
-				<p>Biographie</p>
-				<p>Business</p>
-				<p>Comédie</p>
-				<p>Drama</p>
-				<p>Fitness</p>
-				<p>Fiction</p>
-				<p>Histoire</p>
-				<p>Philosophie</p>
-				<p>Psychologie</p>
-				<p>Recettes</p>
-				<p>Religion</p>
-				<p>Romance</p>
-				<p>Science Fiction &amp; Fantasy</p>
-				<p>Science &amp; Technologie</p>
-				<p>Thrillers</p>
+			    <h3>CATEGORIE :</h3>
+			    <p class="category-filter category-reset active-filter">Tout afficher</p>
+			    <p class="category-filter">Action</p>
+			    <p class="category-filter">Aventure</p>
+			    <p class="category-filter">Art</p>
+			    <p class="category-filter">Biographie</p>
+			    <p class="category-filter">Business</p>
+			    <p class="category-filter">Comédie</p>
+			    <p class="category-filter">Drama</p>
+			    <p class="category-filter">Fitness</p>
+			    <p class="category-filter">Fiction</p>
+			    <p class="category-filter">Histoire</p>
+			    <p class="category-filter">Philosophie</p>
+			    <p class="category-filter">Psychologie</p>
+			    <p class="category-filter">Recettes</p>
+			    <p class="category-filter">Religion</p>
+			    <p class="category-filter">Romance</p>
+			    <p class="category-filter">Science Fiction &amp; Fantasy</p>
+			    <p class="category-filter">Science &amp; Technologie</p>
+			    <p class="category-filter">Thrillers</p>
 			</div>
 
 			<div class="produit-langue">
-				<h3>LANGUES :</h3>
-				<p>Français</p>
-				<p>Anglais</p>
-				<p>Arabe</p>
-				<p>Tamazight</p>
-				<p>Espagnol</p>
+			    <h3>LANGUES :</h3>
+			    <p class="langue-filter langue-reset active-filter">Tout afficher</p>
+			    <p class="langue-filter">Français</p>
+			    <p class="langue-filter">Anglais</p>
+			    <p class="langue-filter">Arabe</p>
+			    <p class="langue-filter">Tamazight</p>
+			    <p class="langue-filter">Espagnol</p>
 			</div>
 		</div>
 
 		<div class="produit-produits">
-			<div class="produit-pmenu">
-				<p>Résultats : 1 - 20</p>
-				<button>
-					<img src="../static/img/filtre.png" width="20" height="20">
-				</button>
-			</div>
-
 			<div class="produit-grid">
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre20.png">
+					<img src="{{ url_for('static', filename='img/produit_livre20.png') }}">
 					<p>Le Roi de Fer<br>Auteur: Maurice Druon<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre19.png">
+					<img src="{{ url_for('static', filename='img/produit_livre19.png') }}">
 					<p>La Reine Étranglée<br>Auteur: Maurice Druon<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre18.png">
+					<img src="{{ url_for('static', filename='img/produit_livre18.png') }}">
 					<p>Les Poisons de la Couronne<br>Auteur: Maurice Druon<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre17.png">
+					<img src="{{ url_for('static', filename='img/produit_livre17.png') }}">
 					<p>La Loi des Mâles<br>Auteur: Maurice Druon<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre16.png">
+					<img src="{{ url_for('static', filename='img/produit_livre16.png') }}">
 					<p>La Louve de France<br>Auteur: Maurice Druon<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre15.png">
+					<img src="{{ url_for('static', filename='img/produit_livre15.png') }}">
 					<p>Le Lis et le Lion<br>Auteur: Maurice Druon<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre14.png">
+					<img src="{{ url_for('static', filename='img/produit_livre14.png') }}">
 					<p>Quand un Roi Perd la France<br>Auteur: Maurice Druon<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre13.png">
+					<img src="{{ url_for('static', filename='img/produit_livre13.png') }}">
 					<p>Le Hobbit<br>Auteur: JRR Tolkien<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre12.png">
+					<img src="{{ url_for('static', filename='img/produit_livre12.png') }}">
 					<p>La Fraternité de l'Anneau<br>Auteur: JRR Tolkien<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre11.png">
+					<img src="{{ url_for('static', filename='img/produit_livre11.png') }}">
 					<p>Les Deux Tours<br>Auteur: JRR Tolkien<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre10.png">
+					<img src="{{ url_for('static', filename='img/produit_livre10.png') }}">
 					<p>Le Retour du Roi<br>Auteur: JRR Tolkien<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre9.png">
+					<img src="{{ url_for('static', filename='img/produit_livre9.png') }}">
 					<p>The Philosopher's Stone<br>Auteur: JK Rowling<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre8.png">
+					<img src="{{ url_for('static', filename='img/produit_livre8.png') }}">
 					<p>The Chamber of Secrets<br>Auteur: JK Rowling<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre7.png">
+					<img src="{{ url_for('static', filename='img/produit_livre7.png') }}">
 					<p>The Prisoner of Azkaban<br>Auteur: JK Rowling<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre6.png">
+					<img src="{{ url_for('static', filename='img/produit_livre6.png') }}">
 					<p>The Goblet of Fire<br>Auteur: JK Rowling<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre5.png">
+					<img src="{{ url_for('static', filename='img/produit_livre5.png') }}">
 					<p>The Order of the Phoenix<br>Auteur: JK Rowling<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre4.png">
+					<img src="{{ url_for('static', filename='img/produit_livre4.png') }}">
 					<p>The Half-Blood Prince<br>Auteur: JK Rowling<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre3.png">
+					<img src="{{ url_for('static', filename='img/produit_livre3.png') }}">
 					<p>The Deathly Hallows<br>Auteur: JK Rowling<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre2.png">
+					<img src="{{ url_for('static', filename='img/produit_livre2.png') }}">
 					<p>The Ballad of Songbirds and Snakes<br>Auteur: Suzanne Collins<br>Prix: X DA</p>
 				</div>
 
 				<div class="produit-book">
-					<img src="../static/img/produit_livre1.png">
+					<img src="{{ url_for('static', filename='img/produit_livre1.png') }}">
 					<p>Sunrise on the Reaping<br>Auteur: Suzanne Collins<br>Prix: X DA</p>
 				</div>
-
 			</div>
 		</div>
 	</div>
@@ -204,6 +197,6 @@
 		<p>&copy; 2026 Adlis - Produits</p>
 	</footer>
 
-    <script src="../static/js/scripte.js"></script>
+    <script src="{{ url_for('static', filename='js/scripte.js') }}"></script>
 </body>
 </html>

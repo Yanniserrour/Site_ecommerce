@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Administrateur</title>
-    <link rel="stylesheet" href="../static/css/style.css">
-    <link rel="shortcut icon" href="../static/img/logo_englet.png"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_englet.png') }}"> 
 </head>
 <body class="admin-body">
     <div class="index-header admin-header">
         <div class="index-brand">
-            <a href="/index" class="brand-link">
-                <img src="../static/img/LOGO_site.png" alt="Adlis Logo" class="brand-logo">
+            <a href="{{ url_for('index') }}" class="brand-link">
+                <img src="{{ url_for('static', filename='img/LOGO_site.png') }}" alt="Adlis Logo" class="brand-logo">
                 <span class="brand-name">ADLIS</span>
             </a>
         </div>
@@ -41,6 +41,9 @@
 
                 <label>Cat&eacute;gorie :</label><br>
                 <input type="text" id="adminProductCategory" required><br><br>
+
+                <label>Langue :</label><br>
+                <input type="text" id="adminProductLanguage" required><br><br>
 
                 <label>Prix :</label><br>
                 <input type="number" id="adminProductPrice" min="0" required><br><br>
@@ -82,7 +85,7 @@
     <center>
         <h3>Liste des commandes</h3>
 
-        <table>
+        <table class="admin-orders-table">
             <thead>
                 <tr>
                     <th>Client</th>
@@ -103,6 +106,10 @@
                 </tr>
             </tbody>
         </table>
+
+        <p class="admin-orders-total">
+            Prix total des commandes : <strong id="adminOrdersTotal">0 DA</strong>
+        </p>
     </center>
 
     <hr>
@@ -111,6 +118,6 @@
         <center><p>&copy; 2026 Adlis - Administration</p></center>
     </footer>
 
-    <script src="../static/js/scripte.js"></script>
+    <script src="{{ url_for('static', filename='js/scripte.js') }}"></script>
 </body>
 </html>

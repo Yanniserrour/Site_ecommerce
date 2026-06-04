@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulaire - Adlis</title>
-    <link rel="stylesheet" href="../static/css/style.css">
-    <link rel="shortcut icon" href="../static/img/logo_englet.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_englet.png') }}"> 
 </head>
 <body class = "form-body">
-    <div class="form-card">
+    <form class="form-card" id="commandeForm">
         <h1>Remplir le formulaire</h1>
-        <input type="text" placeholder="Nom">
+        <input type="text" placeholder="Nom" required>
         <input type="text" placeholder="Prénom">
         <input type="text" placeholder="Adresse précise">
         <input type="text" placeholder="Numéro de téléphone">
@@ -83,7 +83,8 @@
             <option>bureau de livraision</option>
         </select>
 
-        <button class="btn-commande" id="Commande">Commander !</button>
-    </div>
+        <button class="btn-commande" id="Commande" type="submit">Commander !</button>
+    </form>
+    <script src="{{ url_for('static', filename='js/scripte.js') }}"></script>
 </body>
 </html>

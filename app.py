@@ -22,30 +22,65 @@ def obtenir_connexion():
 
 # les chemain
 @app.route('/')
+@app.route('/index')
+@app.route('/index.html')
 def index():
     return render_template('index.html')
 
 @app.route('/auth')
+@app.route('/auth.html')
 def auth():
     return render_template('auth.html')
 
 @app.route('/formulaire')
+@app.route('/formulaire.html')
 def formulaire():
     return render_template('formulaire.html')
 
 @app.route('/profile')
+@app.route('/profile.html')
 def profile():
-    return render_template('profile.html')
+    user = {
+        'nom': 'Nadjib',
+        'prenom': 'Yani',
+        'age': 34,
+        'email': 'nadjib.yani@example.com',
+        'telephone': '0612345678',
+        'ville': 'Alger',
+        'avatar': 'profil-de-lutilisateur.png'
+    }
+
+    purchase_history = [
+        {
+            'date': '12/04/2026',
+            'produit': "L'Alchimiste",
+            'prix': '1200 DA',
+            'status': 'Livré',
+            'status_class': 'delivered'
+        },
+        {
+            'date': '20/04/2026',
+            'produit': 'Think Again',
+            'prix': '2500 DA',
+            'status': 'En cours',
+            'status_class': 'pending'
+        }
+    ]
+
+    return render_template('profile.html', user=user, purchase_history=purchase_history)
 
 @app.route('/produit')
+@app.route('/produit.html')
 def produit():
     return render_template('produit.html')
 
 @app.route('/panier')
+@app.route('/panier.html')
 def panier():
     return render_template('panier.html')
 
 @app.route('/admin')
+@app.route('/admin.html')
 def admin():
     return render_template('admin.html')
 
@@ -142,4 +177,8 @@ def connexion():
             connexion.close()
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     app.run(debug=True, port=50000)
+=======
+    app.run(debug=True)
+>>>>>>> 0a01e4b00e6e73a64e8506490e37dd097b64b26f

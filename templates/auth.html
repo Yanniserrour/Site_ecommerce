@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="../static/css/style.css">
-    <link rel="shortcut icon" href="../static/img/logo_englet.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_englet.png') }}"> 
     <title>Authentification - Adlis</title>
 </head>
 <body class = "auth-body">
@@ -13,7 +13,11 @@
     <div class="container" id="container">
         <!--le contenaire d'inscription-->
         <div class="form-container sign-up">
+<<<<<<< HEAD
             <form action="/inscription" method="POST">
+=======
+            <form id="signupForm">
+>>>>>>> 0a01e4b00e6e73a64e8506490e37dd097b64b26f
                 <h1>Crée un compte</h1>
                 <div class="social-icons">
                     <a href="#" class="icon"><i class="fa-brands fa-google"></i></a>
@@ -22,17 +26,29 @@
                     <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
                 <span>Ou utilisez votre Email</span>
+<<<<<<< HEAD
                 <input type="text" name="nom" placeholder="Nom" required>
                 <input type="email" name="email" placeholder="Mail" required>
                 <input type="password" name="mot_de_passe" placeholder="Mot de passe" required>
 
                 <button>Inscription</button>
+=======
+                <input type="text" placeholder="Nom">
+                <input type="email" placeholder="Mail">
+                <input type="date" placeholder="Date de naissance" id="signupBirthDate">
+                <input type="password" placeholder="Mot de passe">
+                <button type="submit">Inscription</button>
+>>>>>>> 0a01e4b00e6e73a64e8506490e37dd097b64b26f
             </form>
         </div>
 
         <!--le contenaire de connexion-->
         <div class="form-container sign-in">
+<<<<<<< HEAD
             <form action="/connexion" method="POST">
+=======
+            <form id="loginForm">
+>>>>>>> 0a01e4b00e6e73a64e8506490e37dd097b64b26f
                 <h1>Conectez vous</h1>
                 <div class="social-icons">
                     <a href="#" class="icon"><i class="fa-brands fa-google"></i></a>
@@ -44,7 +60,7 @@
                 <input type="email" name="email" placeholder="Mail" required>
                 <input type="password" name="mot_de_passe" placeholder="Mot de passe" required>
                 <a href="#">Mot de passe oublier?</a>
-                <button>Conexion</button>
+                <button type="submit">Conexion</button>
             </form>
         </div>
 
@@ -78,6 +94,6 @@
     </footer>
 
     <!--l'appelle du JS-->
-    <script src="../static/js/scripte.js"></script>
+    <script src="{{ url_for('static', filename='js/scripte.js') }}"></script>
 </body>
 </html>
