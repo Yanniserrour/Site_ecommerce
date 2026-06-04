@@ -83,7 +83,7 @@ neutres : #fff, #eee, #f9f9f9, #fafafa, #333
 
 ##BACK-END:
     " 3 choses fondamentale a faire: la dinamicité,
-        les intérogation DB, les controles"
+        les intérogations DB, les controles"
 
 DINAMICITÉ DU SITE: 
  -liens conditionnel (terminé)
@@ -109,20 +109,20 @@ DINAMICITÉ DU SITE:
  -ajouter des disigne de confirmation(ajouter au panier, commander)
  -suprimer l'anciens livre ajouter si il n'ya plus de place.
 
- INTEROGATION DB: 
- -iscription/connexion
- -achat de livre 
- -charger l'historique pour chaque connexion
- -afficher le panier pour chaque connexion
- -afficher les informations profile pour chaque connexion
- -ajouter la commande a la BD.
+ DB: 
+ -iscription/connexion (terminé)
  -jouter la table panier.
- -ajouter l'avatar a la bd.
- -une suppression du panier le supprime aussi de la bd.
+ -sauvgarder les livres ajouter dans la DB
+ -sauvgarder la commande de livre dans la BD 
+ -charger l'historique pour chaque connexion
+ -charger le panier pour chaque connexion
+ -charger les informations profile pour chaque connexion
+ -sauvgarder l'avatar dans la BD
+ -une suppression du panier le supprime aussi de la BD.
 
 
  LES CONTROLES: 
- -controles de connexion : compte existant, mdp ou email inccorrect
+ -controles de connexion : compte existant, mdp ou email inccorrect (terminé)
  -aficher automatiquement les donnée de l'utilisateurs l'ors de l'achat.
  -en cours et livré 
 
@@ -131,7 +131,11 @@ DINAMICITÉ DU SITE:
  -police
  -ajouter un footer
  -ajouter les liens avec flask
- 
+ -pdf de conception
+ -ajouter des citations.
+ -ajouter les chemains vers les resaux dans auth
+ -netoyer le message d'authentification
+
 
 
 
