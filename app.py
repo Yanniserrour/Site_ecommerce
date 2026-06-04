@@ -1,7 +1,7 @@
 import os
 from datetime import timedelta
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-import oracledb
+import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
@@ -20,21 +20,23 @@ def set_response_headers(response):
 ENV = 'DEVELOPPEMENT' 
 
 if ENV == "DEVELOPPEMENT":
-    DB_USER     = "system"
-    DB_PASSWORD = "yani"
-    DB_DSN      = "localhost:1521/XEPDB1"
+    DB_HOST     = "localhost"
+    DB_USER     = "root"
+    DB_PASSWORD = "admin123"
+    DB_NAME     = "adlis"
 else: 
-    DB_USER     = "adlis_prod" #a changer
+    DB_HOST     = "serveur_debergement"  #a changer
+    DB_USER     = "adlis_prod"           #a changer
     DB_PASSWORD = "mot_de_passe_distant" #a changer
-    DB_DSN      = "serveur_debergement" #a changer
+    DB_NAME     = "adlis"                #a changer
 
 def obtenir_connexion():
-    return oracledb.connect(user=DB_USER, password=DB_PASSWORD, dsn=DB_DSN)
+    return mysql.connector.connect(host=DB_HOST, user=DB_USER, password=DB_PASSWORD, database=DB_NAME)
 
 ADMIN_CREDENTIALS = {
     "yanni.serrour@fgei.ummto.dz": "admin123",
     "nadjib.sadouki@fgei.ummto.dz": "admin123",
-    "salim.mofrej@fgei.ummto.dz": "admin123"
+    "salim@fgei.ummto.dz": "admin123"
 }
 
 # les chemain
@@ -131,11 +133,12 @@ def inscription():
         return redirect(url_for('auth'))
     
     connexion = None
+    cursor = None
     try: 
         connexion = obtenir_connexion()
         cursor = connexion.cursor()
         
-        cursor.execute("SELECT email FROM utilisateur WHERE UPPER(email) = UPPER(:email)", [email])
+        cursor.execute("SELECT email FROM utilisateur WHERE email = %(email)s", {"email": email})
         compte_existant = cursor.fetchone()
         
         if compte_existant:
@@ -146,7 +149,7 @@ def inscription():
             
             requete_sql = """
             INSERT INTO utilisateur(email, nom, prenom, date_naissance, mot_de_passe, num_telephone)
-            VALUES(:email, :nom, :prenom, TO_DATE(:date_naiss, 'YYYY-MM-DD'), :mdp_hashed, :num_tel)
+            VALUES(%(email)s, %(nom)s, %(prenom)s, %(date_naiss)s, %(mdp_hashed)s, %(num_tel)s)
             """
             
             cursor.execute(requete_sql, {
@@ -158,14 +161,14 @@ def inscription():
             flash("Inscription réussie ! Veuillez vous connecter.", "success")
             return redirect(url_for('auth'))
         
-    except oracledb.DatabaseError as e:
-        error, = e.args
-        flash(f"Erreur technique de base de données : {error.message}")
+    except mysql.connector.Error as e:
+        flash(f"Erreur technique de base de données : {e}")
         return redirect(url_for('auth'))
     
     finally:
-        if connexion:
+        if cursor:
             cursor.close()
+        if connexion:
             connexion.close()
 
 
@@ -197,12 +200,13 @@ def connexion():
             flash("Email ou mot de passe incorrect.", "error")
             return redirect(url_for('auth'))
 
-    connexion = None
+    connexion_db = None
+    cursor = None
     try: 
-        connexion = obtenir_connexion()
-        cursor    = connexion.cursor()
+        connexion_db = obtenir_connexion()
+        cursor = connexion_db.cursor()
         
-        cursor.execute("SELECT email, nom, prenom, mot_de_passe FROM utilisateur WHERE UPPER(email) = UPPER(:email)", [email])
+        cursor.execute("SELECT email, nom, prenom, mot_de_passe FROM utilisateur WHERE email = %(email)s", {"email": email})
         utilisateur = cursor.fetchone()
         
         if not utilisateur:
@@ -224,15 +228,15 @@ def connexion():
             flash("Connexion réussie !", "success")
             return redirect(url_for('index'))
     
-    except oracledb.DatabaseError as e:
-        error, = e.args
-        flash(f"Erreur de connexion : {error.message}")
+    except mysql.connector.Error as e:
+        flash(f"Erreur de connexion : {e}")
         return redirect(url_for('auth'))
     
     finally:
-        if connexion: 
+        if cursor:
             cursor.close()
-            connexion.close()
+        if connexion_db: 
+            connexion_db.close()
             
 
 @app.route('/deconnexion')
@@ -261,7 +265,6 @@ def ajouter_produit():
     else:
         nom_image = 'default_book.png'
     
-    connexion = None
     if not nom or not auteur or not prix:
         flash("Les champs 'Nom', 'Auteur' et 'Prix' sont obligatoires.", "error")
         return redirect(url_for('admin'))
@@ -274,7 +277,7 @@ def ajouter_produit():
 
         requete_sql = """
         INSERT INTO livre (titre, auteur, categorie, langue, prix, image)
-        VALUES (:nom, :auteur, :categorie, :langue, :prix, :image)
+        VALUES (%(nom)s, %(auteur)s, %(categorie)s, %(langue)s, %(prix)s, %(image)s)
         """
 
         cursor.execute(requete_sql, {
