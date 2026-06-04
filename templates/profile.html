@@ -21,11 +21,33 @@
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-pic-container">
-                <img src="{{ url_for('static', filename='img/' ~ user.avatar) }}" alt="Photo de profil" class="profile-pic">
-                <div class="add-avatar-btn" title="Choisir un avatar">
+                <img src="{{ url_for('static', filename='img/' + user.avatar) }}" alt="Photo de profil" class="profile-pic">
+                <div class="add-avatar-btn" id="toggleAvatarBox" title="Choisir un avatar">
                     <i class="fa-solid fa-plus"></i>
                 </div>
-            </div>
+                <div class="avatar-box" id="avatarBox">
+                    <p>Choisir un avatar :</p>
+                    <form action="{{ url_for('update_avatar') }}" method="POST">
+                        <div class="avatar-options">
+                            <button type="submit" name="avatar_choice" value="profil-de-lutilisateur.png" class="avatar-option">
+                                <img src="{{ url_for('static', filename='img/profil-de-lutilisateur.png') }}" alt="Avatar 1">
+                            </button>
+                            <button type="submit" name="avatar_choice" value="avatar1.png" class="avatar-option">
+                                <img src="{{ url_for('static', filename='img/avatar1.png') }}" alt="Avatar 2">
+                            </button>
+                            <button type="submit" name="avatar_choice" value="avatar2.png" class="avatar-option">
+                                <img src="{{ url_for('static', filename='img/avatar2.png') }}" alt="Avatar 3">
+                            </button>
+                            <button type="submit" name="avatar_choice" value="avatar3.png" class="avatar-option">
+                                <img src="{{ url_for('static', filename='img/avatar3.png') }}" alt="Avatar 4">
+                            </button>
+                            <button type="submit" name="avatar_choice" value="avatar4.png" class="avatar-option">
+                                <img src="{{ url_for('static', filename='img/avatar4.png') }}" alt="Avatar 5">
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>  
             <h1>Mon Profil</h1>
         </div>
 

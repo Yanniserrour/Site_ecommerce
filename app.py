@@ -72,7 +72,7 @@ def profile():
         'email': session.get('email', ''),
         'telephone': '0612345678',
         'ville': 'Alger',
-        'avatar': 'profil-de-lutilisateur.png'
+        'avatar': session.get('avatar', 'profil-de-lutilisateur.png')
     }
 
     purchase_history = [
@@ -136,7 +136,7 @@ def inscription():
     cursor = None
     try: 
         connexion = obtenir_connexion()
-        cursor = connexion.cursor()
+        cursor = connexion.cursor(buffered=True)
         
         cursor.execute("SELECT email FROM utilisateur WHERE email = %(email)s", {"email": email})
         compte_existant = cursor.fetchone()
@@ -204,9 +204,8 @@ def connexion():
     cursor = None
     try: 
         connexion_db = obtenir_connexion()
-        cursor = connexion_db.cursor()
-        
-        cursor.execute("SELECT email, nom, prenom, mot_de_passe FROM utilisateur WHERE email = %(email)s", {"email": email})
+        cursor = connexion_db.cursor(buffered=True)   
+        cursor.execute("SELECT email, nom, prenom, mot_de_passe, avatar FROM utilisateur WHERE email = %(email)s", {"email": email})
         utilisateur = cursor.fetchone()
         
         if not utilisateur:
@@ -225,6 +224,7 @@ def connexion():
             session['nom'] = utilisateur[1]
             session['prenom'] = utilisateur[2]
             session['user_name'] = utilisateur[1]
+            session['avatar'] = utilisateur[4] if utilisateur[4] else 'profil-de-lutilisateur.png'
             flash("Connexion réussie !", "success")
             return redirect(url_for('index'))
     
@@ -314,6 +314,38 @@ def ajouter_produit():
     
     return redirect(url_for('admin'))
 
+# Pour l'avatar
+@app.route('/profile/update_avatar', methods=['POST'])
+def update_avatar():
+    if not session.get('logged_in'):
+        return redirect(url_for('auth'))
+
+    nom_avatar = request.form.get('avatar_choice')
+    if not nom_avatar:
+        flash("Aucun avatar sélectionné.", "error")
+        return redirect(url_for('profile'))
+
+    connexion = None
+    cursor = None
+    try:
+        connexion = obtenir_connexion()
+        cursor = connexion.cursor()
+        cursor.execute(
+            "UPDATE utilisateur SET avatar = %(avatar)s WHERE email = %(email)s",
+            {"avatar": nom_avatar, "email": session['email']}
+        )
+        connexion.commit()
+        session['avatar'] = nom_avatar
+        flash("Avatar mis à jour !", "success")
+    except mysql.connector.Error as e:
+        flash(f"Erreur : {e}", "error")
+    finally:
+        if cursor:
+            cursor.close()
+        if connexion:
+            connexion.close()
+
+    return redirect(url_for('profile'))
     
 if __name__ == '__main__':
     app.run(debug=True)

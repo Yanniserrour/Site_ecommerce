@@ -909,3 +909,19 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 });
+
+// Pour les avatars 
+var toggleAvatarBox = document.getElementById('toggleAvatarBox');
+var avatarBox = document.getElementById('avatarBox');
+
+if (toggleAvatarBox && avatarBox) {
+    toggleAvatarBox.addEventListener('click', function() {
+        avatarBox.classList.toggle('active');
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!avatarBox.contains(e.target) && !toggleAvatarBox.contains(e.target)) {
+            avatarBox.classList.remove('active');
+        }
+    });
+}

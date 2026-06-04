@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DMSerifDisplay:wght@500;600;700&display=swap');
 
 @font-face {
     font-family: 'DMSerifDisplay';
@@ -449,26 +449,61 @@ body {
     background-color: #eee;
 }
 
-.add-avatar-btn {
+/* Pour ajouter des avatars */
+.avatar-box {
+    display: none;
     position: absolute;
-    bottom: 5px;
-    right: 5px;
-    background-color: #512da8;
-    color: white;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    border: 2px solid #fff;
-    transition: 0.3s ease;
+    left: 100%;
+    top: 0;
+    margin-left: 15px;
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    min-width: 200px;
 }
 
-.add-avatar-btn:hover {
-    background-color: #3f1d8c;
-    transform: scale(1.1);
+.avatar-box.active {
+    display: block;
+}
+
+.avatar-box p {
+    font-family: 'Raleway', sans-serif;
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.avatar-options {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.avatar-option {
+    background: none;
+    border: 3px solid transparent;
+    border-radius: 50%;
+    padding: 0;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.avatar-option:hover {
+    border-color: #512da8;
+}
+
+.avatar-option img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-pic-container {
+    position: relative;
 }
 
 .profile-info h3, .purchase-history h3 {
