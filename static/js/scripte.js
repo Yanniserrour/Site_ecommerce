@@ -171,9 +171,41 @@ function findLivreIdInDb(livres, title, author, priceText) {
     return null;
 }
 
-// Initialisation au chargement (profile, index)
-window.addEventListener('load', () => {
+// Carousel (index)
+var indexCarousel = document.getElementById('indexCarousel');
+var carouselImage = document.getElementById('carouselImage');
+var carouselLeft = document.getElementById('carouselLeft');
+var carouselRight = document.getElementById('carouselRight');
 
+var carouselImages = [
+    '/static/img/banner1.png',
+    '/static/img/banner2.png',
+    '/static/img/banner3.png'
+];
+var carouselIndex = 0;
+
+function showCarousel() {
+    if (!indexCarousel || !carouselImage || carouselImages.length === 0) return;
+    carouselImage.src = carouselImages[carouselIndex];
+    indexCarousel.style.display = 'flex';
+}
+
+if (carouselLeft) {
+    carouselLeft.addEventListener('click', function() {
+        carouselIndex = (carouselIndex - 1 + carouselImages.length) % carouselImages.length;
+        carouselImage.src = carouselImages[carouselIndex];
+    });
+}
+
+if (carouselRight) {
+    carouselRight.addEventListener('click', function() {
+        carouselIndex = (carouselIndex + 1) % carouselImages.length;
+        carouselImage.src = carouselImages[carouselIndex];
+    });
+}
+
+// Initialisation au chargement (index)
+window.addEventListener('load', () => {
     const welcomeVideo = document.getElementById('welcomeVideo');
     if (welcomeVideo) {
         welcomeVideo.muted = true;
@@ -181,13 +213,23 @@ window.addEventListener('load', () => {
         welcomeVideo.setAttribute('playsinline', '');
         welcomeVideo.setAttribute('disablepictureinpicture', '');
         welcomeVideo.setAttribute('controlsList', 'nodownload nofullscreen noremoteplayback');
-        welcomeVideo.addEventListener('ended', () => {
-            welcomeVideo.pause();
-            welcomeVideo.currentTime = welcomeVideo.duration || welcomeVideo.currentTime;
+        welcomeVideo.classList.remove('is-hidden');
+        welcomeVideo.addEventListener('canplay', function() {
+            welcomeVideo.classList.remove('is-hidden');
         });
-        welcomeVideo.play().catch(() => {});
+        welcomeVideo.addEventListener('ended', function() {
+            welcomeVideo.style.display = 'none';
+            showCarousel();
+        });
+        welcomeVideo.play().catch(function() {
+            welcomeVideo.style.display = 'none';
+            showCarousel();
+        });
+    } else if (indexCarousel) {
+        showCarousel();
     }
 });
+
 
 
 // =================AUTH===============================
