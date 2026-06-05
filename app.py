@@ -351,6 +351,50 @@ def api_user_profile():
         if connexion:
             connexion.close()
 
+# Route modifier et sauvegarder les données du profil: 
+@app.route('/api/user/update_profile', methods=['POST'])
+def api_update_profile():
+    if not session.get('logged_in'):
+        return jsonify({"ok": False, "error": "Non authentifie"}), 401
+
+    email = session.get('email')
+    data = request.get_json(silent=True) or {}
+
+    nom = data.get('nom')
+    prenom = data.get('prenom')
+    date_naissance = data.get('date_naissance')
+    num_telephone = data.get('num_telephone')
+    ville = data.get('ville')
+
+    connexion = None
+    cursor = None
+    try:
+        connexion = obtenir_connexion()
+        cursor = connexion.cursor()
+        cursor.execute("""
+            UPDATE utilisateur 
+            SET nom = %(nom)s, prenom = %(prenom)s, date_naissance = %(date_naissance)s,
+                num_telephone = %(num_telephone)s, ville = %(ville)s
+            WHERE email = %(email)s
+        """, {
+            "nom": nom, "prenom": prenom, "date_naissance": date_naissance,
+            "num_telephone": num_telephone, "ville": ville, "email": email
+        })
+        connexion.commit()
+
+        session['nom'] = nom
+        session['prenom'] = prenom
+
+        return jsonify({"ok": True})
+    except mysql.connector.Error as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connexion:
+            connexion.close()
+
+
 # Route API/ recuperer l'historique d'chats
 @app.route('/api/user/purchases', methods=['GET'])
 def api_user_purchases():

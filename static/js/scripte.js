@@ -324,38 +324,51 @@ async function renderDynamicBooks() {
         products = [];
     }
 
+    // Produit page grid
     const produitGrid = document.querySelector('.produit-grid');
-    const recentGallery = document.getElementById('recentBooksGallery') || document.querySelector('.index-autre-gallery:last-of-type');
-
     if (produitGrid) {
-        produitGrid.querySelectorAll('.admin-dynamic-book').forEach((book) => book.remove());
-        products.slice().reverse().forEach((product) => {
-            const book = createBookElement({
+        produitGrid.querySelectorAll('.admin-dynamic-book').forEach(function(book) { book.remove(); });
+        products.slice().reverse().forEach(function(product) {
+            produitGrid.prepend(createBookElement({
                 name: product.title,
                 author: product.author,
                 category: product.category,
                 language: product.language,
                 price: product.price,
                 image: '/static/img/' + product.image
-            }, 'produit-book');
-            produitGrid.prepend(book);
+            }, 'produit-book'));
         });
     }
 
-    if (recentGallery) {
-        recentGallery.querySelectorAll('.admin-dynamic-book').forEach((book) => book.remove());
-        products.slice(0, 5).reverse().forEach((product) => {
-            const book = createBookElement({
+    // Index page categories
+    var indexCategories = {
+        'Action': document.getElementById('indexAction'),
+        'Business': document.getElementById('indexBusiness'),
+        'Drama': document.getElementById('indexDrama'),
+        'Fiction': document.getElementById('indexFiction'),
+        'Roman': document.getElementById('indexRoman')
+    };
+
+    Object.keys(indexCategories).forEach(function(category) {
+        var gallery = indexCategories[category];
+        if (!gallery) return;
+
+        gallery.innerHTML = '';
+        var booksInCategory = products.filter(function(p) {
+            return p.category === category;
+        });
+
+        booksInCategory.slice(-5).forEach(function(product) {
+            gallery.appendChild(createBookElement({
                 name: product.title,
                 author: product.author,
                 category: product.category,
                 language: product.language,
                 price: product.price,
                 image: '/static/img/' + product.image
-            }, 'index-book');
-            recentGallery.prepend(book);
+            }, 'index-book'));
         });
-    }
+    });
 }
 
 renderDynamicBooks();
@@ -973,6 +986,66 @@ function chargerDonneesProfil() {
             console.error('Erreur:', error);
             afficherErreurProfil();
         });
+}
+
+// Modifier et sauvegarder les données
+var saveProfileBtn = document.getElementById('saveProfileBtn');
+
+document.querySelectorAll('.edit-icon').forEach(function(icon) {
+    icon.addEventListener('click', function() {
+        var fieldId = icon.dataset.field;
+        var span = document.getElementById(fieldId);
+        if (!span || span.querySelector('input')) return;
+
+        var currentValue = span.textContent.trim();
+        var input = document.createElement('input');
+        input.type = fieldId === 'profileBirthDate' ? 'date' : 'text';
+        input.value = currentValue === 'Non defini' || currentValue === 'Non renseigne' ? '' : currentValue;
+        input.className = 'profile-edit-input';
+
+        span.textContent = '';
+        span.appendChild(input);
+        input.focus();
+
+        if (saveProfileBtn) saveProfileBtn.style.display = 'block';
+    });
+});
+
+if (saveProfileBtn) {
+    saveProfileBtn.addEventListener('click', function() {
+        var nom = document.getElementById('profileNom');
+        var prenom = document.getElementById('profilePrenom');
+        var birthDate = document.getElementById('profileBirthDate');
+        var telephone = document.getElementById('profileTelephone');
+        var ville = document.getElementById('profileVille');
+
+        var data = {
+            nom: (nom.querySelector('input') ? nom.querySelector('input').value : nom.textContent).trim(),
+            prenom: (prenom.querySelector('input') ? prenom.querySelector('input').value : prenom.textContent).trim(),
+            date_naissance: (birthDate.querySelector('input') ? birthDate.querySelector('input').value : birthDate.textContent).trim(),
+            num_telephone: (telephone.querySelector('input') ? telephone.querySelector('input').value : telephone.textContent).trim(),
+            ville: (ville.querySelector('input') ? ville.querySelector('input').value : ville.textContent).trim()
+        };
+
+        fetch('/api/user/update_profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(result) {
+            if (result.ok) {
+                showConfirmationMessage('Profil mis a jour !');
+                chargerDonneesProfil();
+                saveProfileBtn.style.display = 'none';
+            } else {
+                showConfirmationMessage('Erreur: ' + (result.error || 'Inconnu'));
+            }
+        })
+        .catch(function() {
+            showConfirmationMessage('Erreur de connexion');
+        });
+    });
 }
 
 // Fonction pour charger l'historique des achats
