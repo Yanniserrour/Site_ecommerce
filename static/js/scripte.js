@@ -116,6 +116,24 @@ function calculateAge(birthDateString) {
     return age;
 }
 
+// A modifier plus tard, ca verifie si il est connecte
+let authChecked = false;
+let isLogged = false;
+
+async function checkAuthOnce() {
+    if (authChecked) return isLogged;
+
+    try {
+        const res = await fetch('/api/cart', { method: 'GET' });
+        isLogged = res.ok;
+    } catch (e) {
+        isLogged = false;
+    }
+
+    authChecked = true;
+    return isLogged;
+}
+
 // DB livre cache (panier, index, produit)
 let livresDbCache = null;
 
@@ -404,12 +422,11 @@ function openProductModal(bookElement) {
     modalOverlay.classList.add('active');
 }
 
-document.querySelectorAll('.index-book').forEach(function(book) {
-    book.addEventListener('click', function() { openProductModal(book); });
-});
+document.addEventListener('click', function (e) {
+    const book = e.target.closest('.index-book, .produit-book');
+    if (!book) return;
 
-document.querySelectorAll('.produit-book').forEach(function(book) {
-    book.addEventListener('click', function() { openProductModal(book); });
+    openProductModal(book);
 });
 
 modalCloseBtn.addEventListener('click', function() {
@@ -421,6 +438,12 @@ modalOverlay.addEventListener('click', function(e) {
 });
 
 modalCartBtn.addEventListener('click', async function() {
+    const logged = await checkAuthOnce();
+
+    if (!logged) {
+        window.location.href = 'auth.html';
+        return;
+    }
     if (selectedProduct) {
         const cartItems = getStoredItems(cartItemsKey);
         const existingItem = cartItems.find((item) =>
