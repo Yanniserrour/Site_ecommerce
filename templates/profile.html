@@ -3,105 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Panier</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_englet.png') }}"> 
-    <title>Mon Profil - Adlis</title>
 </head>
-<body class = "profile-body">
-    <div class="index-header">
+
+<body class="page-panier-body">
+
+    <div class="index-header panier-simple-header">
         <div class="index-brand">
             <a href="{{ url_for('index') }}" class="brand-link">
-                <img src="{{ url_for('static', filename='img/LOGO_site.png') }}" alt="Adlis Logo" class="brand-logo">
+                <img src = "{{ url_for('static', filename='img/LOGO_site.png') }}"  alt="Adlis Logo" class="brand-logo">
                 <span class="brand-name">ADLIS</span>
             </a>
         </div>
-        <a href="{{ url_for('deconnxion') }}" class="admin-logout-btn">SE DECONNECTER</a>
+
+        <button class="burger-menu-btn" id="burgerMenuBtn">
+            <img src="{{ url_for('static', filename='img/menus.png') }}"   alt="Menu">
+        </button>
     </div>
-    <div class="profile-container">
-        <div class="profile-header">
-            <div class="profile-pic-container">
-                <img id="profileAvatar" src="{{ url_for('static', filename='img/profil-de-lutilisateur.png') }}" alt="Photo de profil" class="profile-pic">
-                <div class="add-avatar-btn" id="toggleAvatarBox" title="Choisir un avatar">
-                    <i class="fa-solid fa-plus"></i>
-                </div>
-                <div class="avatar-box" id="avatarBox">
-                    <p>Choisir un avatar :</p>
-                    <form action="{{ url_for('update_avatar') }}" method="POST">
-                        <div class="avatar-options">
-                            <button type="submit" name="avatar_choice" value="profil-de-lutilisateur.png" class="avatar-option">
-                                <img src="{{ url_for('static', filename='img/profil-de-lutilisateur.png') }}" alt="Avatar 1">
-                            </button>
-                            <button type="submit" name="avatar_choice" value="avatar1.png" class="avatar-option">
-                                <img src="{{ url_for('static', filename='img/avatar1.png') }}" alt="Avatar 2">
-                            </button>
-                            <button type="submit" name="avatar_choice" value="avatar2.png" class="avatar-option">
-                                <img src="{{ url_for('static', filename='img/avatar2.png') }}" alt="Avatar 3">
-                            </button>
-                            <button type="submit" name="avatar_choice" value="avatar3.png" class="avatar-option">
-                                <img src="{{ url_for('static', filename='img/avatar3.png') }}" alt="Avatar 4">
-                            </button>
-                            <button type="submit" name="avatar_choice" value="avatar4.png" class="avatar-option">
-                                <img src="{{ url_for('static', filename='img/avatar4.png') }}" alt="Avatar 5">
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>  
-            <h1>Mon Profil</h1>
-        </div>
 
-        <div class="profile-info">
-            <h3>Informations personnelles</h3>
-            <div class="info-row">
-                <p><strong>Nom :</strong> <span id="profileNom">Chargement...</span></p>
-                <i class="fa-solid fa-pen edit-icon"></i>
-            </div>
-            <div class="info-row">
-                <p><strong>Prenom :</strong> <span id="profilePrenom">Chargement...</span></p>
-                <i class="fa-solid fa-pen edit-icon"></i>
-            </div>
-            <div class="info-row">
-                <p><strong>Âge :</strong> <span id="profileAge">Chargement...</span> ans</p>
-                <i class="fa-solid fa-pen edit-icon"></i>
-            </div>
-            <div class="info-row">
-                <p><strong>Date de naissance :</strong> <span id="profileBirthDate">Chargement...</span></p>
-                <i class="fa-solid fa-pen edit-icon"></i>
-            </div>
-            <div class="info-row">
-                <p><strong>Email :</strong> <span id="profileEmail">Chargement...</span></p>
-                <i class="fa-solid fa-pen edit-icon"></i>
-            </div>
-            <div class="info-row">
-                <p><strong>Téléphone :</strong> <span id="profileTelephone">Chargement...</span></p>
-                <i class="fa-solid fa-pen edit-icon"></i>
-            </div>
-            <div class="info-row">
-                <p><strong>Ville :</strong> <span id="profileVille">Chargement...</span></p>
-                <i class="fa-solid fa-pen edit-icon"></i>
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="sidebar-content">
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('produit') }}" class="sidebar-link">
+                    <span>PRODUITS</span>
+                </a>
+                <a href="{{ url_for('panier') }}" class="sidebar-link" id="linkPanier">
+                 <span>PANIER</span>
+                </a>
+                <a href="{{ url_for('profile_router') }}" class="sidebar-link" id="linkProfil">
+                    <span id="account-nom">{{ session.get('user_name') or session.get('nom') or 'PROFIL' }}</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-account">
+                {% if session.get('logged_in') %}
+                <a href="{{ url_for('deconnxion') }}" class="account-btn" id="accountBtn">
+                    <img src="{{ url_for('static', filename='img/profil-de-lutilisateur.png') }}" alt="Profil" class="account-icon">
+                    <span id="accountText">SE DÉCONNECTER</span>
+                </a>
+                {% else %}
+                <a href="{{ url_for('auth') }}" class="account-btn" id="accountBtn">
+                    <img src="{{ url_for('static', filename='img/profil-de-lutilisateur.png') }}" alt="Profil" class="account-icon">
+                    <span id="accountText">SE CONNECTER</span>
+                </a>
+                {% endif %}
             </div>
         </div>
+    </div>
 
-        <div class="purchase-history">
-            <h3>Historique d'achats</h3>
-            <table>
+    <hr>
+
+    <main class="panier-page">
+        <section class="panier-card">
+            <h1>Mon panier</h1>
+            <p>Consultez vos produits s&eacute;lectionn&eacute;s avant de finaliser votre achat.</p>
+
+            <table class="panier-table">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Livre</th>
+                        <th>Produits s&eacute;lectionn&eacute;s</th>
+                        <th>Quantit&eacute;</th>
                         <th>Prix</th>
-                        <th>Statut</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="purchaseHistoryBody">
-                    <tr>
-                        <td colspan="4">Chargement de l'historique...</td>
-                    </tr>
+                <tbody id="panierItems">
+                    <!-- Les articles seront chargés dynamiquement ici -->
                 </tbody>
             </table>
-        </div>
-    </div>
+
+            <p class="panier-empty" id="panierEmpty">Votre panier est vide.</p>
+
+            <div class="panier-total-box">
+                <span>Montant total &agrave; payer</span>
+                <strong id="panierTotal">0 DA</strong>
+            </div>
+
+            <a href="{{ url_for('formulaire') }}" id="panierConfirmLink">
+                <button class="panier-confirm" type="button">Passer la commande</button>
+            </a>
+        </section>
+    </main>
+
+    <hr>
+
+    <footer class="panier-footer">
+        <p>&copy; 2026 Adlis</p>
+    </footer>
+
     <script src="{{ url_for('static', filename='js/scripte.js') }}"></script>
-</body> 
+</body>
 </html>
