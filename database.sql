@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS utilisateur;
 CREATE TABLE utilisateur(
     email VARCHAR(100) PRIMARY KEY,
     nom VARCHAR(50) NOT NULL, 
-    prenom VARCHAR(50),
+    prenom VARCHAR(50), 
     date_naissance DATE,
     mot_de_passe VARCHAR(255) NOT NULL,
     num_telephone BIGINT,

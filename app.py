@@ -650,6 +650,7 @@ def api_cart_sync():
         if connexion:
             connexion.close()
 
+
 # Finaliser la commande
 @app.route('/commander', methods=['POST'])
 def commander():
