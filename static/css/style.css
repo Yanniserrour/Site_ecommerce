@@ -575,6 +575,34 @@ body {
     color: #856404;
 }
 
+.profile-edit-input {
+    font-family: 'DMSerifDisplay', sans-serif;
+    font-size: 14px;
+    padding: 4px 8px;
+    border: 2px solid #512da8;
+    border-radius: 6px;
+    outline: none;
+    width: 200px;
+}
+
+.save-profile-btn {
+    background: #512da8;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: 'Raleway', sans-serif;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: block;
+    margin: 15px auto 0 auto;
+}
+
+.save-profile-btn:hover {
+    background: #764ba2;
+}
+
 
 /* partie panier */
  

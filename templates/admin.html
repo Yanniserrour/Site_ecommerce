@@ -31,7 +31,7 @@
     <center>
         <h3>Ajouter un produit</h3>
 
-        <form id="adminProductForm" action="{{ url_for('ajouter_produit') }}" method="POST" enctype="multipart/form-data">
+        <form action="/admin/ajouter_produit" method="POST" enctype="multipart/multipart-form-data">
             <fieldset>
                 <legend class = "alegend">Informations produit</legend>
 
@@ -47,7 +47,7 @@
                     <label><input type="radio" name="categorie" value="Business"> Business</label>
                     <label><input type="radio" name="categorie" value="Drama"> Drama</label>
                     <label><input type="radio" name="categorie" value="Fiction"> Fiction</label>
-                    <label><input type="radio" name="categorie" value="Recettes"> Recettes</label><br><br>
+                    <label><input type="radio" name="categorie" value="Roman"> Roman</label><br><br>
                 </div>
 
                 <label class = "alabel">Langue :</label><br>
@@ -63,7 +63,7 @@
                 <input type="number" id="adminProductPrice" name="prix" min="0" required><br><br>
 
                 <label class = "alabel">Image :</label><br>
-                <input type="file" id="adminProductImage" name="image_fichier"><br><br>
+                <input type="file" id="image_fichier" name="image_fichier"><br><br>
 
                 <input type="submit" value="Ajouter">
                 <input type="reset" value="R&eacute;initialiser">
