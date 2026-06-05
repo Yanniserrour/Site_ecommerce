@@ -24,7 +24,7 @@ ENV = 'DEVELOPPEMENT'
 if ENV == "DEVELOPPEMENT":
     DB_HOST     = "localhost"
     DB_USER     = "root"
-    DB_PASSWORD = "admin123"
+    DB_PASSWORD = "Yani2003@"
     DB_NAME     = "adlis"
 else: 
     DB_HOST     = "serveur_debergement"  #a changer
@@ -721,10 +721,12 @@ def commander():
         if not items:
             return {"ok": False, "error": "Votre panier est vide."}, 400
 
+        prix_total = sum(float(prix) * int(quantite) for _, quantite, prix in items)
+
         cursor.execute("""
-            INSERT INTO commande (email, wilaya_livraison, statue) 
-            VALUES (%(email)s, %(wilaya)s, 'En attente')
-        """, {"email": email, "wilaya": wilaya})
+            INSERT INTO commande (email, wilaya_livraison, statue, prix_total) 
+            VALUES (%(email)s, %(wilaya)s, 'En attente', %(prix_total)s)
+        """, {"email": email, "wilaya": wilaya, "prix_total": prix_total})
         id_commande = cursor.lastrowid
 
         for id_livre, quantite, prix in items:
@@ -749,6 +751,137 @@ def commander():
             connexion.close()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
 
+
+
+# API: Liste de toutes les commandes (admin)
+@app.route('/api/admin/commandes', methods=['GET'])
+def api_admin_commandes():
+    if not session.get('logged_in') or not session.get('is_admin'):
+        return jsonify({"ok": False, "error": "Acces refuse"}), 403
+    connexion = None
+    cursor = None
+    try:
+        connexion = obtenir_connexion()
+        cursor = connexion.cursor(dictionary=True, buffered=True)
+        cursor.execute("""
+            SELECT
+                c.id_commande,
+                u.nom,
+                u.prenom,
+                u.num_telephone,
+                c.wilaya_livraison,
+                c.date_commande,
+                c.prix_total,
+                c.statue,
+                GROUP_CONCAT(l.nom_livre ORDER BY l.nom_livre SEPARATOR ', ') AS produits
+            FROM commande c
+            JOIN utilisateur u ON c.email = u.email
+            JOIN contient ct ON c.id_commande = ct.id_commande
+            JOIN livre l ON ct.id_livre = l.id_livre
+            GROUP BY c.id_commande
+            ORDER BY c.date_commande DESC
+        """)
+        rows = cursor.fetchall() or []
+        commandes = []
+        for r in rows:
+            commandes.append({
+                'id_commande': r['id_commande'],
+                'client': (r['nom'] or '') + ' ' + (r['prenom'] or ''),
+                'telephone': str(r['num_telephone']) if r['num_telephone'] else 'N/A',
+                'wilaya': r['wilaya_livraison'] or 'N/A',
+                'date': str(r['date_commande']) if r['date_commande'] else 'N/A',
+                'prix_total': str(r['prix_total']) if r['prix_total'] else '0',
+                'statue': r['statue'] or 'En attente',
+                'produits': r['produits'] or 'N/A',
+            })
+        return jsonify({"ok": True, "commandes": commandes})
+    except mysql.connector.Error as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+    finally:
+        if cursor: cursor.close()
+        if connexion: connexion.close()
+
+
+# API: Changer le statut d une commande (admin)
+@app.route('/api/admin/commande/<int:id_commande>/statue', methods=['POST'])
+def api_update_commande_statue(id_commande):
+    if not session.get('logged_in') or not session.get('is_admin'):
+        return jsonify({"ok": False, "error": "Acces refuse"}), 403
+    data = request.get_json(silent=True) or {}
+    new_statue = data.get('statue')
+    statuts_valides = ['En attente', 'Validée', 'Livrée', 'Annulée']
+    if new_statue not in statuts_valides:
+        return jsonify({"ok": False, "error": "Statut invalide"}), 400
+    connexion = None
+    cursor = None
+    try:
+        connexion = obtenir_connexion()
+        cursor = connexion.cursor()
+        cursor.execute(
+            "UPDATE commande SET statue = %(statue)s WHERE id_commande = %(id)s",
+            {"statue": new_statue, "id": id_commande}
+        )
+        connexion.commit()
+        return jsonify({"ok": True})
+    except mysql.connector.Error as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+    finally:
+        if cursor: cursor.close()
+        if connexion: connexion.close()
+
+
+# API: Historique des commandes de l utilisateur connecte
+@app.route('/api/user/commandes', methods=['GET'])
+def api_user_commandes():
+    if not session.get('logged_in'):
+        return jsonify({"ok": False, "error": "Non authentifie"}), 401
+    email = session.get('email')
+    connexion = None
+    cursor = None
+    try:
+        connexion = obtenir_connexion()
+        cursor = connexion.cursor(dictionary=True, buffered=True)
+        cursor.execute("""
+            SELECT
+                c.id_commande,
+                c.date_commande,
+                c.prix_total,
+                c.wilaya_livraison,
+                c.statue,
+                GROUP_CONCAT(l.nom_livre ORDER BY l.nom_livre SEPARATOR ', ') AS produits
+            FROM commande c
+            JOIN contient ct ON c.id_commande = ct.id_commande
+            JOIN livre l ON ct.id_livre = l.id_livre
+            WHERE c.email = %(email)s
+            GROUP BY c.id_commande
+            ORDER BY c.date_commande DESC
+        """, {"email": email})
+        rows = cursor.fetchall() or []
+        commandes = []
+        for r in rows:
+            statue = r['statue'] or 'En attente'
+            statue_class = 'pending'
+            if statue.lower() in ('livrée', 'livree'):
+                statue_class = 'delivered'
+            elif statue.lower() in ('annulée', 'annulee'):
+                statue_class = 'cancelled'
+            elif statue.lower() in ('validée', 'validee'):
+                statue_class = 'validated'
+            commandes.append({
+                'id_commande': r['id_commande'],
+                'date': str(r['date_commande']) if r['date_commande'] else 'N/A',
+                'produits': r['produits'] or 'N/A',
+                'prix_total': str(r['prix_total']) if r['prix_total'] else '0',
+                'wilaya': r['wilaya_livraison'] or 'N/A',
+                'statue': statue,
+                'statue_class': statue_class,
+            })
+        return jsonify({"ok": True, "commandes": commandes})
+    except mysql.connector.Error as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+    finally:
+        if cursor: cursor.close()
+        if connexion: connexion.close()
 
 
 # Demarrage

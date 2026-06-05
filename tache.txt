@@ -128,8 +128,8 @@ DINAMICITÉ DU SITE:
  -la possibilité de modifier les information de la personne sur profile
  -changer les attributs entre nom et prenom  
  -passer la commande, sauvgarder la commande dans la BD, 
-        et l'afficher dans admin, et l'afficher dans l'historique de l'utilisateurs. 
- -charger l'historique (commande) pour chaque connexion.
+        et l'afficher dans admin, et l'afficher dans l'historique de l'utilisateurs. (terminé) 
+ -charger l'historique (commande) pour chaque connexion. (terminé)
 
 
 
@@ -148,7 +148,9 @@ DINAMICITÉ DU SITE:
  -ajouter les chemains vers les resaux dans auth (terminé)
  -netoyer le message d'authentification (terminé)
  -amener admin vers admin (terminé)
- -rendre la quantité livre dans panier fixe 
+ -rendre la quantité livre dans panier fixe (terminé)
+ -enlever le non rensegner des commandes admin
+ -corrigé l'attribut nom et prenom
 
 
 

@@ -674,74 +674,75 @@ document.addEventListener('DOMContentLoaded', function() {
 //==========================FORMULAIRE================================
 const commandeForm = document.getElementById('commandeForm');
 
-if (commandeForm) {
-    commandeForm.querySelectorAll('input, select').forEach((field) => {
-        field.required = true;
-    });
+// Pre-remplir le formulaire avec les infos du profil
+function prefillFormulaire() {
+    if (!commandeForm) return;
+    fetch('/api/user/profile', { cache: 'no-store' })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (!data.ok) return;
+            var u = data.user;
+            var iN = commandeForm.querySelector('input[placeholder="Nom"]');
+            var iP = commandeForm.querySelector('input[placeholder="Prénom"]');
+            var iT = commandeForm.querySelector('input[placeholder="Numéro de téléphone"]');
+            if (iN && u.nom && u.nom !== 'Non renseigne') iN.value = u.nom;
+            if (iP && u.prenom && u.prenom !== 'Non renseigne') iP.value = u.prenom;
+            if (iT && u.num_telephone && u.num_telephone !== '0') iT.value = u.num_telephone;
+        })
+        .catch(function() {});
+}
+prefillFormulaire();
 
-    commandeForm.addEventListener('submit', function(event) {
+if (commandeForm) {
+    commandeForm.addEventListener('submit', async function(event) {
         event.preventDefault();
 
-    const tbody = document.getElementById('panierItems');
-    if (!tbody || tbody.children.length === 0) {
-        showConfirmationMessage('Votre panier est vide.');
-        return;
-    }
-
-        const inputs = commandeForm.querySelectorAll('input[type="text"]');
-        const clientName = Array.from(inputs)
-            .slice(0, 2)
-            .map((field) => field.value.trim())
-            .filter(Boolean)
-            .join(' ');
-        const phone = inputs[3] ? inputs[3].value.trim() : '';
-
-        const existingOrders = getStoredItems(adminOrdersKey);
-        const orderProducts = cartItems.map((item) => {
-            const quantity = item.quantity || 1;
-            return (item.title || 'Produit inconnu') + ' x' + quantity;
-        }).join(', ');
-        const orderTotal = cartItems.reduce((sum, item) => {
-            const quantity = item.quantity || 1;
-            return sum + getPrixValue(item.price) * quantity;
-        }, 0);
-
-        existingOrders.push({
-            id: Date.now().toString() + Math.random().toString(16).slice(2),
-            client: clientName || 'Client inconnu',
-            phone: phone || 'Non renseigne',
-            product: orderProducts,
-            amount: formatAdminPrice(orderTotal),
-            status: 'En attente'
-        });
-
-        const formData = new FormData(commandeForm);
-        if (!formData.has('wilaya') && inputs[2]) {
-            formData.append('wilaya', inputs[2].value.trim());
+        // 1. Verifier que le panier n est pas vide (depuis la DB)
+        let panierData = null;
+        try {
+            const res = await fetch('/api/cart', { method: 'GET', credentials: 'same-origin', cache: 'no-store' });
+            panierData = await res.json();
+        } catch (e) {
+            showConfirmationMessage('Erreur de connexion avec le serveur.');
+            return;
+        }
+        if (!panierData || !panierData.ok || !panierData.items || panierData.items.length === 0) {
+            showConfirmationMessage('Votre panier est vide.');
+            return;
         }
 
-        fetch('/commander', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
+        // 2. Recuperer la wilaya
+        const wilayaSelect = commandeForm.querySelector('select[name="wilaya"]');
+        const wilaya = wilayaSelect ? wilayaSelect.value : '';
+        if (!wilaya) {
+            showConfirmationMessage('Veuillez sélectionner une wilaya.');
+            return;
+        }
+
+        // 3. Envoyer la commande
+        const payload = new FormData();
+        payload.append('wilaya', wilaya);
+
+        try {
+            const res = await fetch('/commander', {
+                method: 'POST',
+                body: payload,
+                credentials: 'same-origin'
+            });
+            const data = await res.json();
+
             if (data.ok) {
-                saveStoredItems(adminOrdersKey, existingOrders);
-                saveStoredItems(cartItemsKey, []);
-                showConfirmationMessage('Commande confirmee et enregistree !');
+                showConfirmationMessage('Commande confirmée et enregistrée !');
                 commandeForm.reset();
+                prefillFormulaire(); // Re-remplir nom/prenom/tel apres reset
             } else {
-                showConfirmationMessage('Erreur lors de la commande : ' + (data.error || 'Serveur'));
+                showConfirmationMessage('Erreur : ' + (data.error || 'Serveur'));
             }
-        })
-        .catch(() => {
-            showConfirmationMessage('Erreur de connexion avec le serveur');
-        });
+        } catch (e) {
+            showConfirmationMessage('Erreur de connexion avec le serveur.');
+        }
     });
 }
-
-
 
 
 
@@ -753,72 +754,70 @@ const adminOrdersList = document.getElementById('adminOrdersList');
 const adminOrdersTotal = document.getElementById('adminOrdersTotal');
 const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 
+// Cycle des statuts de commande
+const statutsCycle = ['En attente', 'Validée', 'Livrée', 'Annulée'];
+
+function getStatueClass(statue) {
+    if (statue === 'Livrée') return 'livree';
+    if (statue === 'Validée') return 'validee';
+    if (statue === 'Annulée') return 'annulee';
+    return 'attente';
+}
+
 function updateAdminOrdersTotal() {
     if (!adminOrdersList || !adminOrdersTotal) return;
-
     const total = Array.from(adminOrdersList.querySelectorAll('tr')).reduce((sum, row) => {
         const amountCell = row.querySelector('td:nth-child(4)');
         return sum + getPrixValue(amountCell ? amountCell.textContent : '0');
     }, 0);
-
     adminOrdersTotal.textContent = total.toLocaleString('fr-DZ') + ' DA';
 }
 
 function createAdminOrderRow(order) {
     const row = document.createElement('tr');
-    const clientCell = document.createElement('td');
-    const phoneCell = document.createElement('td');
-    const productCell = document.createElement('td');
-    const amountCell = document.createElement('td');
-    const statusCell = document.createElement('td');
-    const statusBtn = document.createElement('button');
-
-    clientCell.textContent = order.client || '......';
-    phoneCell.textContent = order.phone || '......';
-    productCell.textContent = order.product || '......';
-    amountCell.textContent = order.amount || '0 DA';
-    statusBtn.className = 'admin-order-status';
-    statusBtn.type = 'button';
-    statusBtn.textContent = order.status || 'En attente';
-    statusCell.appendChild(statusBtn);
-    row.append(clientCell, phoneCell, productCell, amountCell, statusCell);
-
+    row.dataset.commandeId = order.id_commande;
+    const statue = order.statue || 'En attente';
+    row.innerHTML =
+        '<td>' + (order.client || '......') + '</td>' +
+        '<td>' + (order.telephone || '......') + '</td>' +
+        '<td>' + (order.produits || '......') + '</td>' +
+        '<td>' + parseFloat(order.prix_total || 0).toLocaleString('fr-DZ') + ' DA</td>' +
+        '<td>' + (order.wilaya || '......') + '</td>' +
+        '<td><button class="admin-order-status statue-' + getStatueClass(statue) +
+        '" type="button" data-id="' + order.id_commande + '">' + statue + '</button></td>';
     return row;
 }
 
-function renderAdminOrdersList() {
+// Charge les commandes depuis la DB a chaque appel (connexion / refresh)
+async function renderAdminOrdersList() {
     if (!adminOrdersList) return;
-
-    const orders = getStoredItems(adminOrdersKey);
-    adminOrdersList.innerHTML = '';
-
-    if (orders.length === 0) {
-        const emptyRow = document.createElement('tr');
-        const emptyCell = document.createElement('td');
-        emptyCell.setAttribute('colspan', '5');
-        emptyCell.className = 'admin-orders-empty';
-        emptyCell.textContent = 'Aucune commande pour le moment.';
-        emptyRow.appendChild(emptyCell);
-        adminOrdersList.appendChild(emptyRow);
-        adminOrdersTotal.textContent = '0 DA';
-        return;
+    adminOrdersList.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:12px;">Chargement...</td></tr>';
+    try {
+        const res = await fetch('/api/admin/commandes', { cache: 'no-store' });
+        const data = await res.json();
+        adminOrdersList.innerHTML = '';
+        if (!data.ok || !data.commandes || data.commandes.length === 0) {
+            adminOrdersList.innerHTML = '<tr><td colspan="6" class="admin-orders-empty">Aucune commande pour le moment.</td></tr>';
+            if (adminOrdersTotal) adminOrdersTotal.textContent = '0 DA';
+            return;
+        }
+        data.commandes.forEach(function(order) {
+            adminOrdersList.appendChild(createAdminOrderRow(order));
+        });
+        updateAdminOrdersTotal();
+    } catch (e) {
+        adminOrdersList.innerHTML = '<tr><td colspan="6" class="admin-orders-empty">Erreur de chargement des commandes.</td></tr>';
+        console.error('Erreur commandes admin:', e);
     }
-
-    orders.forEach((order) => {
-        adminOrdersList.appendChild(createAdminOrderRow(order));
-    });
-
-    updateAdminOrdersTotal();
 }
 
 // Charger la liste des produits depuis la DB
 async function renderAdminProductsFromDb() {
     if (!adminProductsList) return;
     try {
-        const res = await fetch('/api/admin/produits');
+        const res = await fetch('/api/admin/produits', { cache: 'no-store' });
         const data = await res.json();
         if (!data.ok) return;
-
         adminProductsList.innerHTML = '';
         data.produits.forEach(function(product) {
             const row = document.createElement('tr');
@@ -830,46 +829,54 @@ async function renderAdminProductsFromDb() {
                 '<td><button class="admin-delete-product" type="button">Supprimer</button></td>';
             adminProductsList.appendChild(row);
         });
-    } catch (e) {}
+    } catch (e) { console.error('Erreur produits admin:', e); }
 }
 
 if (adminProductsList) {
     renderAdminProductsFromDb();
-
     adminProductsList.addEventListener('click', async function(event) {
         const deleteBtn = event.target.closest('.admin-delete-product');
-        if (deleteBtn) {
-            const row = deleteBtn.closest('tr');
-            const productId = row.dataset.productId;
-            try {
-                const res = await fetch('/api/admin/produit/' + productId, { method: 'DELETE' });
-                const data = await res.json();
-                if (data.ok) {
-                    row.remove();
-                }
-            } catch (e) {}
-        }
+        if (!deleteBtn) return;
+        const row = deleteBtn.closest('tr');
+        const productId = row.dataset.productId;
+        try {
+            const res = await fetch('/api/admin/produit/' + productId, { method: 'DELETE' });
+            const data = await res.json();
+            if (data.ok) row.remove();
+        } catch (e) {}
     });
 }
 
 if (adminOrdersList) {
+    // Chargement initial depuis la DB
     renderAdminOrdersList();
 
-    adminOrdersList.addEventListener('click', (event) => {
+    // Clic sur le bouton statut : cycle + sauvegarde en DB
+    adminOrdersList.addEventListener('click', async function(event) {
         const statusBtn = event.target.closest('.admin-order-status');
-
-        if (statusBtn) {
-            statusBtn.textContent = statusBtn.textContent === 'En attente' ? 'Validee' : 'En attente';
-            statusBtn.classList.toggle('active');
-        }
+        if (!statusBtn) return;
+        const idCommande = statusBtn.dataset.id;
+        const currentStatue = statusBtn.textContent.trim();
+        const nextStatue = statutsCycle[(statutsCycle.indexOf(currentStatue) + 1) % statutsCycle.length];
+        try {
+            const res = await fetch('/api/admin/commande/' + idCommande + '/statue', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ statue: nextStatue })
+            });
+            const data = await res.json();
+            if (data.ok) {
+                statusBtn.textContent = nextStatue;
+                statusBtn.className = 'admin-order-status statue-' + getStatueClass(nextStatue);
+                updateAdminOrdersTotal();
+            }
+        } catch (e) { console.error('Erreur statut:', e); }
     });
 }
 
 if (adminLogoutBtn) {
     adminLogoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('userLoggedIn');
-        localStorage.removeItem('userName');
-        window.location.href = 'auth.html';
+        window.location.href = '/deconnexion';
     });
 }
 
@@ -985,31 +992,32 @@ if (saveProfileBtn) {
     });
 }
 
-// Fonction pour charger l'historique des achats
+// Historique commandes utilisateur (depuis la DB)
 function chargerHistoriqueAchats() {
-    fetch('/api/user/purchases')
-        .then(response => response.json())
-        .then(data => {
+    fetch('/api/user/commandes', { cache: 'no-store' })
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
             const tbody = document.getElementById('purchaseHistoryBody');
-            if (data.ok && data.purchases && data.purchases.length > 0) {
+            if (!tbody) return;
+            if (data.ok && data.commandes && data.commandes.length > 0) {
                 tbody.innerHTML = '';
-                data.purchases.forEach(purchase => {
+                data.commandes.forEach(function(cmd) {
                     const row = tbody.insertRow();
-                    row.innerHTML = `
-                        <td>${purchase.date || 'N/A'}</td>
-                        <td>${purchase.produit || 'N/A'}</td>
-                        <td>${purchase.prix || '0'} DA</td>
-                        <td><span class="status ${purchase.status_class || 'pending'}">${purchase.status || 'En attente'}</span></td>
-                    `;
+                    row.innerHTML =
+                        '<td>' + (cmd.date ? cmd.date.substring(0, 16) : 'N/A') + '</td>' +
+                        '<td>' + (cmd.produits || 'N/A') + '</td>' +
+                        '<td>' + parseFloat(cmd.prix_total || 0).toFixed(2) + ' DA</td>' +
+                        '<td>' + (cmd.wilaya || 'N/A') + '</td>' +
+                        '<td><span class="status ' + (cmd.statue_class || 'pending') + '">' + (cmd.statue || 'En attente') + '</span></td>';
                 });
             } else {
-                tbody.innerHTML = '<tr><td colspan="4">Aucun achat enregistré.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5">Aucune commande enregistrée.</td></tr>';
             }
         })
-        .catch(error => {
-            console.error('Erreur:', error);
+        .catch(function(error) {
+            console.error('Erreur historique:', error);
             const tbody = document.getElementById('purchaseHistoryBody');
-            tbody.innerHTML = '<tr><td colspan="4">Erreur lors du chargement de l\'historique.</td></tr>';
+            if (tbody) tbody.innerHTML = '<tr><td colspan="5">Erreur de chargement.</td></tr>';
         });
 }
 
@@ -1029,6 +1037,3 @@ document.addEventListener('DOMContentLoaded', function() {
     chargerDonneesProfil();
     chargerHistoriqueAchats();
 });
-
-
-
