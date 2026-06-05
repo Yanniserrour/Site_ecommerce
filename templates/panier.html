@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Panier</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_englet.png') }}"> 
@@ -71,35 +74,7 @@
                 </thead>
 
                 <tbody id="panierItems">
-                    <tr>
-                        <td>
-                            <strong>Cat&eacute;gorie : ......</strong><br>
-                            ......<br>
-                            ......
-                        </td>
-                        <td class="prix">...... DA</td>
-                        <td><button class="panier-delete" type="button">Supprimer</button></td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <strong>Cat&eacute;gorie : ......</strong><br>
-                            ......<br>
-                            ......
-                        </td>
-                        <td class="prix">...... DA</td>
-                        <td><button class="panier-delete" type="button">Supprimer</button></td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <strong>Cat&eacute;gorie : ......</strong><br>
-                            ......<br>
-                            ......
-                        </td>
-                        <td class="prix">...... DA</td>
-                        <td><button class="panier-delete" type="button">Supprimer</button></td>
-                    </tr>
+                    <!-- Les articles seront chargés dynamiquement ici -->
                 </tbody>
             </table>
 
@@ -115,7 +90,6 @@
             </a>
         </section>
     </main>
-
     <hr>
 
     <footer class="panier-footer">

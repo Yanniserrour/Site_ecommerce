@@ -122,11 +122,13 @@ DINAMICITÉ DU SITE:
  -charger les informations profile pour chaque connexion (Terminé)
  -suppression du livre a partir de admin et la BD (terminé)
  -la possibilité de modifier les information de la personne sur profile 
- -ajouter aux panier et la BD 
- -sauvgarder le panier de l'utilisateur dans la BD   
- -charger l'historique pour chaque connexion 
+ -ajouter les livres depuis admin vers acceuil 
+ -ajouter aux panier et la BD (terminé)
+ -supprimer un livre de panier et la BD (terminé)  
+ -charger l'historique (commande) pour chaque connexion 
  -charger le panier pour chaque connexion 
- -une suppression du panier le supprime aussi de la BD.
+ -passer la commande, sauvgarder la commande dans la BD, 
+        et l'afficher dans admin, et l'afficher dans l'historique de l'utilisateurs
  -ajouter tout les livres a partir de admin 
  -ajouter l'attribut quantité_livre, et tout ce qui va avec
 
@@ -146,7 +148,8 @@ DINAMICITÉ DU SITE:
  -ajouter des citations.
  -ajouter les chemains vers les resaux dans auth (terminé)
  -netoyer le message d'authentification (terminé)
- -amener admin vers admin
+ -amener admin vers admin (terminé)
+ -rendre la quantité livre dans panier fixe 
 
 
 

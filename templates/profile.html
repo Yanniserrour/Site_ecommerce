@@ -10,14 +10,14 @@
 </head>
 <body class = "profile-body">
     <div class="index-header">
-        <div class="index-brand">
-            <a href="{{ url_for('index') }}" class="brand-link">
-                <img src="{{ url_for('static', filename='img/LOGO_site.png') }}" alt="Adlis Logo" class="brand-logo">
+            <div class="index-brand">
+                <a href="{{ url_for('index') }}" class="brand-link">
+                    <img src = "{{ url_for('static', filename='img/LOGO_site.png') }}"  alt="Adlis Logo" class="brand-logo">
                 <span class="brand-name">ADLIS</span>
-            </a>
-        </div>
-        <a href="{{ url_for('deconnxion') }}" class="admin-logout-btn">SE DECONNECTER</a>
-    </div>
+                </a>
+            </div>
+            <a href="{{ url_for('deconnxion') }}" class="admin-logout-btn">SE DECONNECTER</a>
+            </div>
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-pic-container">
@@ -84,9 +84,9 @@
 
         <div class="purchase-history">
             <h3>Historique d'achats</h3>
-            <table>
+            <table>                
                 <thead>
-                    <tr>
+                    <tr>                        
                         <th>Date</th>
                         <th>Livre</th>
                         <th>Prix</th>
@@ -101,6 +101,7 @@
             </table>
         </div>
     </div>
+
     <script src="{{ url_for('static', filename='js/scripte.js') }}"></script>
 </body> 
 </html>

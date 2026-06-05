@@ -458,36 +458,10 @@ modalCartBtn.addEventListener('click', async function() {
         return;
     }
     if (selectedProduct) {
-        const cartItems = getStoredItems(cartItemsKey);
-        const existingItem = cartItems.find((item) =>
-            item.title === selectedProduct.title &&
-            item.author === selectedProduct.author &&
-            item.price === selectedProduct.price
-        );
-
-        if (existingItem) {
-            existingItem.quantity = (existingItem.quantity || 1) + 1;
-        } else {
-            let id_livre = null;
-            try {
-                const livres = await loadLivresDb();
-                id_livre = findLivreIdInDb(livres, selectedProduct.title, selectedProduct.author, selectedProduct.price);
-            } catch (e) {
-                id_livre = null;
-            }
-
-            cartItems.push({
-                id: Date.now().toString(),
-                id_livre: id_livre,
-                title: selectedProduct.title,
-                author: selectedProduct.author,
-                category: selectedProduct.category,
-                price: selectedProduct.price,
-                quantity: 1
-            });
-        }
-
-        saveStoredItems(cartItemsKey, cartItems);
+        const livres = await loadLivresDb();
+        const id_livre = findLivreIdInDb(livres, selectedProduct.title, selectedProduct.author, selectedProduct.price);
+        
+        ajouterAuPanier(id_livre, selectedProduct.title, selectedProduct.price, selectedProduct.category, selectedProduct.author);
     }
 
     modalOverlay.classList.remove('active');
@@ -532,203 +506,166 @@ document.querySelectorAll('.langue-filter').forEach(function(filter) {
 
 
 
+// ==================== PANIER ====================
 
-
-
-
-
-
-//=======================PANIER======================================
-const panierItems = document.getElementById('panierItems');
-const panierTotal = document.getElementById('panierTotal');
-const panierEmpty = document.getElementById('panierEmpty');
-const panierConfirmLink = document.getElementById('panierConfirmLink');
-const panierProfileBtn = document.getElementById('panierProfileBtn');
-
-async function ensureCartHasLivreIds() {
-    const storedItems = getStoredItems(cartItemsKey);
-    if (!storedItems || storedItems.length === 0) return [];
-
-    const livres = await loadLivresDb();
-    let changed = false;
-    const mapped = storedItems.map((item) => {
-        if (item.id_livre) return item;
-        const id_livre = findLivreIdInDb(livres, item.title, item.author, item.price);
-        if (id_livre !== null) {
-            changed = true;
-            return { ...item, id_livre };
+// Charger le panier depuis la base de données
+function chargerPanier() {
+    fetch('/api/cart', {
+        method: 'GET',
+        credentials: 'same-origin',
+        cache: 'no-store'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.ok) {
+            afficherPanier(data.items);
+        } else if (data.error === 'not_logged_in') {
+            window.location.href = '/auth';
+        } else {
+            console.error('Erreur:', data.error);
+            afficherPanier([]);
         }
-        return item;
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        afficherPanier([]);
     });
-
-    if (changed) saveStoredItems(cartItemsKey, mapped);
-    return mapped;
 }
 
-async function syncCartToDb() {
-    const storedItems = await ensureCartHasLivreIds();
-    const items = storedItems
-        .filter((it) => it.id_livre)
-        .map((it) => ({ id_livre: it.id_livre, quantity: it.quantity || 1 }));
+// Afficher le panier dans le tableau
+function afficherPanier(items) {
+    const tbody = document.getElementById('panierItems');
+    const emptyMessage = document.getElementById('panierEmpty');
+    const totalSpan = document.getElementById('panierTotal');
+    
+    if (!tbody) return;
+    
+    if (!items || items.length === 0) {
+        tbody.innerHTML = '';
+        if (emptyMessage) emptyMessage.style.display = 'block';
+        if (totalSpan) totalSpan.textContent = '0 DA';
+        return;
+    }
+    
+    if (emptyMessage) emptyMessage.style.display = 'none';
+    
+    let total = 0;
+    tbody.innerHTML = '';
+    
+    items.forEach(item => {
+        const prix = parseFloat(item.price);
+        const quantite = item.quantity || 1;
+        const prixLigne = prix * quantite;
+        total += prixLigne;
+        
+        const row = tbody.insertRow();
+        row.innerHTML = `
+            <td>
+                <strong>${item.category || 'Livre'}</strong><br>
+                ${item.title}<br>
+                ${item.author || ''}
+            </td>
+            <td class="quantite-cell">${quantite}</td>
+            <td class="prix">${prixLigne.toFixed(2)} DA</td>
+            <td>
+                <button class="panier-delete" data-id="${item.id_livre}" type="button">Supprimer</button>
+            </td>
+        `;
+    });
+    
+    if (totalSpan) totalSpan.textContent = total.toFixed(2) + ' DA';
+    
+    // Ajouter les événements de suppression
+    document.querySelectorAll('.panier-delete').forEach(btn => {
+        btn.addEventListener('click', function() {
+            supprimerDuPanier(this.getAttribute('data-id'));
+        });
+    });
+}
 
-    const res = await fetch('/api/cart/sync', {
+// Supprimer un article du panier
+function supprimerDuPanier(idLivre) {
+    fetch('/api/cart', {
+        method: 'GET',
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.ok) {
+            const items = data.items.filter(item => item.id_livre != idLivre);
+            synchroniserPanier(items);
+        }
+    })
+    .catch(error => console.error('Erreur:', error));
+}
+
+// Synchroniser le panier avec la base de données
+function synchroniserPanier(items) {
+    const cartItems = items.map(item => ({
+        id_livre: parseInt(item.id_livre),
+        quantity: parseInt(item.quantity) || 1
+    }));
+    
+    fetch('/api/cart/sync', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items })
-    });
-
-    try { return (await res.json()) || { ok: false }; }
-    catch (e) { return { ok: false }; }
-}
-
-async function loadCartFromDbAndRender() {
-    const res = await fetch('/api/cart', { method: 'GET' });
-    if (!res.ok) return;
-    const data = await res.json();
-    if (!data || !data.ok || !data.items) return;
-
-    panierItems.innerHTML = '';
-    data.items.forEach((item) => {
-        panierItems.appendChild(createPanierRow({
-            id: String(item.id_livre),
-            id_livre: item.id_livre,
-            title: item.title,
-            author: item.author,
-            category: item.category,
-            price: item.price,
-            quantity: item.quantity
-        }));
-    });
-    updatePanier();
-}
-
-function updatePanier() {
-    const rows = Array.from(panierItems.querySelectorAll('tr'));
-    const total = rows.reduce((sum, row) => {
-        const prix = row.querySelector('.prix');
-        const qtyInput = row.querySelector('.panier-quantity');
-        const quantity = qtyInput ? Number(qtyInput.value) : 1;
-        return sum + getPrixValue(prix ? prix.textContent : '0') * (quantity > 0 ? quantity : 1);
-    }, 0);
-
-    panierTotal.textContent = total.toLocaleString('fr-DZ') + ' DA';
-    panierEmpty.classList.toggle('active', rows.length === 0);
-    panierConfirmLink.classList.toggle('disabled', rows.length === 0);
-}
-
-function createPanierRow(item) {
-    const row = document.createElement('tr');
-    const infoCell = document.createElement('td');
-    const quantityCell = document.createElement('td');
-    const priceCell = document.createElement('td');
-    const actionCell = document.createElement('td');
-    const title = document.createElement('strong');
-    const quantityInput = document.createElement('input');
-    const deleteBtn = document.createElement('button');
-
-    row.dataset.cartId = item.id_livre ? String(item.id_livre) : item.id;
-    title.textContent = 'Categorie : ' + (item.category || 'X');
-
-    infoCell.append(
-        title,
-        document.createElement('br'),
-        item.title || '',
-        document.createElement('br'),
-        item.author || ''
-    );
-
-    quantityInput.type = 'number';
-    quantityInput.min = '1';
-    quantityInput.value = item.quantity || 1;
-    quantityInput.className = 'panier-quantity';
-    quantityInput.addEventListener('change', () => {
-        const newQuantity = Number(quantityInput.value) || 1;
-        const storedItems = getStoredItems(cartItemsKey);
-        const currentItem = storedItems.find((stored) => stored.id === item.id);
-
-        if (currentItem) {
-            currentItem.quantity = newQuantity;
-            saveStoredItems(cartItemsKey, storedItems);
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({ items: cartItems })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.ok) {
+            chargerPanier();
+        } else {
+            console.error('Erreur synchronisation:', data.error);
         }
-
-        updatePanier();
-    });
-
-    quantityCell.appendChild(quantityInput);
-
-    priceCell.className = 'prix';
-    priceCell.textContent = item.price || '0 DA';
-    deleteBtn.className = 'panier-delete';
-    deleteBtn.type = 'button';
-    deleteBtn.textContent = 'Supprimer';
-    actionCell.appendChild(deleteBtn);
-    row.append(infoCell, quantityCell, priceCell, actionCell);
-
-    return row;
+    })
+    .catch(error => console.error('Erreur:', error));
 }
 
-function renderPanierItems() {
-    if (!panierItems) return;
-    panierItems.innerHTML = '';
-    getStoredItems(cartItemsKey).forEach((item) => {
-        panierItems.appendChild(createPanierRow(item));
-    });
-}
-
-if (panierItems && panierTotal && panierEmpty && panierConfirmLink) {
-    renderPanierItems();
-    updatePanier();
-
-    (async () => {
-        await syncCartToDb();
-        await loadCartFromDbAndRender();
-    })().catch(() => {});
-
-    panierItems.addEventListener('click', (event) => {
-        const deleteBtn = event.target.closest('.panier-delete');
-
-        if (deleteBtn) {
-            const row = deleteBtn.closest('tr');
-            const cartId = row.dataset.cartId;
-
-            const updated = getStoredItems(cartItemsKey).filter((item) => {
-                const idToCompare = item.id_livre ? String(item.id_livre) : item.id;
-                return idToCompare !== cartId;
-            });
-            saveStoredItems(cartItemsKey, updated);
-
-            row.remove();
-            updatePanier();
-            syncCartToDb().catch(() => {});
+// Ajouter un produit au panier
+function ajouterAuPanier(idLivre, titre, prix, categorie, auteur) {
+    fetch('/api/cart', {
+        method: 'GET',
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        let items = [];
+        if (data.ok && data.items) {
+            items = data.items;
         }
-    });
-
-    panierConfirmLink.addEventListener('click', (event) => {
-        if (panierConfirmLink.classList.contains('disabled')) {
-            event.preventDefault();
+        
+        const existingItem = items.find(item => item.id_livre == idLivre);
+        
+        if (existingItem) {
+            showConfirmationMessage('Ce produit est déjà dans votre panier !');
+            return;
         }
-    });
-
-    updatePanier();
+        
+        items.push({
+            id_livre: parseInt(idLivre),
+            title: titre,
+            author: auteur || '',
+            price: parseFloat(prix),
+            category: categorie || 'Livre',
+            quantity: 1
+        });
+        
+        synchroniserPanier(items);
+        showConfirmationMessage('Livre ajouté au panier avec succès !');
+    })
+    .catch(error => console.error('Erreur:', error));
 }
 
-if (panierProfileBtn) {
-    panierProfileBtn.addEventListener('click', () => {
-        const isLoggedIn = localStorage.getItem('userLoggedIn');
-        window.location.href = isLoggedIn === 'true' ? 'profile.html' : 'auth.html';
-    });
-}
-
-if (panierConfirmLink) {
-    panierConfirmLink.addEventListener('click', function() {
-        if (!panierConfirmLink.classList.contains('disabled')) {
-            sessionStorage.setItem(confirmationMessageKey, 'Vous pouvez maintenant confirmer votre commande');
-        }
-    });
-}
-
-
-
+// Charger le panier au chargement de la page
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('panierItems')) {
+        chargerPanier();
+    }
+});
 
 
 
@@ -745,11 +682,11 @@ if (commandeForm) {
     commandeForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const cartItems = getStoredItems(cartItemsKey);
-        if (cartItems.length === 0) {
-            showConfirmationMessage('Votre panier est vide.');
-            return;
-        }
+    const tbody = document.getElementById('panierItems');
+    if (!tbody || tbody.children.length === 0) {
+        showConfirmationMessage('Votre panier est vide.');
+        return;
+    }
 
         const inputs = commandeForm.querySelectorAll('input[type="text"]');
         const clientName = Array.from(inputs)
