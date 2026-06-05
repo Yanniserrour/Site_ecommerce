@@ -27,27 +27,39 @@
     <center>
         <h3>Ajouter un produit</h3>
 
-    <form id="adminProductForm" action="{{ url_for('ajouter_produit') }}" method="POST" enctype="multipart/form-data">
+        <form id="adminProductForm" action="{{ url_for('ajouter_produit') }}" method="POST" enctype="multipart/form-data">
             <fieldset>
-                <legend>Informations produit</legend>
+                <legend class = "alegend">Informations produit</legend>
 
-                <label>Nom :</label><br>
+                <label class = "alabel">Nom :</label><br>
                 <input type="text" id="adminProductName" name="nom" required><br><br>
 
-                <label>Auteur :</label><br>
+                <label class = "alabel">Auteur :</label><br>
                 <input type="text" id="adminProductAuthor" name="auteur" required><br><br>
 
-                <label>Cat&eacute;gorie :</label><br>
-                <input type="text" id="adminProductCategory" name="categorie" required><br><br>
+                <label class = "alabel">Cat&eacute;gorie :</label><br>
+                <div class = "aradio-group">
+                    <label><input type="radio" name="categorie" value="Action" required> Action</label>
+                    <label><input type="radio" name="categorie" value="Business"> Business</label>
+                    <label><input type="radio" name="categorie" value="Drama"> Drama</label>
+                    <label><input type="radio" name="categorie" value="Fiction"> Fiction</label>
+                    <label><input type="radio" name="categorie" value="Recettes"> Recettes</label><br><br>
+                </div>
 
-                <label>Langue :</label><br>
-                <input type="text" id="adminProductLanguage" name="langue" required><br><br>
+                <label class = "alabel">Langue :</label><br>
+                <div class = "aradio-group">
+                    <label><input type="radio" name="langue" value="Français" required> Fran&ccedil;ais</label>
+                    <label><input type="radio" name="langue" value="Anglais"> Anglais</label>
+                    <label><input type="radio" name="langue" value="Arabe"> Arabe</label>
+                    <label><input type="radio" name="langue" value="Tamazight"> Tamazight</label>
+                    <label><input type="radio" name="langue" value="Espagnol"> Espagnol</label><br><br>
+                </div>
 
-                <label>Prix :</label><br>
+                <label class = "alabel">Prix :</label><br>
                 <input type="number" id="adminProductPrice" name="prix" min="0" required><br><br>
 
-                <label>Image :</label><br>
-                <input type="file" id="adminProductImage" name="image_fichier" accept="image/*"><br><br>
+                <label class = "alabel">Image :</label><br>
+                <input type="file" id="adminProductImage" name="image_fichier"><br><br>
 
                 <input type="submit" value="Ajouter">
                 <input type="reset" value="R&eacute;initialiser">

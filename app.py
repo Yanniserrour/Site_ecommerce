@@ -380,6 +380,49 @@ def ajouter_produit():
     
     return redirect(url_for('admin'))
 
+# Liste des produits pour admin
+@app.route('/api/admin/produits', methods=['GET'])
+def api_admin_produits():
+    connexion = None
+    cursor = None
+    try:
+        connexion = obtenir_connexion()
+        cursor = connexion.cursor(buffered=True)
+        cursor.execute("SELECT id_livre, nom_livre, categorie, prix FROM livre ORDER BY id_livre DESC")
+        rows = cursor.fetchall() or []
+        produits = []
+        for r in rows:
+            produits.append({'id': r[0], 'name': r[1], 'category': r[2], 'price': str(r[3])})
+        return {"ok": True, "produits": produits}
+    except mysql.connector.Error as e:
+        return {"ok": False, "error": str(e)}, 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connexion:
+            connexion.close()
+
+# Supprimer un produit
+@app.route('/api/admin/produit/<int:id_livre>', methods=['DELETE'])
+def api_delete_produit(id_livre):
+    if not session.get('logged_in') or not session.get('is_admin'):
+        return {"ok": False, "error": "Acces refuse"}, 403
+    connexion = None
+    cursor = None
+    try:
+        connexion = obtenir_connexion()
+        cursor = connexion.cursor()
+        cursor.execute("DELETE FROM livre WHERE id_livre = %(id)s", {"id": id_livre})
+        connexion.commit()
+        return {"ok": True}
+    except mysql.connector.Error as e:
+        return {"ok": False, "error": str(e)}, 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connexion:
+            connexion.close()
+
 # ROUTES: API JSON (livres, panier, commandes)
 # Liste des livres
 @app.route('/api/livres', methods=['GET'])

@@ -840,33 +840,44 @@ function renderAdminOrdersList() {
     updateAdminOrdersTotal();
 }
 
-function createAdminProductRow(product) {
-    const row = document.createElement('tr');
-    const nameCell = document.createElement('td');
-    const categoryCell = document.createElement('td');
-    const priceCell = document.createElement('td');
-    const actionCell = document.createElement('td');
-    const deleteBtn = document.createElement('button');
+// Charger la liste des produits depuis la DB
+async function renderAdminProductsFromDb() {
+    if (!adminProductsList) return;
+    try {
+        const res = await fetch('/api/admin/produits');
+        const data = await res.json();
+        if (!data.ok) return;
 
-    row.dataset.productId = product.id;
-    nameCell.textContent = product.name;
-    categoryCell.textContent = product.category;
-    priceCell.textContent = formatAdminPrice(product.price);
-    deleteBtn.className = 'admin-delete-product';
-    deleteBtn.type = 'button';
-    deleteBtn.textContent = 'Supprimer';
-
-    actionCell.appendChild(deleteBtn);
-    row.append(nameCell, categoryCell, priceCell, actionCell);
-
-    return row;
+        adminProductsList.innerHTML = '';
+        data.produits.forEach(function(product) {
+            const row = document.createElement('tr');
+            row.dataset.productId = product.id;
+            row.innerHTML =
+                '<td>' + product.name + '</td>' +
+                '<td>' + product.category + '</td>' +
+                '<td>' + formatAdminPrice(product.price) + '</td>' +
+                '<td><button class="admin-delete-product" type="button">Supprimer</button></td>';
+            adminProductsList.appendChild(row);
+        });
+    } catch (e) {}
 }
 
-function renderAdminProductsList() {
-    if (!adminProductsList) return;
-    adminProductsList.innerHTML = '';
-    getAdminProducts().forEach((product) => {
-        adminProductsList.appendChild(createAdminProductRow(product));
+if (adminProductsList) {
+    renderAdminProductsFromDb();
+
+    adminProductsList.addEventListener('click', async function(event) {
+        const deleteBtn = event.target.closest('.admin-delete-product');
+        if (deleteBtn) {
+            const row = deleteBtn.closest('tr');
+            const productId = row.dataset.productId;
+            try {
+                const res = await fetch('/api/admin/produit/' + productId, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.ok) {
+                    row.remove();
+                }
+            } catch (e) {}
+        }
     });
 }
 

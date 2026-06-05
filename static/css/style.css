@@ -1131,6 +1131,40 @@ body {
     color: #176534;
 }
 
+.aradio-group {
+    display: flex;
+    flex-wrap: nowrap; 
+    gap: 15px;     
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+}
+
+.aradio-group label {
+    white-space: nowrap; 
+}
+
+.alabel {
+    font-family: 'DMSerifDisplay', sans-serif;
+    font-size: 20px;
+}
+
+.alegend {
+    font-family: 'DMSerifDisplay', sans-serif;
+    font-size: 30px;
+}
+
+.aradio-group input[type="radio"] {
+    width: auto;
+    margin: 0 5px 0 0;
+}
+
+.aradio-group label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
 
 /* partie index */
 .index-body {
