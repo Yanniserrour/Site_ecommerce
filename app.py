@@ -86,9 +86,9 @@ def formulaire():
     return render_template('formulaire.html')
 
 # Profil utilisateur 
-@app.route('/profile')
+@app.route('/profile/view')
 @app.route('/profile.html')
-def profile():
+def profile_page():
     if not session.get('logged_in'):
         flash("Veuillez vous connecter pour acceder a votre profil.", "error")
         return redirect(url_for('auth'))
@@ -121,6 +121,17 @@ def admin():
         return redirect(url_for('index'))
     return render_template('admin.html')
 
+# Route router profil: 
+@app.route('/profile')
+def profile_router():
+    if not session.get('logged_in'):
+        flash("Veuillez vous connecter", "error")
+        return redirect(url_for('auth'))
+
+    if session.get('is_admin'):
+        return redirect(url_for('admin'))
+
+    return redirect(url_for('profile_page'))
 
 # Route d'auth/inscription
 # Inscription
@@ -509,7 +520,6 @@ def api_delete_produit(id_livre):
             cursor.close()
         if connexion:
             connexion.close()
-
 
 #~~~~~~~~~~~~~~~~~~ A CONFIRMER ~~~~~~~~~~~~~~~~~~~~~~~
 # ROUTES API JSON (livres, panier, commandes)

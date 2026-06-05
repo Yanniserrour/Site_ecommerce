@@ -10,12 +10,16 @@
 <body class="admin-body">
     <div class="index-header admin-header">
         <div class="index-brand">
-            <img src="{{ url_for('static', filename='img/LOGO_site.png') }}" alt="Adlis Logo" class="brand-logo">
-            <span class="brand-name">ADLIS</span>
+            <a href="{{ url_for('index') }}" class="brand-link">
+                <img src="{{ url_for('static', filename='img/LOGO_site.png') }}" alt="Adlis Logo" class="brand-logo">
+                <span class="brand-name">ADLIS</span>
+            </a>
         </div>
 
         <div class="index-account admin-account">
-            <button class="admin-logout-btn" id="adminLogoutBtn" type="button">SE DECONNECTER</button>
+            <a href="{{ url_for('deconnxion') }}">
+                <button class="admin-logout-btn" id="adminLogoutBtn" type="button">SE DECONNECTER</button>
+            </a>
         </div>
     </div>
 

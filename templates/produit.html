@@ -37,7 +37,7 @@
 				<a href="{{ url_for('panier') }}" class="sidebar-link" id="linkPanier">
 	   			 <span>PANIER</span>
 				</a>
-				<a href="{{ url_for('profile') }}" class="sidebar-link" id="linkProfil">
+				<a href="{{ url_for('profile_router') }}" class="sidebar-link" id="linkProfil">
 	    			<span id="account-nom">{{ session.get('user_name') or session.get('nom') or 'PROFIL' }}</span>
 				</a>
 			</nav>
