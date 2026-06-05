@@ -22,7 +22,7 @@ ENV = 'DEVELOPPEMENT'
 if ENV == "DEVELOPPEMENT":
     DB_HOST     = "localhost"
     DB_USER     = "root"
-    DB_PASSWORD = "Yani2003@"
+    DB_PASSWORD = "root1234"
     DB_NAME     = "adlis"
 else: 
     DB_HOST     = "serveur_debergement"  #a changer
@@ -105,6 +105,163 @@ def panier():
         flash("Veuillez vous connecter pour accéder au panier.", "error")
         return redirect(url_for('auth'))
     return render_template('panier.html')
+
+
+# -------------------------
+# API Cart + Livres (JSON)
+# -------------------------
+
+
+def _get_logged_user_email():
+    return session.get('email')
+
+
+def _prix_to_decimal(value):
+    # accepte "1200 DA" ou "1200,00" ou "1200.00"
+    if value is None:
+        return None
+    if isinstance(value, (int, float)):
+        return float(value)
+    s = str(value)
+    s = s.replace('DA', '').strip()
+    s = s.replace(' ', '')
+    s = s.replace(',', '.')
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+@app.route('/api/livres', methods=['GET'])
+def api_livres():
+    """Retourne la liste complète des livres avec leur id (pour mapper le panier)."""
+    connexion = None
+    cursor = None
+    try:
+        connexion = obtenir_connexion()
+        cursor = connexion.cursor(buffered=True)
+        cursor.execute("SELECT id_livre, nom_livre, autheur, prix, image_livre, categorie, langue FROM livre")
+        rows = cursor.fetchall() or []
+        livres = []
+        for r in rows:
+            livres.append({
+                'id_livre': r[0],
+                'title': r[1],
+                'author': r[2],
+                'price': str(r[3]),
+                'image': r[4],
+                'category': r[5],
+                'language': r[6],
+            })
+        return {"ok": True, "livres": livres}
+    except mysql.connector.Error as e:
+        return {"ok": False, "error": str(e)}, 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connexion:
+            connexion.close()
+
+
+@app.route('/api/cart', methods=['GET'])
+def api_get_cart():
+    email = _get_logged_user_email()
+    if not email:
+        return {"ok": False, "error": "not_logged_in"}, 401
+
+    connexion = None
+    cursor = None
+    try:
+        connexion = obtenir_connexion()
+        cursor = connexion.cursor(buffered=True)
+        # panier + livre pour afficher title/price/etc
+        cursor.execute(
+            """
+            SELECT p.id_livre, l.nom_livre, l.autheur, l.prix, l.image_livre, l.categorie, l.langue, p.quantite
+            FROM panier p
+            JOIN livre l ON l.id_livre = p.id_livre
+            WHERE p.email = %(email)s
+            """,
+            {"email": email}
+        )
+        rows = cursor.fetchall() or []
+
+        items = []
+        for r in rows:
+            items.append({
+                'id_livre': r[0],
+                'title': r[1],
+                'author': r[2],
+                'price': str(r[3]),
+                'image': r[4],
+                'category': r[5],
+                'language': r[6],
+                'quantity': int(r[7]),
+            })
+
+        return {"ok": True, "items": items}
+    except mysql.connector.Error as e:
+        return {"ok": False, "error": str(e)}, 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connexion:
+            connexion.close()
+
+
+@app.route('/api/cart/sync', methods=['POST'])
+def api_cart_sync():
+    email = _get_logged_user_email()
+    if not email:
+        return {"ok": False, "error": "not_logged_in"}, 401
+
+    payload = request.get_json(silent=True) or {}
+    items = payload.get('items') or []
+
+    # items attendus: [{id_livre, quantity}]
+    connexion = None
+    cursor = None
+    try:
+        connexion = obtenir_connexion()
+        cursor = connexion.cursor(buffered=True)
+
+        # Supprime l'ancien panier puis reconstruit (simple et fiable)
+        cursor.execute("DELETE FROM panier WHERE email = %(email)s", {"email": email})
+
+        insert_sql = """
+            INSERT INTO panier(email, id_livre, quantite)
+            VALUES (%(email)s, %(id_livre)s, %(quantite)s)
+        """
+
+        for it in items:
+            id_livre = it.get('id_livre')
+            qty = it.get('quantity')
+            try:
+                id_livre_int = int(id_livre)
+                qty_int = int(qty)
+            except (TypeError, ValueError):
+                continue
+            if qty_int <= 0:
+                continue
+
+            cursor.execute(insert_sql, {
+                "email": email,
+                "id_livre": id_livre_int,
+                "quantite": qty_int,
+            })
+
+        connexion.commit()
+        return {"ok": True}
+    except mysql.connector.Error as e:
+        if connexion:
+            connexion.rollback()
+        return {"ok": False, "error": str(e)}, 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connexion:
+            connexion.close()
+
 
 @app.route('/admin')
 @app.route('/admin.html')
@@ -278,7 +435,7 @@ def ajouter_produit():
         cursor = connexion.cursor()
 
         requete_sql = """
-        INSERT INTO livre (titre, auteur, categorie, langue, prix, image)
+        INSERT INTO livre (nom_livre, autheur, categorie, langue, prix, image_livre)
         VALUES (%(nom)s, %(auteur)s, %(categorie)s, %(langue)s, %(prix)s, %(image)s)
         """
 
@@ -348,6 +505,64 @@ def update_avatar():
             connexion.close()
 
     return redirect(url_for('profile'))
+
+@app.route('/commander', methods=['POST'])
+def commander():
+    """Finalise la commande en déplaçant le panier vers les tables commande/contient."""
+    if not session.get('logged_in'):
+        return {"ok": False, "error": "Veuillez vous connecter pour commander."}, 401
+
+    email = session.get('email')
+    # On récupère la wilaya depuis le formulaire ou 'Alger' par défaut
+    wilaya = request.form.get('wilaya') or 'Alger'
+
+    connexion = None
+    cursor = None
+    try:
+        connexion = obtenir_connexion()
+        cursor = connexion.cursor(buffered=True)
+
+        # 1. Récupérer les articles du panier actuel de l'utilisateur
+        cursor.execute("""
+            SELECT p.id_livre, p.quantite, l.prix 
+            FROM panier p 
+            JOIN livre l ON p.id_livre = l.id_livre 
+            WHERE p.email = %(email)s
+        """, {"email": email})
+        items = cursor.fetchall()
+
+        if not items:
+            return {"ok": False, "error": "Votre panier est vide."}, 400
+
+        # 2. Créer la commande globale
+        cursor.execute("""
+            INSERT INTO commande (email, wilaya_livraison, statue) 
+            VALUES (%(email)s, %(wilaya)s, 'En attente')
+        """, {"email": email, "wilaya": wilaya})
+        id_commande = cursor.lastrowid
+
+        # 3. Insérer chaque livre dans la table de liaison 'contient'
+        for id_livre, quantite, prix in items:
+            cursor.execute("""
+                INSERT INTO contient (id_commande, id_livre, quantite_commandee, prix_achat)
+                VALUES (%(id_cmd)s, %(id_lv)s, %(qty)s, %(px)s)
+            """, {"id_cmd": id_commande, "id_lv": id_livre, "qty": quantite, "px": prix})
+
+        # 4. Vider le panier en base de données après la commande
+        cursor.execute("DELETE FROM panier WHERE email = %(email)s", {"email": email})
+
+        connexion.commit()
+        return {"ok": True}
+
+    except mysql.connector.Error as e:
+        if connexion:
+            connexion.rollback()
+        return {"ok": False, "error": str(e)}, 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connexion:
+            connexion.close()
     
 if __name__ == '__main__':
     app.run(debug=True)

@@ -116,10 +116,10 @@ DINAMICITÉ DU SITE:
  -jouter la table panier. (terminé)
  -ajouter la possibilité de connexion et déconnexion du site (terminé)
  -connexion vers la page admin (terminé)
- -sauvgarder les livres ajouter dans la DB 
- -sauvgarder le panier de l'utilisateur dans la BD  
+ -sauvgarder les livres ajouter dans la DB (terminé)
+-sauvgarder le panier de l'utilisateur dans la BD  
  -ajouter l'attribut quantité_livre
- -sauvgarder la commande de livre dans la DB 
+ -sauvgarder la commande de livre dans la DB (terminé)
  -sauvgarder l'avatar dans la BD 
  -charger l'historique pour chaque connexion
  -charger le panier pour chaque connexion
