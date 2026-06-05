@@ -295,22 +295,48 @@ function createBookElement(product, className) {
     return book;
 }
 
-function renderDynamicBooks() {
-    const products = getAdminProducts();
+async function renderDynamicBooks() {
+    let products = [];
+    try {
+        const res = await fetch('/api/livres', { method: 'GET' });
+        const data = await res.json();
+        if (data && data.ok && data.livres) {
+            products = data.livres;
+        }
+    } catch (e) {
+        products = [];
+    }
+
     const produitGrid = document.querySelector('.produit-grid');
     const recentGallery = document.getElementById('recentBooksGallery') || document.querySelector('.index-autre-gallery:last-of-type');
 
     if (produitGrid) {
         produitGrid.querySelectorAll('.admin-dynamic-book').forEach((book) => book.remove());
         products.slice().reverse().forEach((product) => {
-            produitGrid.prepend(createBookElement(product, 'produit-book'));
+            const book = createBookElement({
+                name: product.title,
+                author: product.author,
+                category: product.category,
+                language: product.language,
+                price: product.price,
+                image: '/static/img/' + product.image
+            }, 'produit-book');
+            produitGrid.prepend(book);
         });
     }
 
     if (recentGallery) {
         recentGallery.querySelectorAll('.admin-dynamic-book').forEach((book) => book.remove());
         products.slice(0, 5).reverse().forEach((product) => {
-            recentGallery.prepend(createBookElement(product, 'index-book'));
+            const book = createBookElement({
+                name: product.title,
+                author: product.author,
+                category: product.category,
+                language: product.language,
+                price: product.price,
+                image: '/static/img/' + product.image
+            }, 'index-book');
+            recentGallery.prepend(book);
         });
     }
 }
@@ -841,63 +867,6 @@ function renderAdminProductsList() {
     adminProductsList.innerHTML = '';
     getAdminProducts().forEach((product) => {
         adminProductsList.appendChild(createAdminProductRow(product));
-    });
-}
-
-if (adminProductForm && adminProductsList) {
-    renderAdminProductsList();
-
-    adminProductForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const productName = document.getElementById('adminProductName').value.trim();
-        const productAuthor = document.getElementById('adminProductAuthor').value.trim();
-        const productCategory = document.getElementById('adminProductCategory').value.trim();
-        const productLanguage = document.getElementById('adminProductLanguage').value.trim();
-        const productPrice = document.getElementById('adminProductPrice').value.trim();
-        const productImage = document.getElementById('adminProductImage').files[0];
-
-        if (!productName || !productAuthor || !productCategory || !productPrice) return;
-
-        const saveProduct = (imageSrc) => {
-            const products = getAdminProducts();
-            const newProduct = {
-                id: Date.now().toString(),
-                name: productName,
-                author: productAuthor,
-                category: productCategory,
-                language: productLanguage,
-                price: productPrice,
-                image: imageSrc
-            };
-
-            products.unshift(newProduct);
-            saveAdminProducts(products.slice(0, adminProductsMaxCount));
-            renderAdminProductsList();
-            renderDynamicBooks();
-            adminProductForm.reset();
-        };
-
-        if (productImage) {
-            const reader = new FileReader();
-            reader.addEventListener('load', () => { saveProduct(reader.result); });
-            reader.readAsDataURL(productImage);
-        } else {
-            saveProduct('../static/img/logo_englet.png');
-        }
-    });
-
-    adminProductsList.addEventListener('click', (event) => {
-        const deleteBtn = event.target.closest('.admin-delete-product');
-
-        if (deleteBtn) {
-            const row = deleteBtn.closest('tr');
-            const productId = row.dataset.productId;
-
-            saveAdminProducts(getAdminProducts().filter((product) => product.id !== productId));
-            renderAdminProductsList();
-            renderDynamicBooks();
-        }
     });
 }
 
