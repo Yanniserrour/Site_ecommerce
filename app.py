@@ -22,7 +22,7 @@ ENV = 'DEVELOPPEMENT'
 if ENV == "DEVELOPPEMENT":
     DB_HOST     = "localhost"
     DB_USER     = "root"
-    DB_PASSWORD = "root1234"
+    DB_PASSWORD = "Yani2003@"
     DB_NAME     = "adlis"
 else: 
     DB_HOST     = "serveur_debergement"  #a changer
@@ -263,6 +263,7 @@ def api_cart_sync():
             connexion.close()
 
 
+#DB connexion en mode administrateurs 
 @app.route('/admin')
 @app.route('/admin.html')
 def admin():
@@ -398,12 +399,14 @@ def connexion():
             connexion_db.close()
             
 
+#DB déconnexion
 @app.route('/deconnexion')
 def deconnxion():
     session.clear()
     return redirect(url_for('index'))
 
 
+# DB ajouter produit
 @app.route('/admin/ajouter_produit', methods=['POST'])
 def ajouter_produit():
     if not session.get('logged_in') or not session.get('is_admin'):
@@ -473,6 +476,8 @@ def ajouter_produit():
     
     return redirect(url_for('admin'))
 
+
+
 # DB avatar
 @app.route('/profile/update_avatar', methods=['POST'])
 def update_avatar():
@@ -506,6 +511,9 @@ def update_avatar():
 
     return redirect(url_for('profile'))
 
+
+
+#DB commander
 @app.route('/commander', methods=['POST'])
 def commander():
     """Finalise la commande en déplaçant le panier vers les tables commande/contient."""
@@ -513,7 +521,6 @@ def commander():
         return {"ok": False, "error": "Veuillez vous connecter pour commander."}, 401
 
     email = session.get('email')
-    # On récupère la wilaya depuis le formulaire ou 'Alger' par défaut
     wilaya = request.form.get('wilaya') or 'Alger'
 
     connexion = None
