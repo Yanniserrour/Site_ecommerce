@@ -21,7 +21,7 @@
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-pic-container">
-                <img src="{{ url_for('static', filename='img/' + user.avatar) }}" alt="Photo de profil" class="profile-pic">
+                <img src="{{ url_for('static', filename='img/' + (user.avatar.decode('utf-8') if user.avatar is mapping and false else (user.avatar|string))) }}" alt="Photo de profil" class="profile-pic">
                 <div class="add-avatar-btn" id="toggleAvatarBox" title="Choisir un avatar">
                     <i class="fa-solid fa-plus"></i>
                 </div>
