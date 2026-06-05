@@ -143,7 +143,7 @@ DINAMICITÉ DU SITE:
  -police
  -ajouter un footer (terminé)
  -ajouter les liens avec flask (terminé)
- -pdf de conception.
+ -pdf de conception. (terminé)
  -ajouter des citations.
  -ajouter les chemains vers les resaux dans auth (terminé)
  -netoyer le message d'authentification (terminé)
