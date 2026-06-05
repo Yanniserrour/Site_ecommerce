@@ -1,19 +1,5 @@
-//ceci est fait pour translate entre les pages inscription et connexion
-const container = document.getElementById('container');
-const registerBtn = document.getElementById('register');
-const loginBtn = document.getElementById('login');
-
-if (container && registerBtn && loginBtn) {
-    registerBtn.addEventListener('click', () => {
-        container.classList.add("active");
-    });
-
-    loginBtn.addEventListener('click', () => {
-        container.classList.remove("active");
-    });
-}
-
-// Sidebar Menu Toggle
+// Plusieurs pages
+// Sidebar Menu Toggle (index, produit, panier, admin)
 const burgerMenuBtn = document.getElementById('burgerMenuBtn');
 const sidebarMenu = document.getElementById('sidebarMenu');
 const accountBtn = document.getElementById('accountBtn');
@@ -32,14 +18,142 @@ if (burgerMenuBtn && sidebarMenu) {
     });
 }
 
-// Account button functionality
+// Account button (index, produit, panier, admin)
 if (accountBtn && accountBtn.tagName && accountBtn.tagName.toLowerCase() !== 'a') {
     accountBtn.addEventListener('click', () => {
         window.location.href = 'auth.html';
     });
 }
 
-// Check page state and run initialization
+// Bloquage de panier et profil (index, produit, panier, admin)
+const linkPanier = document.getElementById('linkPanier');
+const linkProfil = document.getElementById('linkProfil');
+
+if (linkPanier) {
+    // Le serveur gere l acces aux pages sensibles.
+}
+
+if (linkProfil) {
+    // Le serveur gere l acces au profil.
+}
+
+// Message de confirmation (panier, formulaire, produit, index)
+const confirmationMessageKey = 'adlisConfirmationMessage';
+
+function showConfirmationMessage(message) {
+    let confirmation = document.getElementById('confirmationMessage');
+
+    if (!confirmation) {
+        confirmation = document.createElement('div');
+        confirmation.id = 'confirmationMessage';
+        confirmation.className = 'confirmation-message';
+        document.body.appendChild(confirmation);
+    }
+
+    confirmation.textContent = message;
+    confirmation.classList.add('active');
+
+    clearTimeout(confirmation.hideTimer);
+    confirmation.hideTimer = setTimeout(() => {
+        confirmation.classList.remove('active');
+    }, 2600);
+}
+
+window.addEventListener('load', () => {
+    const savedMessage = sessionStorage.getItem(confirmationMessageKey);
+
+    if (savedMessage) {
+        sessionStorage.removeItem(confirmationMessageKey);
+        showConfirmationMessage(savedMessage);
+    }
+});
+
+// Fonctions utilitaires partagees
+const cartItemsKey = 'adlisCartItems';
+const adminOrdersKey = 'adlisOrders';
+const adminProductsKey = 'adlisAdminBooks';
+const adminProductsMaxCount = 5;
+
+function getStoredItems(key) {
+    const savedItems = localStorage.getItem(key);
+    if (!savedItems) return [];
+    try { return JSON.parse(savedItems); } catch (error) { return []; }
+}
+
+function saveStoredItems(key, items) {
+    localStorage.setItem(key, JSON.stringify(items));
+}
+
+function getPrixValue(text) {
+    const cleaned = text.replace(/\s/g, '').replace(',', '.');
+    const value = parseFloat(cleaned);
+    return Number.isNaN(value) ? 0 : value;
+}
+
+function formatAdminPrice(price) {
+    return Number(price).toLocaleString('fr-DZ') + ' DA';
+}
+
+function getAdminProducts() {
+    const savedProducts = localStorage.getItem(adminProductsKey);
+    if (!savedProducts) return [];
+    try { return JSON.parse(savedProducts); } catch (error) { return []; }
+}
+
+function saveAdminProducts(products) {
+    localStorage.setItem(adminProductsKey, JSON.stringify(products));
+}
+
+function calculateAge(birthDateString) {
+    if (!birthDateString) return null;
+    const birthDate = new Date(birthDateString);
+    if (Number.isNaN(birthDate.getTime())) return null;
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() - birthDate.getDate();
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) age -= 1;
+    return age;
+}
+
+// DB livre cache (panier, index, produit)
+let livresDbCache = null;
+
+async function loadLivresDb() {
+    if (livresDbCache) return livresDbCache;
+    const res = await fetch('/api/livres', { method: 'GET' });
+    const data = await res.json();
+    livresDbCache = data && data.livres ? data.livres : [];
+    return livresDbCache;
+}
+
+function normalizePriceForMatch(p) {
+    if (p === null || p === undefined) return '';
+    return String(p).replace(/\s/g, '').replace('DA', '').replace(',', '.');
+}
+
+function findLivreIdInDb(livres, title, author, priceText) {
+    const wantedTitle = (title || '').trim().toLowerCase();
+    const wantedAuthor = (author || '').trim().toLowerCase();
+    const wantedPrice = normalizePriceForMatch(priceText);
+    const prixNum = getPrixValue(priceText);
+    const wantedPrice2 = prixNum ? normalizePriceForMatch(String(prixNum)) : wantedPrice;
+
+    for (const l of livres) {
+        const t = (l.title || '').trim().toLowerCase();
+        const a = (l.author || '').trim().toLowerCase();
+        const p = normalizePriceForMatch(l.price);
+        if (t === wantedTitle && a === wantedAuthor && (p === wantedPrice || p === wantedPrice2)) return l.id_livre;
+    }
+    for (const l of livres) {
+        const t = (l.title || '').trim().toLowerCase();
+        const a = (l.author || '').trim().toLowerCase();
+        if (t === wantedTitle && a === wantedAuthor) return l.id_livre;
+    }
+    return null;
+}
+
+// Initialisation au chargement (profile, index)
 window.addEventListener('load', () => {
     populateProfileAge();
 
@@ -54,25 +168,34 @@ window.addEventListener('load', () => {
             welcomeVideo.pause();
             welcomeVideo.currentTime = welcomeVideo.duration || welcomeVideo.currentTime;
         });
-        welcomeVideo.play().catch(() => {
-            // autoplay may be blocked, but video will still show if the browser allows it
-        });
+        welcomeVideo.play().catch(() => {});
     }
 });
 
-//Bloquage de panier et profil
-const linkPanier = document.getElementById('linkPanier');
-const linkProfil = document.getElementById('linkProfil');
 
-if (linkPanier) {
-    // Le serveur gère l'accès aux pages sensibles.
+// Authentification
+const container = document.getElementById('container');
+const registerBtn = document.getElementById('register');
+const loginBtn = document.getElementById('login');
+
+if (container && registerBtn && loginBtn) {
+    registerBtn.addEventListener('click', () => {
+        container.classList.add("active");
+    });
+
+    loginBtn.addEventListener('click', () => {
+        container.classList.remove("active");
+    });
 }
 
-if (linkProfil) {
-    // Le serveur gère l'accès au profil.
-}
 
-// Les deux en meme temps
+
+
+
+
+
+// Index et produit, recherche et filtres
+// Systeme de recherche et filtres combines
 var currentSearch = '';
 var currentCategory = '';
 var currentLangue = '';
@@ -83,11 +206,9 @@ function applyFilters() {
     books.forEach(function(book) {
         var p = book.querySelector('p');
         if (!p) return;
-        
         var lines = p.innerText.split('\n');
         var title = (lines[0] || '').trim().toLowerCase();
         var matchSearch = !currentSearch || title.includes(currentSearch.toLowerCase());
-
         var matchCategory = true;
         var matchLangue = true;
 
@@ -96,15 +217,11 @@ function applyFilters() {
             matchLangue = !currentLangue || (book.dataset.langue || '') === currentLangue;
         }
 
-        if (matchSearch && matchCategory && matchLangue) {
-            book.style.display = '';
-        } else {
-            book.style.display = 'none';
-        }
+        book.style.display = (matchSearch && matchCategory && matchLangue) ? '' : 'none';
     });
 }
 
-// Barre de recherche
+// Barre de recherche (index, produit)
 var searchInput = document.querySelector('.search-input');
 var searchBtn = document.querySelector('.search-btn');
 
@@ -122,6 +239,8 @@ if (searchInput && searchBtn) {
     });
 }
 
+
+// Charger la recherche depuis l URL (produit)
 if (document.querySelector('.produit-grid')) {
     var urlParams = new URLSearchParams(window.location.search);
     var searchParam = urlParams.get('search');
@@ -133,6 +252,190 @@ if (document.querySelector('.produit-grid')) {
     }
 }
 
+// Index, video de bienvenue:
+document.addEventListener("DOMContentLoaded", function() {
+    const video = document.getElementById("welcomeVideo");
+
+    if (video) {
+        video.addEventListener("canplay", function() {
+            video.classList.remove("is-hidden");
+        });
+        if (video.readyState >= 3) {
+            video.classList.remove("is-hidden");
+        }
+    }
+});
+
+// Livres dynamiques (index, produit)
+function createBookElement(product, className) {
+    const book = document.createElement('div');
+    const image = document.createElement('img');
+    const description = document.createElement('p');
+
+    book.className = className + ' admin-dynamic-book';
+    image.src = product.image || '../static/img/logo_englet.png';
+    image.alt = product.name;
+    book.dataset.category = product.category;
+    book.dataset.langue = product.language;
+
+    description.append(
+        product.name,
+        document.createElement('br'),
+        className === 'produit-book' ? 'Auteur: ' + product.author : product.author
+    );
+
+    if (className === 'produit-book') {
+        description.append(
+            document.createElement('br'),
+            'Prix: ' + formatAdminPrice(product.price)
+        );
+    }
+
+    book.append(image, description);
+    return book;
+}
+
+function renderDynamicBooks() {
+    const products = getAdminProducts();
+    const produitGrid = document.querySelector('.produit-grid');
+    const recentGallery = document.getElementById('recentBooksGallery') || document.querySelector('.index-autre-gallery:last-of-type');
+
+    if (produitGrid) {
+        produitGrid.querySelectorAll('.admin-dynamic-book').forEach((book) => book.remove());
+        products.slice().reverse().forEach((product) => {
+            produitGrid.prepend(createBookElement(product, 'produit-book'));
+        });
+    }
+
+    if (recentGallery) {
+        recentGallery.querySelectorAll('.admin-dynamic-book').forEach((book) => book.remove());
+        products.slice(0, 5).reverse().forEach((product) => {
+            recentGallery.prepend(createBookElement(product, 'index-book'));
+        });
+    }
+}
+
+renderDynamicBooks();
+
+
+
+
+
+
+// Produit, page dynamique: 
+// Modal produit (index, produit)
+const modalOverlay = document.createElement('div');
+modalOverlay.className = 'product-modal-overlay';
+modalOverlay.innerHTML = `
+    <div class="product-modal">
+        <button class="product-modal-close">&times;</button>
+        <img class="product-modal-img" src="" alt="">
+        <h2 class="product-modal-title"></h2>
+        <p class="product-modal-author"></p>
+        <p class="product-modal-category"></p>
+        <p class="product-modal-langue"></p>
+        <p class="product-modal-price"></p>
+        <button class="product-modal-cart">Ajouter au panier</button>
+    </div>
+`;
+document.body.appendChild(modalOverlay);
+
+const modalImg = modalOverlay.querySelector('.product-modal-img');
+const modalTitle = modalOverlay.querySelector('.product-modal-title');
+const modalAuthor = modalOverlay.querySelector('.product-modal-author');
+const modalCategory = modalOverlay.querySelector('.product-modal-category');
+const modalLangue = modalOverlay.querySelector('.product-modal-langue');
+const modalPrice = modalOverlay.querySelector('.product-modal-price');
+const modalCloseBtn = modalOverlay.querySelector('.product-modal-close');
+const modalCartBtn = modalOverlay.querySelector('.product-modal-cart');
+let selectedProduct = null;
+
+function openProductModal(bookElement) {
+    const img = bookElement.querySelector('img');
+    const p = bookElement.querySelector('p');
+    if (!img || !p) return;
+
+    const lines = p.innerText.split('\n').map(l => l.trim()).filter(l => l !== '');
+    let title = lines[0] || '';
+    let author = lines[1] || '';
+    let price = 'X DA';
+
+    if (bookElement.classList.contains('produit-book')) {
+        author = (lines[1] || '').replace('Auteur:', '').trim();
+        price = (lines[2] || '').replace('Prix:', '').trim();
+    }
+
+    modalImg.src = img.src;
+    modalTitle.textContent = title;
+    modalAuthor.textContent = author;
+    modalCategory.textContent = 'Categorie: ' + (bookElement.dataset.category || 'X');
+    modalLangue.textContent = 'Langue: ' + (bookElement.dataset.langue || 'X');
+    modalPrice.textContent = price;
+    selectedProduct = {
+        title: title,
+        author: author,
+        category: bookElement.dataset.category || 'X',
+        price: price
+    };
+    modalOverlay.classList.add('active');
+}
+
+document.querySelectorAll('.index-book').forEach(function(book) {
+    book.addEventListener('click', function() { openProductModal(book); });
+});
+
+document.querySelectorAll('.produit-book').forEach(function(book) {
+    book.addEventListener('click', function() { openProductModal(book); });
+});
+
+modalCloseBtn.addEventListener('click', function() {
+    modalOverlay.classList.remove('active');
+});
+
+modalOverlay.addEventListener('click', function(e) {
+    if (e.target === modalOverlay) modalOverlay.classList.remove('active');
+});
+
+modalCartBtn.addEventListener('click', async function() {
+    if (selectedProduct) {
+        const cartItems = getStoredItems(cartItemsKey);
+        const existingItem = cartItems.find((item) =>
+            item.title === selectedProduct.title &&
+            item.author === selectedProduct.author &&
+            item.price === selectedProduct.price
+        );
+
+        if (existingItem) {
+            existingItem.quantity = (existingItem.quantity || 1) + 1;
+        } else {
+            let id_livre = null;
+            try {
+                const livres = await loadLivresDb();
+                id_livre = findLivreIdInDb(livres, selectedProduct.title, selectedProduct.author, selectedProduct.price);
+            } catch (e) {
+                id_livre = null;
+            }
+
+            cartItems.push({
+                id: Date.now().toString(),
+                id_livre: id_livre,
+                title: selectedProduct.title,
+                author: selectedProduct.author,
+                category: selectedProduct.category,
+                price: selectedProduct.price,
+                quantity: 1
+            });
+        }
+
+        saveStoredItems(cartItemsKey, cartItems);
+    }
+
+    modalOverlay.classList.remove('active');
+    showConfirmationMessage('Livre ajoute au panier avec succes');
+});
+
+
+// Produit, filtre categorie et langue
 // Filtrer par categorie
 document.querySelectorAll('.category-filter').forEach(function(filter) {
     filter.addEventListener('click', function() {
@@ -167,62 +470,26 @@ document.querySelectorAll('.langue-filter').forEach(function(filter) {
     });
 });
 
-// Gestion de la page panier
+
+
+
+
+
+
+
+
+// Panier, gestion
 const panierItems = document.getElementById('panierItems');
 const panierTotal = document.getElementById('panierTotal');
 const panierEmpty = document.getElementById('panierEmpty');
 const panierConfirmLink = document.getElementById('panierConfirmLink');
 const panierProfileBtn = document.getElementById('panierProfileBtn');
-const cartItemsKey = 'adlisCartItems';
-const adminOrdersKey = 'adlisOrders';
-
-let livresDbCache = null;
-
-async function loadLivresDb() {
-    if (livresDbCache) return livresDbCache;
-    const res = await fetch('/api/livres', { method: 'GET' });
-    const data = await res.json();
-    livresDbCache = data && data.livres ? data.livres : [];
-    return livresDbCache;
-}
-
-function normalizePriceForMatch(p) {
-    if (p === null || p === undefined) return '';
-    return String(p).replace(/\s/g, '').replace('DA', '').replace(',', '.');
-}
-
-function findLivreIdInDb(livres, title, author, priceText) {
-    const wantedTitle = (title || '').trim().toLowerCase();
-    const wantedAuthor = (author || '').trim().toLowerCase();
-    const wantedPrice = normalizePriceForMatch(priceText);
-
-    const prixNum = getPrixValue(priceText);
-    const wantedPrice2 = prixNum ? normalizePriceForMatch(String(prixNum)) : wantedPrice;
-
-    for (const l of livres) {
-        const t = (l.title || '').trim().toLowerCase();
-        const a = (l.author || '').trim().toLowerCase();
-        const p = normalizePriceForMatch(l.price);
-
-        if (t === wantedTitle && a === wantedAuthor && (p === wantedPrice || p === wantedPrice2)) {
-            return l.id_livre;
-        }
-    }
-    // fallback: match sans prix (si format différent)
-    for (const l of livres) {
-        const t = (l.title || '').trim().toLowerCase();
-        const a = (l.author || '').trim().toLowerCase();
-        if (t === wantedTitle && a === wantedAuthor) return l.id_livre;
-    }
-    return null;
-}
 
 async function ensureCartHasLivreIds() {
     const storedItems = getStoredItems(cartItemsKey);
     if (!storedItems || storedItems.length === 0) return [];
 
     const livres = await loadLivresDb();
-
     let changed = false;
     const mapped = storedItems.map((item) => {
         if (item.id_livre) return item;
@@ -250,12 +517,8 @@ async function syncCartToDb() {
         body: JSON.stringify({ items })
     });
 
-    // on ne bloque pas l'UI si ça échoue
-    try {
-        return (await res.json()) || { ok: false };
-    } catch (e) {
-        return { ok: false };
-    }
+    try { return (await res.json()) || { ok: false }; }
+    catch (e) { return { ok: false }; }
 }
 
 async function loadCartFromDbAndRender() {
@@ -264,7 +527,6 @@ async function loadCartFromDbAndRender() {
     const data = await res.json();
     if (!data || !data.ok || !data.items) return;
 
-    // On ne vide l'affichage que si on a reçu des données valides du serveur
     panierItems.innerHTML = '';
     data.items.forEach((item) => {
         panierItems.appendChild(createPanierRow({
@@ -280,33 +542,6 @@ async function loadCartFromDbAndRender() {
     updatePanier();
 }
 
-
-function getStoredItems(key) {
-    const savedItems = localStorage.getItem(key);
-
-    if (!savedItems) {
-        return [];
-    }
-
-    try {
-        return JSON.parse(savedItems);
-    } catch (error) {
-        return [];
-    }
-}
-
-function saveStoredItems(key, items) {
-    localStorage.setItem(key, JSON.stringify(items));
-}
-
-// Transformer le texte du prix en nombre utilisable
-function getPrixValue(text) {
-    const cleaned = text.replace(/\s/g, '').replace(',', '.');
-    const value = parseFloat(cleaned);
-    return Number.isNaN(value) ? 0 : value;
-}
-
-// Mettre a jour le total et l'etat du panier
 function updatePanier() {
     const rows = Array.from(panierItems.querySelectorAll('tr'));
     const total = rows.reduce((sum, row) => {
@@ -331,7 +566,6 @@ function createPanierRow(item) {
     const quantityInput = document.createElement('input');
     const deleteBtn = document.createElement('button');
 
-    // cartId = id_livre si présent, sinon fallback id local
     row.dataset.cartId = item.id_livre ? String(item.id_livre) : item.id;
     title.textContent = 'Categorie : ' + (item.category || 'X');
 
@@ -374,30 +608,22 @@ function createPanierRow(item) {
 }
 
 function renderPanierItems() {
-    if (!panierItems) {
-        return;
-    }
-
+    if (!panierItems) return;
     panierItems.innerHTML = '';
-
     getStoredItems(cartItemsKey).forEach((item) => {
         panierItems.appendChild(createPanierRow(item));
     });
 }
 
 if (panierItems && panierTotal && panierEmpty && panierConfirmLink) {
-    // Affichage initial local
     renderPanierItems();
     updatePanier();
 
-    // Si connecté, synchroniser vers BD puis re-render depuis BD
-    // (panier.html protège déjà l’accès côté serveur, mais on garde ça robuste)
     (async () => {
         await syncCartToDb();
         await loadCartFromDbAndRender();
     })().catch(() => {});
 
-    // Supprimer un produit du panier
     panierItems.addEventListener('click', (event) => {
         const deleteBtn = event.target.closest('.panier-delete');
 
@@ -413,13 +639,10 @@ if (panierItems && panierTotal && panierEmpty && panierConfirmLink) {
 
             row.remove();
             updatePanier();
-
-            // Sync silencieux
             syncCartToDb().catch(() => {});
         }
     });
 
-    // Empecher la commande si le panier est vide
     panierConfirmLink.addEventListener('click', (event) => {
         if (panierConfirmLink.classList.contains('disabled')) {
             event.preventDefault();
@@ -429,87 +652,112 @@ if (panierItems && panierTotal && panierEmpty && panierConfirmLink) {
     updatePanier();
 }
 
-
 if (panierProfileBtn) {
-    // Rediriger vers le profil ou la connexion depuis le panier
     panierProfileBtn.addEventListener('click', () => {
         const isLoggedIn = localStorage.getItem('userLoggedIn');
         window.location.href = isLoggedIn === 'true' ? 'profile.html' : 'auth.html';
     });
 }
 
-const confirmationMessageKey = 'adlisConfirmationMessage';
-
-function showConfirmationMessage(message) {
-    let confirmation = document.getElementById('confirmationMessage');
-
-    if (!confirmation) {
-        confirmation = document.createElement('div');
-        confirmation.id = 'confirmationMessage';
-        confirmation.className = 'confirmation-message';
-        document.body.appendChild(confirmation);
-    }
-
-    confirmation.textContent = message;
-    confirmation.classList.add('active');
-
-    clearTimeout(confirmation.hideTimer);
-    confirmation.hideTimer = setTimeout(() => {
-        confirmation.classList.remove('active');
-    }, 2600);
+if (panierConfirmLink) {
+    panierConfirmLink.addEventListener('click', function() {
+        if (!panierConfirmLink.classList.contains('disabled')) {
+            sessionStorage.setItem(confirmationMessageKey, 'Vous pouvez maintenant confirmer votre commande');
+        }
+    });
 }
 
-window.addEventListener('load', () => {
-    const savedMessage = sessionStorage.getItem(confirmationMessageKey);
 
-    if (savedMessage) {
-        sessionStorage.removeItem(confirmationMessageKey);
-        showConfirmationMessage(savedMessage);
-    }
-});
 
+
+
+
+
+
+// Formulaire, page de commande: 
 const commandeForm = document.getElementById('commandeForm');
 
 if (commandeForm) {
     commandeForm.querySelectorAll('input, select').forEach((field) => {
         field.required = true;
     });
+
+    commandeForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const cartItems = getStoredItems(cartItemsKey);
+        if (cartItems.length === 0) {
+            showConfirmationMessage('Votre panier est vide.');
+            return;
+        }
+
+        const inputs = commandeForm.querySelectorAll('input[type="text"]');
+        const clientName = Array.from(inputs)
+            .slice(0, 2)
+            .map((field) => field.value.trim())
+            .filter(Boolean)
+            .join(' ');
+        const phone = inputs[3] ? inputs[3].value.trim() : '';
+
+        const existingOrders = getStoredItems(adminOrdersKey);
+        const orderProducts = cartItems.map((item) => {
+            const quantity = item.quantity || 1;
+            return (item.title || 'Produit inconnu') + ' x' + quantity;
+        }).join(', ');
+        const orderTotal = cartItems.reduce((sum, item) => {
+            const quantity = item.quantity || 1;
+            return sum + getPrixValue(item.price) * quantity;
+        }, 0);
+
+        existingOrders.push({
+            id: Date.now().toString() + Math.random().toString(16).slice(2),
+            client: clientName || 'Client inconnu',
+            phone: phone || 'Non renseigne',
+            product: orderProducts,
+            amount: formatAdminPrice(orderTotal),
+            status: 'En attente'
+        });
+
+        const formData = new FormData(commandeForm);
+        if (!formData.has('wilaya') && inputs[2]) {
+            formData.append('wilaya', inputs[2].value.trim());
+        }
+
+        fetch('/commander', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.ok) {
+                saveStoredItems(adminOrdersKey, existingOrders);
+                saveStoredItems(cartItemsKey, []);
+                showConfirmationMessage('Commande confirmee et enregistree !');
+                commandeForm.reset();
+            } else {
+                showConfirmationMessage('Erreur lors de la commande : ' + (data.error || 'Serveur'));
+            }
+        })
+        .catch(() => {
+            showConfirmationMessage('Erreur de connexion avec le serveur');
+        });
+    });
 }
 
+
+
+
+
+
+// Admin:
 const adminProductForm = document.getElementById('adminProductForm');
 const adminProductsList = document.getElementById('adminProductsList');
 const adminOrdersList = document.getElementById('adminOrdersList');
 const adminOrdersTotal = document.getElementById('adminOrdersTotal');
 const adminLogoutBtn = document.getElementById('adminLogoutBtn');
-const adminProductsKey = 'adlisAdminBooks';
-const adminProductsMaxCount = 5;
-
-function getAdminProducts() {
-    const savedProducts = localStorage.getItem(adminProductsKey);
-
-    if (!savedProducts) {
-        return [];
-    }
-
-    try {
-        return JSON.parse(savedProducts);
-    } catch (error) {
-        return [];
-    }
-}
-
-function saveAdminProducts(products) {
-    localStorage.setItem(adminProductsKey, JSON.stringify(products));
-}
-
-function formatAdminPrice(price) {
-    return Number(price).toLocaleString('fr-DZ') + ' DA';
-}
 
 function updateAdminOrdersTotal() {
-    if (!adminOrdersList || !adminOrdersTotal) {
-        return;
-    }
+    if (!adminOrdersList || !adminOrdersTotal) return;
 
     const total = Array.from(adminOrdersList.querySelectorAll('tr')).reduce((sum, row) => {
         const amountCell = row.querySelector('td:nth-child(4)');
@@ -542,9 +790,7 @@ function createAdminOrderRow(order) {
 }
 
 function renderAdminOrdersList() {
-    if (!adminOrdersList) {
-        return;
-    }
+    if (!adminOrdersList) return;
 
     const orders = getStoredItems(adminOrdersKey);
     adminOrdersList.innerHTML = '';
@@ -591,245 +837,69 @@ function createAdminProductRow(product) {
 }
 
 function renderAdminProductsList() {
-    if (!adminProductsList) {
-        return;
-    }
-
+    if (!adminProductsList) return;
     adminProductsList.innerHTML = '';
-
     getAdminProducts().forEach((product) => {
         adminProductsList.appendChild(createAdminProductRow(product));
     });
 }
 
-function createBookElement(product, className) {
-    const book = document.createElement('div');
-    const image = document.createElement('img');
-    const description = document.createElement('p');
-
-    book.className = className + ' admin-dynamic-book';
-    image.src = product.image || '../static/img/logo_englet.png';
-    image.alt = product.name;
-    book.dataset.category = product.category;
-    book.dataset.langue = product.language;
-
-
-    description.append(
-        product.name,
-        document.createElement('br'),
-        className === 'produit-book' ? 'Auteur: ' + product.author : product.author
-    );
-
-    if (className === 'produit-book') {
-        description.append(
-            document.createElement('br'),
-            'Prix: ' + formatAdminPrice(product.price)
-        );
-    }
-
-    book.append(image, description);
-
-    return book;
-}
-
-function renderDynamicBooks() {
-    const products = getAdminProducts();
-    const produitGrid = document.querySelector('.produit-grid');
-    const recentGallery = document.getElementById('recentBooksGallery') || document.querySelector('.index-autre-gallery:last-of-type');
-
-    if (produitGrid) {
-        produitGrid.querySelectorAll('.admin-dynamic-book').forEach((book) => book.remove());
-        products.slice().reverse().forEach((product) => {
-            produitGrid.prepend(createBookElement(product, 'produit-book'));
-        });
-    }
-
-    if (recentGallery) {
-        recentGallery.querySelectorAll('.admin-dynamic-book').forEach((book) => book.remove());
-        products.slice(0, 5).reverse().forEach((product) => {
-            recentGallery.prepend(createBookElement(product, 'index-book'));
-        });
-    }
-}
-
-//Filtrer par categorie
-document.querySelectorAll('.category-filter').forEach(function(filter) {
-    filter.addEventListener('click', function() {
-        document.querySelectorAll('.category-filter').forEach(function(f) {
-            f.classList.remove('active-filter');
-        });
-        filter.classList.add('active-filter');
-
-        var selectedCategory = filter.textContent.trim();
-        var allBooks = document.querySelectorAll('.produit-book');
-        if (filter.classList.contains('category-reset')) {
-            allBooks.forEach(function(book) {
-                book.style.display = '';
-            });
-            return;
-        }
-        allBooks.forEach(function(book) {
-            if (book.dataset.category === selectedCategory) {
-                book.style.display = '';
-            } else {
-                book.style.display = 'none';
-            }
-        });
-    });
-});
-
-
-//Filtrer par langue:
-document.querySelectorAll('.langue-filter').forEach(function(filter) {
-    filter.addEventListener('click', function() {
-        document.querySelectorAll('.langue-filter').forEach(function(f) {
-            f.classList.remove('active-filter');
-        });
-        filter.classList.add('active-filter');
-
-        var selectedLangue = filter.textContent.trim();
-        var allBooks = document.querySelectorAll('.produit-book');
-        if (filter.classList.contains('langue-reset')) {
-            allBooks.forEach(function(book) {
-                book.style.display = '';
-            });
-            return;
-        }
-        allBooks.forEach(function(book) {
-            if (book.dataset.langue === selectedLangue) {
-                book.style.display = '';
-            } else {
-                book.style.display = 'none';
-            }
-        });
-    });
-});
-
 if (adminProductForm && adminProductsList) {
-
     renderAdminProductsList();
 
-
-
     adminProductForm.addEventListener('submit', (event) => {
-
         event.preventDefault();
 
-
-
         const productName = document.getElementById('adminProductName').value.trim();
-
         const productAuthor = document.getElementById('adminProductAuthor').value.trim();
-
         const productCategory = document.getElementById('adminProductCategory').value.trim();
-
         const productLanguage = document.getElementById('adminProductLanguage').value.trim();
-
         const productPrice = document.getElementById('adminProductPrice').value.trim();
-
         const productImage = document.getElementById('adminProductImage').files[0];
 
-
-
-        if (!productName || !productAuthor || !productCategory || !productPrice) {
-
-            return;
-
-        }
-
-
+        if (!productName || !productAuthor || !productCategory || !productPrice) return;
 
         const saveProduct = (imageSrc) => {
-
             const products = getAdminProducts();
-
             const newProduct = {
-
                 id: Date.now().toString(),
-
                 name: productName,
-
                 author: productAuthor,
-
                 category: productCategory,
-
                 language: productLanguage,
-
                 price: productPrice,
-
                 image: imageSrc
-
             };
 
-
-
             products.unshift(newProduct);
-
             saveAdminProducts(products.slice(0, adminProductsMaxCount));
-
             renderAdminProductsList();
-
             renderDynamicBooks();
-
             adminProductForm.reset();
-
         };
 
-
-
         if (productImage) {
-
             const reader = new FileReader();
-
-
-
-            reader.addEventListener('load', () => {
-
-                saveProduct(reader.result);
-
-            });
-
+            reader.addEventListener('load', () => { saveProduct(reader.result); });
             reader.readAsDataURL(productImage);
-
         } else {
-
             saveProduct('../static/img/logo_englet.png');
-
         }
-
     });
-
-
 
     adminProductsList.addEventListener('click', (event) => {
-
         const deleteBtn = event.target.closest('.admin-delete-product');
 
-
-
         if (deleteBtn) {
-
             const row = deleteBtn.closest('tr');
-
             const productId = row.dataset.productId;
 
-
-
             saveAdminProducts(getAdminProducts().filter((product) => product.id !== productId));
-
             renderAdminProductsList();
-
             renderDynamicBooks();
-
         }
-
     });
-
-} 
-
-
-
-renderDynamicBooks();
+}
 
 if (adminOrdersList) {
     renderAdminOrdersList();
@@ -852,173 +922,22 @@ if (adminLogoutBtn) {
     });
 }
 
-// Page dynamique: 
-const modalOverlay = document.createElement('div');
-modalOverlay.className = 'product-modal-overlay';
-modalOverlay.innerHTML = `
-    <div class="product-modal">
-        <button class="product-modal-close">&times;</button>
-        <img class="product-modal-img" src="" alt="">
-        <h2 class="product-modal-title"></h2>
-        <p class="product-modal-author"></p>
-        <p class="product-modal-category"></p>
-        <p class="product-modal-langue"></p>
-        <p class="product-modal-price"></p>
-        <button class="product-modal-cart">Ajouter au panier</button>
-    </div>
-`;
-document.body.appendChild(modalOverlay);
- 
-const modalImg = modalOverlay.querySelector('.product-modal-img');
-const modalTitle = modalOverlay.querySelector('.product-modal-title');
-const modalAuthor = modalOverlay.querySelector('.product-modal-author');
-const modalCategory = modalOverlay.querySelector('.product-modal-category');
-const modalLangue = modalOverlay.querySelector('.product-modal-langue');
-const modalPrice = modalOverlay.querySelector('.product-modal-price');
-const modalCloseBtn = modalOverlay.querySelector('.product-modal-close');
-const modalCartBtn = modalOverlay.querySelector('.product-modal-cart');
-let selectedProduct = null;
- 
-modalCartBtn.addEventListener('click', async function() {
-    if (selectedProduct) {
-        const cartItems = getStoredItems(cartItemsKey);
-        const existingItem = cartItems.find((item) =>
-            item.title === selectedProduct.title &&
-            item.author === selectedProduct.author &&
-            item.price === selectedProduct.price
-        );
-
-        if (existingItem) {
-            existingItem.quantity = (existingItem.quantity || 1) + 1;
-        } else {
-            // Tentative de mapping id_livre via DB
-            let id_livre = null;
-            try {
-                const livres = await loadLivresDb();
-                id_livre = findLivreIdInDb(livres, selectedProduct.title, selectedProduct.author, selectedProduct.price);
-            } catch (e) {
-                id_livre = null;
-            }
-
-            cartItems.push({
-                id: Date.now().toString(),
-                id_livre: id_livre,
-                title: selectedProduct.title,
-                author: selectedProduct.author,
-                category: selectedProduct.category,
-                price: selectedProduct.price,
-                quantity: 1
-            });
-        }
-
-        saveStoredItems(cartItemsKey, cartItems);
-        // Si user connecté et page panier ouverte plus tard, la sync se fera automatiquement.
-    }
-
-    modalOverlay.classList.remove('active');
-    showConfirmationMessage('Livre ajoute au panier avec succes');
-});
 
 
-if (panierConfirmLink) {
-    panierConfirmLink.addEventListener('click', function() {
-        if (!panierConfirmLink.classList.contains('disabled')) {
-            sessionStorage.setItem(confirmationMessageKey, 'Vous pouvez maintenant confirmer votre commande');
-        }
-    });
-}
-
-function openProductModal(bookElement) {
-    const img = bookElement.querySelector('img');
-    const p = bookElement.querySelector('p');
- 
-    if (!img || !p) return;
- 
-    // Utilisation de innerText pour ignorer les balises HTML (ex: <strong>)
-    const lines = p.innerText.split('\n').map(l => l.trim()).filter(l => l !== '');
- 
-    let title = lines[0] || '';
-    let author = lines[1] || '';
-    let price = 'X DA';
- 
-    if (bookElement.classList.contains('produit-book')) {
-        author = (lines[1] || '').replace('Auteur:', '').trim();
-        price = (lines[2] || '').replace('Prix:', '').trim();
-    }
- 
-    modalImg.src = img.src;
-    modalTitle.textContent = title;
-    modalAuthor.textContent = author;
-    modalCategory.textContent = 'Categorie: ' + (bookElement.dataset.category || 'X');
-    modalLangue.textContent = 'Langue: ' + (bookElement.dataset.langue || 'X');
-    modalPrice.textContent = price;
-    selectedProduct = {
-        title: title,
-        author: author,
-        category: bookElement.dataset.category || 'X',
-        price: price
-    };
-    modalOverlay.classList.add('active');
-}
- 
-document.querySelectorAll('.index-book').forEach(function(book) {
-    book.addEventListener('click', function() {
-        openProductModal(book);
-    });
-});
 
 
- 
-document.querySelectorAll('.produit-book').forEach(function(book) {
-    book.addEventListener('click', function() {
-        openProductModal(book);
-    });
-});
- 
-modalCloseBtn.addEventListener('click', function() {
-    modalOverlay.classList.remove('active');
-});
- 
-modalOverlay.addEventListener('click', function(e) {
-    if (e.target === modalOverlay) {
-        modalOverlay.classList.remove('active');
-    }
-});
 
-const loginForm = document.getElementById('loginForm');
-const signupForm = document.getElementById('signupForm');
-const orderForm = document.getElementById('commandeForm');
 
-function calculateAge(birthDateString) {
-    if (!birthDateString) {
-        return null;
-    }
 
-    const birthDate = new Date(birthDateString);
-    if (Number.isNaN(birthDate.getTime())) {
-        return null;
-    }
 
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    const dayDiff = today.getDate() - birthDate.getDate();
 
-    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-        age -= 1;
-    }
-
-    return age;
-}
-
+// Profil:
 function populateProfileAge() {
     const birthDate = localStorage.getItem('userBirthDate');
     const profileAge = document.getElementById('profileAge');
     const profileBirthDate = document.getElementById('profileBirthDate');
 
-    if (!profileAge || !profileBirthDate) {
-        return;
-    }
+    if (!profileAge || !profileBirthDate) return;
 
     if (birthDate) {
         const age = calculateAge(birthDate);
@@ -1029,88 +948,10 @@ function populateProfileAge() {
         }
     }
 
-    profileBirthDate.textContent = 'Non défini';
+    profileBirthDate.textContent = 'Non defini';
 }
 
-if (orderForm) {
-    orderForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        const cartItems = getStoredItems(cartItemsKey);
-        if (cartItems.length === 0) {
-            showConfirmationMessage('Votre panier est vide.');
-            return;
-        }
-
-        const inputs = orderForm.querySelectorAll('input[type="text"]');
-        const clientName = Array.from(inputs)
-            .slice(0, 2)
-            .map((field) => field.value.trim())
-            .filter(Boolean)
-            .join(' ');
-        const phone = inputs[3] ? inputs[3].value.trim() : '';
-
-        const existingOrders = getStoredItems(adminOrdersKey);
-        const orderProducts = cartItems.map((item) => {
-            const quantity = item.quantity || 1;
-            return `${item.title || 'Produit inconnu'} x${quantity}`;
-        }).join(', ');
-        const orderTotal = cartItems.reduce((sum, item) => {
-            const quantity = item.quantity || 1;
-            return sum + getPrixValue(item.price) * quantity;
-        }, 0);
-
-        existingOrders.push({
-            id: Date.now().toString() + Math.random().toString(16).slice(2),
-            client: clientName || 'Client inconnu',
-            phone: phone || 'Non renseigné',
-            product: orderProducts,
-            amount: formatAdminPrice(orderTotal),
-            status: 'En attente'
-        });
-
-        // Envoi vers la base de données via l'API Flask
-        const formData = new FormData(orderForm);
-        // Si le champ s'appelle autrement que 'wilaya', on tente de mapper l'input adresse (index 2)
-        if (!formData.has('wilaya') && inputs[2]) {
-            formData.append('wilaya', inputs[2].value.trim());
-        }
-
-        fetch('/commander', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.ok) {
-                saveStoredItems(adminOrdersKey, existingOrders);
-                saveStoredItems(cartItemsKey, []);
-                showConfirmationMessage('Commande confirmée et enregistrée !');
-                orderForm.reset();
-            } else {
-                showConfirmationMessage('Erreur lors de la commande : ' + (data.error || 'Serveur'));
-            }
-        })
-        .catch(() => {
-            showConfirmationMessage('Erreur de connexion avec le serveur');
-        });
-    });
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    const video = document.getElementById("welcomeVideo");
- 
-    if (video) {
-        video.addEventListener("canplay", function() {
-            video.classList.remove("is-hidden");
-        });
-        if (video.readyState >= 3) {
-            video.classList.remove("is-hidden");
-        }
-    }
-});
-
-// Pour les avatars 
+// Avatars
 var toggleAvatarBox = document.getElementById('toggleAvatarBox');
 var avatarBox = document.getElementById('avatarBox');
 
@@ -1125,3 +966,6 @@ if (toggleAvatarBox && avatarBox) {
         }
     });
 }
+
+
+
