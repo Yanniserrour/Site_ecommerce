@@ -294,6 +294,7 @@ function createBookElement(product, className) {
     image.alt = product.name;
     book.dataset.category = product.category;
     book.dataset.langue = product.language;
+    book.dataset.price = formatAdminPrice(product.price);
 
     description.append(
         product.name,
@@ -413,11 +414,10 @@ function openProductModal(bookElement) {
     const lines = p.innerText.split('\n').map(l => l.trim()).filter(l => l !== '');
     let title = lines[0] || '';
     let author = lines[1] || '';
-    let price = 'X DA';
+    let price = bookElement.dataset.price || 'X DA'; 
 
     if (bookElement.classList.contains('produit-book')) {
         author = (lines[1] || '').replace('Auteur:', '').trim();
-        price = (lines[2] || '').replace('Prix:', '').trim();
     }
 
     modalImg.src = img.src;
