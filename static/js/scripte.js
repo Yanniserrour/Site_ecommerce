@@ -732,9 +732,8 @@ if (commandeForm) {
             const data = await res.json();
 
             if (data.ok) {
-                showConfirmationMessage('Commande confirmée et enregistrée !');
-                commandeForm.reset();
-                prefillFormulaire(); // Re-remplir nom/prenom/tel apres reset
+                sessionStorage.setItem(confirmationMessageKey, 'Commande confirmée et enregistrée !');
+                window.location.href = '/';
             } else {
                 showConfirmationMessage('Erreur : ' + (data.error || 'Serveur'));
             }

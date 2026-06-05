@@ -31,7 +31,7 @@
     <center>
         <h3>Ajouter un produit</h3>
 
-        <form action="/admin/ajouter_produit" method="POST" enctype="multipart/multipart-form-data">
+        <form action="/admin/ajouter_produit" method="POST" enctype="multipart/form-data">
             <fieldset>
                 <legend class = "alegend">Informations produit</legend>
 
@@ -40,6 +40,9 @@
 
                 <label class = "alabel">Auteur :</label><br>
                 <input type="text" id="adminProductAuthor" name="auteur" required><br><br>
+
+                <label class = "alabel">Prix :</label><br>
+                <input type="number" id="adminProductPrice" name="prix" min="0" required><br><br>
 
                 <label class = "alabel">Cat&eacute;gorie :</label><br>
                 <div class = "aradio-group">
@@ -58,9 +61,6 @@
                     <label><input type="radio" name="langue" value="Tamazight"> Tamazight</label>
                     <label><input type="radio" name="langue" value="Espagnol"> Espagnol</label><br><br>
                 </div>
-
-                <label class = "alabel">Prix :</label><br>
-                <input type="number" id="adminProductPrice" name="prix" min="0" required><br><br>
 
                 <label class = "alabel">Image :</label><br>
                 <input type="file" id="image_fichier" name="image_fichier"><br><br>
@@ -104,16 +104,19 @@
                 <tr>
                     <th>Client</th>
                     <th>T&eacute;l&eacute;phone</th>
-                    <th>Produit(s)</th>
+                    <th>Produit</th>
                     <th>Montant</th>
-                    <th>Wilaya</th>
                     <th>&Eacute;tat</th>
                 </tr>
             </thead>
  
             <tbody id="adminOrdersList">
                 <tr>
-                    <td colspan="6" class="admin-orders-empty">Chargement des commandes...</td>
+                    <td>......</td>
+                    <td>......</td>
+                    <td>......</td>
+                    <td>...... DA</td>
+                    <td><button class="admin-order-status" type="button">En attente</button></td>
                 </tr>
             </tbody>
         </table>
