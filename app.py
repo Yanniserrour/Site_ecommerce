@@ -137,10 +137,10 @@ def profile_router():
 # Inscription
 @app.route('/inscription', methods=['POST'])
 def inscription(): 
-    nom   = (request.form.get('nom') or '').strip()
+    nom     = "Non renseigne"
     email = (request.form.get('email') or '').strip()
     mdp   = request.form.get('mot_de_passe') or '' 
-    prenom     = "Non renseigne"
+    prenom   = (request.form.get('prenom') or '').strip()
     date_naiss = "2001-09-11"
     num_tel    = 0  
 
