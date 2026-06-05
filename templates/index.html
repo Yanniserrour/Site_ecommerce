@@ -65,17 +65,11 @@
 	</p>
 
 	<div class="index-gallery">
-	    <div class="index-video-wrapper">
-	        <video id="welcomeVideo" class="welcome-video is-hidden" autoplay muted playsinline preload="auto">
-	            <source src="{{ url_for('static', filename='video/bienvenue.mp4') }}" type="video/mp4">
-	        </video>
-	    </div>
-
-	    <div class="index-carousel" id="indexCarousel" style="display:none;">
-	        <button class="carousel-btn carousel-left" id="carouselLeft"><img src="{{ url_for('static', filename='img/button_left.png') }}"></button>
-	        <img class="carousel-image" id="carouselImage" src="" alt="Banner">
-	        <button class="carousel-btn carousel-right" id="carouselRight"><img src="{{ url_for('static', filename='img/button_right.png') }}"></button>
-	    </div>
+	<div class="index-video-wrapper">
+		<video id="welcomeVideo" class="welcome-video is-hidden" autoplay muted playsinline preload="auto">
+			<source src="{{ url_for('static', filename='video/bienvenue.mp4') }}" type="video/mp4">
+		</video>
+	</div>
 	</div>
 
 	<p class="index-text">Action :</p>

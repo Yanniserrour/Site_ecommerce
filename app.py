@@ -241,7 +241,7 @@ def connexion():
             session['email'] = utilisateur[0]
             session['nom'] = utilisateur[1]
             session['prenom'] = utilisateur[2]
-            session['user_name'] = utilisateur[1]
+            session['user_name'] = utilisateur[2]
             session['avatar'] = utilisateur[4] if utilisateur[4] else 'profil-de-lutilisateur.png'
             flash("Connexion reussie !", "success")
             return redirect(url_for('index'))
@@ -384,6 +384,7 @@ def api_update_profile():
 
         session['nom'] = nom
         session['prenom'] = prenom
+        session['user_name'] = prenom
 
         return jsonify({"ok": True})
     except mysql.connector.Error as e:
