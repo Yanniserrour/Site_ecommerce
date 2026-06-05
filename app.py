@@ -1,6 +1,6 @@
 import os
 from datetime import timedelta
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -85,41 +85,16 @@ def auth():
 def formulaire():
     return render_template('formulaire.html')
 
-# Profil utilisateur
+# Profil utilisateur 
 @app.route('/profile')
 @app.route('/profile.html')
 def profile():
     if not session.get('logged_in'):
         flash("Veuillez vous connecter pour acceder a votre profil.", "error")
         return redirect(url_for('auth'))
-
-    user = {
-        'nom': session.get('nom', 'Utilisateur'),
-        'prenom': session.get('prenom', ''),
-        'age': 34,
-        'email': session.get('email', ''),
-        'telephone': '0612345678',
-        'ville': 'Alger',
-        'avatar': session.get('avatar', 'profil-de-lutilisateur.png')
-    }
-
-    purchase_history = [
-        {
-            'date': '12/04/2026',
-            'produit': "L'Alchimiste",
-            'prix': '1200 DA',
-            'status': 'Livre',
-            'status_class': 'delivered'
-        },
-        {
-            'date': '20/04/2026',
-            'produit': 'Think Again',
-            'prix': '2500 DA',
-            'status': 'En cours',
-            'status_class': 'pending'
-        }
-    ]
-    return render_template('profile.html', user=user, purchase_history=purchase_history)
+    
+    # Données charger via JavaScript
+    return render_template('profile.html')
 
 # Produits
 @app.route('/produit')
@@ -147,7 +122,7 @@ def admin():
     return render_template('admin.html')
 
 
-# Route pour authentification et inscription: 
+# Route d'auth/inscription
 # Inscription
 @app.route('/inscription', methods=['POST'])
 def inscription(): 
@@ -205,7 +180,7 @@ def inscription():
         if connexion:
             connexion.close()
 
-# Connexion
+# route Connexion
 @app.route('/connexion', methods=['POST'])
 def connexion():
     email = (request.form.get('email') or '').strip()
@@ -270,13 +245,13 @@ def connexion():
         if connexion_db: 
             connexion_db.close()
 
-# Deconnexion
+# route Deconnexion
 @app.route('/deconnexion')
 def deconnxion():
     session.clear()
     return redirect(url_for('index'))
 
-# Route pour le profil et avatar: 
+# Route Profile/avatar 
 @app.route('/profile/update_avatar', methods=['POST'])
 def update_avatar():
     if not session.get('logged_in'):
@@ -310,7 +285,119 @@ def update_avatar():
     return redirect(url_for('profile'))
 
 
-# Route pour l'ajout des produits a partir de admin
+# Route API/ recuperer les donnée pour le profile 
+@app.route('/api/user/profile', methods=['GET'])
+@app.route('/api/user/profile', methods=['GET'])
+def api_user_profile():
+    if not session.get('logged_in'):
+        return jsonify({"ok": False, "error": "Non authentifié"}), 401
+    
+    email = session.get('email')
+    connexion = None
+    cursor = None
+    
+    try:
+        connexion = obtenir_connexion()
+        cursor = connexion.cursor(dictionary=True, buffered=True)
+        
+        cursor.execute("""
+            SELECT email, nom, prenom, date_naissance, num_telephone, ville, avatar,
+                   TIMESTAMPDIFF(YEAR, date_naissance, CURDATE()) as age
+            FROM utilisateur 
+            WHERE email = %(email)s
+        """, {"email": email})
+        
+        user = cursor.fetchone()
+        
+        if user:
+            # Convertir l'avatar de bytes à string si nécessaire
+            if user.get('avatar') and isinstance(user['avatar'], bytes):
+                user['avatar'] = user['avatar'].decode('utf-8')
+            elif not user.get('avatar'):
+                user['avatar'] = 'profil-de-lutilisateur.png'
+            
+            # Convertir la date en string pour le JSON
+            if user.get('date_naissance'):
+                user['date_naissance'] = str(user['date_naissance'])
+            
+            # Convertir num_telephone en string si c'est un nombre
+            if user.get('num_telephone'):
+                user['num_telephone'] = str(user['num_telephone'])
+            
+            # Si ville est None, mettre une valeur par défaut
+            if not user.get('ville'):
+                user['ville'] = 'Non renseigné'
+            
+            return jsonify({"ok": True, "user": user})
+        else:
+            return jsonify({"ok": False, "error": "Utilisateur non trouvé"}), 404
+            
+    except mysql.connector.Error as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connexion:
+            connexion.close()
+
+# Route API/ recuperer l'historique d'chats
+@app.route('/api/user/purchases', methods=['GET'])
+def api_user_purchases():
+    if not session.get('logged_in'):
+        return jsonify({"ok": False, "error": "Non authentifié"}), 401
+    
+    email = session.get('email')
+    connexion = None
+    cursor = None
+    
+    try:
+        connexion = obtenir_connexion()
+        cursor = connexion.cursor(dictionary=True, buffered=True)
+        
+        cursor.execute("""
+            SELECT 
+                c.date_commande as date,
+                l.nom_livre as produit,
+                c.prix_total as prix,
+                c.statue as status
+            FROM commande c
+            JOIN contient ct ON c.id_commande = ct.id_commande
+            JOIN livre l ON ct.id_livre = l.id_livre
+            WHERE c.email = %(email)s
+            ORDER BY c.date_commande DESC
+        """, {"email": email})
+        
+        purchases = cursor.fetchall() or []
+        
+        formatted_purchases = []
+        for purchase in purchases:
+            status = purchase.get('status', 'En attente')
+            status_class = 'pending'
+            if status.lower() == 'livré':
+                status_class = 'delivered'
+            elif status.lower() == 'annulé':
+                status_class = 'cancelled'
+            
+            formatted_purchases.append({
+                'date': str(purchase.get('date', '')) if purchase.get('date') else 'N/A',
+                'produit': purchase.get('produit', 'N/A'),
+                'prix': str(purchase.get('prix', '0')),
+                'status': status,
+                'status_class': status_class
+            })
+        
+        return jsonify({"ok": True, "purchases": formatted_purchases})
+        
+    except mysql.connector.Error as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if connexion:
+            connexion.close()
+
+
+# Route ajouter des produit a partir de admin
 @app.route('/admin/ajouter_produit', methods=['POST'])
 def ajouter_produit():
     if not session.get('logged_in') or not session.get('is_admin'):
@@ -380,7 +467,8 @@ def ajouter_produit():
     
     return redirect(url_for('admin'))
 
-# ROUTES: API JSON (livres, panier, commandes)
+#~~~~~~~~~~~~~~~~~~ A CONFIRMER ~~~~~~~~~~~~~~~~~~~~~~~
+# ROUTES API JSON (livres, panier, commandes)
 # Liste des livres
 @app.route('/api/livres', methods=['GET'])
 def api_livres():
@@ -560,7 +648,10 @@ def commander():
             cursor.close()
         if connexion:
             connexion.close()
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
 
-# Demarrage: 
+
+
+# Demarrage
 if __name__ == '__main__':
     app.run(debug=True)

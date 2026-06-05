@@ -155,7 +155,6 @@ function findLivreIdInDb(livres, title, author, priceText) {
 
 // Initialisation au chargement (profile, index)
 window.addEventListener('load', () => {
-    populateProfileAge();
 
     const welcomeVideo = document.getElementById('welcomeVideo');
     if (welcomeVideo) {
@@ -173,7 +172,7 @@ window.addEventListener('load', () => {
 });
 
 
-// Authentification
+// =================AUTH===============================
 const container = document.getElementById('container');
 const registerBtn = document.getElementById('register');
 const loginBtn = document.getElementById('login');
@@ -348,8 +347,7 @@ renderDynamicBooks();
 
 
 
-// Produit, page dynamique: 
-// Modal produit (index, produit)
+// ==================PRODUIT============================
 const modalOverlay = document.createElement('div');
 modalOverlay.className = 'product-modal-overlay';
 modalOverlay.innerHTML = `
@@ -504,7 +502,7 @@ document.querySelectorAll('.langue-filter').forEach(function(filter) {
 
 
 
-// Panier, gestion
+//=======================PANIER======================================
 const panierItems = document.getElementById('panierItems');
 const panierTotal = document.getElementById('panierTotal');
 const panierEmpty = document.getElementById('panierEmpty');
@@ -700,7 +698,7 @@ if (panierConfirmLink) {
 
 
 
-// Formulaire, page de commande: 
+//==========================FORMULAIRE================================
 const commandeForm = document.getElementById('commandeForm');
 
 if (commandeForm) {
@@ -775,7 +773,7 @@ if (commandeForm) {
 
 
 
-// Admin:
+//=============================ADMIN===================================
 const adminProductForm = document.getElementById('adminProductForm');
 const adminProductsList = document.getElementById('adminProductsList');
 const adminOrdersList = document.getElementById('adminOrdersList');
@@ -897,30 +895,8 @@ if (adminLogoutBtn) {
 
 
 
-
-
-
-// Profil:
-function populateProfileAge() {
-    const birthDate = localStorage.getItem('userBirthDate');
-    const profileAge = document.getElementById('profileAge');
-    const profileBirthDate = document.getElementById('profileBirthDate');
-
-    if (!profileAge || !profileBirthDate) return;
-
-    if (birthDate) {
-        const age = calculateAge(birthDate);
-        if (age !== null) {
-            profileAge.textContent = age;
-            profileBirthDate.textContent = birthDate;
-            return;
-        }
-    }
-
-    profileBirthDate.textContent = 'Non defini';
-}
-
-// Avatars
+//===================== PROFILE============================
+// fonction pour les Avatars
 var toggleAvatarBox = document.getElementById('toggleAvatarBox');
 var avatarBox = document.getElementById('avatarBox');
 
@@ -935,6 +911,80 @@ if (toggleAvatarBox && avatarBox) {
         }
     });
 }
+// Fonction pour charger les données du profil depuis la base de données
+function chargerDonneesProfil() {
+    fetch('/api/user/profile')
+        .then(response => response.json())
+        .then(data => {
+            if (data.ok) {
+                document.getElementById('profileNom').textContent = data.user.nom || 'Non défini';
+                document.getElementById('profilePrenom').textContent = data.user.prenom || 'Non défini';
+                document.getElementById('profileAge').textContent = data.user.age || 'Non défini';
+                document.getElementById('profileBirthDate').textContent = data.user.date_naissance || 'Non défini';
+                document.getElementById('profileEmail').textContent = data.user.email || 'Non défini';
+                document.getElementById('profileTelephone').textContent = data.user.num_telephone || 'Non défini';
+                document.getElementById('profileVille').textContent = data.user.ville || 'Non défini';
+                
+                // Mettre à jour l'avatar
+                if (data.user.avatar) {
+                    const avatarImg = document.getElementById('profileAvatar');
+                    avatarImg.src = "/static/img/" + data.user.avatar;
+                }
+            } else {
+                console.error('Erreur chargement profil:', data.error);
+                afficherErreurProfil();
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            afficherErreurProfil();
+        });
+}
+
+// Fonction pour charger l'historique des achats
+function chargerHistoriqueAchats() {
+    fetch('/api/user/purchases')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('purchaseHistoryBody');
+            if (data.ok && data.purchases && data.purchases.length > 0) {
+                tbody.innerHTML = '';
+                data.purchases.forEach(purchase => {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>${purchase.date || 'N/A'}</td>
+                        <td>${purchase.produit || 'N/A'}</td>
+                        <td>${purchase.prix || '0'} DA</td>
+                        <td><span class="status ${purchase.status_class || 'pending'}">${purchase.status || 'En attente'}</span></td>
+                    `;
+                });
+            } else {
+                tbody.innerHTML = '<tr><td colspan="4">Aucun achat enregistré.</td></tr>';
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            const tbody = document.getElementById('purchaseHistoryBody');
+            tbody.innerHTML = '<tr><td colspan="4">Erreur lors du chargement de l\'historique.</td></tr>';
+        });
+}
+
+// Fonction pour afficher une erreur dans le profil
+function afficherErreurProfil() {
+    document.getElementById('profileNom').textContent = 'Erreur de chargement';
+    document.getElementById('profilePrenom').textContent = 'Erreur de chargement';
+    document.getElementById('profileAge').textContent = 'Erreur de chargement';
+    document.getElementById('profileBirthDate').textContent = 'Erreur de chargement';
+    document.getElementById('profileEmail').textContent = 'Erreur de chargement';
+    document.getElementById('profileTelephone').textContent = 'Erreur de chargement';
+    document.getElementById('profileVille').textContent = 'Erreur de chargement';
+}
+
+// Appeler les fonctions au chargement de la page
+document.addEventListener('DOMContentLoaded', function() {
+    chargerDonneesProfil();
+    chargerHistoriqueAchats();
+});
 
 
 
