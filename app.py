@@ -24,7 +24,7 @@ ENV = 'DEVELOPPEMENT'
 if ENV == "DEVELOPPEMENT":
     DB_HOST     = "localhost"
     DB_USER     = "root"
-    DB_PASSWORD = "Yani2003@"
+    DB_PASSWORD = "admin123"
     DB_NAME     = "adlis"
 else: 
     DB_HOST     = "serveur_debergement"  #a changer
