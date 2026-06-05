@@ -125,6 +125,7 @@ DINAMICITÉ DU SITE:
  -charger le panier pour chaque connexion
  -charger les informations profile pour chaque connexion
  -une suppression du panier le supprime aussi de la BD.
+ -la possibilité de modifier les information de la personne sur profile 
 
 
  LES CONTROLES: 

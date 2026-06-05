@@ -316,7 +316,7 @@ def ajouter_produit():
     
     return redirect(url_for('admin'))
 
-# Pour l'avatar
+# DB avatar
 @app.route('/profile/update_avatar', methods=['POST'])
 def update_avatar():
     if not session.get('logged_in'):
