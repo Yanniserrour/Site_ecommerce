@@ -83,10 +83,9 @@ function applyFilters() {
     books.forEach(function(book) {
         var p = book.querySelector('p');
         if (!p) return;
-
-        var parts = p.innerHTML.split('<br>');
-        var title = (parts[0] || '').trim().toLowerCase();
-
+        
+        var lines = p.innerText.split('\n');
+        var title = (lines[0] || '').trim().toLowerCase();
         var matchSearch = !currentSearch || title.includes(currentSearch.toLowerCase());
 
         var matchCategory = true;
@@ -177,6 +176,111 @@ const panierProfileBtn = document.getElementById('panierProfileBtn');
 const cartItemsKey = 'adlisCartItems';
 const adminOrdersKey = 'adlisOrders';
 
+let livresDbCache = null;
+
+async function loadLivresDb() {
+    if (livresDbCache) return livresDbCache;
+    const res = await fetch('/api/livres', { method: 'GET' });
+    const data = await res.json();
+    livresDbCache = data && data.livres ? data.livres : [];
+    return livresDbCache;
+}
+
+function normalizePriceForMatch(p) {
+    if (p === null || p === undefined) return '';
+    return String(p).replace(/\s/g, '').replace('DA', '').replace(',', '.');
+}
+
+function findLivreIdInDb(livres, title, author, priceText) {
+    const wantedTitle = (title || '').trim().toLowerCase();
+    const wantedAuthor = (author || '').trim().toLowerCase();
+    const wantedPrice = normalizePriceForMatch(priceText);
+
+    const prixNum = getPrixValue(priceText);
+    const wantedPrice2 = prixNum ? normalizePriceForMatch(String(prixNum)) : wantedPrice;
+
+    for (const l of livres) {
+        const t = (l.title || '').trim().toLowerCase();
+        const a = (l.author || '').trim().toLowerCase();
+        const p = normalizePriceForMatch(l.price);
+
+        if (t === wantedTitle && a === wantedAuthor && (p === wantedPrice || p === wantedPrice2)) {
+            return l.id_livre;
+        }
+    }
+    // fallback: match sans prix (si format différent)
+    for (const l of livres) {
+        const t = (l.title || '').trim().toLowerCase();
+        const a = (l.author || '').trim().toLowerCase();
+        if (t === wantedTitle && a === wantedAuthor) return l.id_livre;
+    }
+    return null;
+}
+
+async function ensureCartHasLivreIds() {
+    const storedItems = getStoredItems(cartItemsKey);
+    if (!storedItems || storedItems.length === 0) return [];
+
+    const livres = await loadLivresDb();
+
+    let changed = false;
+    const mapped = storedItems.map((item) => {
+        if (item.id_livre) return item;
+        const id_livre = findLivreIdInDb(livres, item.title, item.author, item.price);
+        if (id_livre !== null) {
+            changed = true;
+            return { ...item, id_livre };
+        }
+        return item;
+    });
+
+    if (changed) saveStoredItems(cartItemsKey, mapped);
+    return mapped;
+}
+
+async function syncCartToDb() {
+    const storedItems = await ensureCartHasLivreIds();
+    const items = storedItems
+        .filter((it) => it.id_livre)
+        .map((it) => ({ id_livre: it.id_livre, quantity: it.quantity || 1 }));
+
+    const res = await fetch('/api/cart/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items })
+    });
+
+    // on ne bloque pas l'UI si ça échoue
+    try {
+        return (await res.json()) || { ok: false };
+    } catch (e) {
+        return { ok: false };
+    }
+}
+
+async function loadCartFromDbAndRender() {
+    const res = await fetch('/api/cart', { method: 'GET' });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data || !data.ok || !data.items) return;
+
+    // On ne vide l'affichage que si on a reçu des données valides du serveur
+    panierItems.innerHTML = '';
+    data.items.forEach((item) => {
+        panierItems.appendChild(createPanierRow({
+            id: String(item.id_livre),
+            id_livre: item.id_livre,
+            title: item.title,
+            author: item.author,
+            category: item.category,
+            price: item.price,
+            quantity: item.quantity
+        }));
+    });
+    updatePanier();
+}
+
+
 function getStoredItems(key) {
     const savedItems = localStorage.getItem(key);
 
@@ -227,8 +331,10 @@ function createPanierRow(item) {
     const quantityInput = document.createElement('input');
     const deleteBtn = document.createElement('button');
 
-    row.dataset.cartId = item.id;
+    // cartId = id_livre si présent, sinon fallback id local
+    row.dataset.cartId = item.id_livre ? String(item.id_livre) : item.id;
     title.textContent = 'Categorie : ' + (item.category || 'X');
+
     infoCell.append(
         title,
         document.createElement('br'),
@@ -280,7 +386,16 @@ function renderPanierItems() {
 }
 
 if (panierItems && panierTotal && panierEmpty && panierConfirmLink) {
+    // Affichage initial local
     renderPanierItems();
+    updatePanier();
+
+    // Si connecté, synchroniser vers BD puis re-render depuis BD
+    // (panier.html protège déjà l’accès côté serveur, mais on garde ça robuste)
+    (async () => {
+        await syncCartToDb();
+        await loadCartFromDbAndRender();
+    })().catch(() => {});
 
     // Supprimer un produit du panier
     panierItems.addEventListener('click', (event) => {
@@ -290,12 +405,17 @@ if (panierItems && panierTotal && panierEmpty && panierConfirmLink) {
             const row = deleteBtn.closest('tr');
             const cartId = row.dataset.cartId;
 
-            saveStoredItems(
-                cartItemsKey,
-                getStoredItems(cartItemsKey).filter((item) => item.id !== cartId)
-            );
+            const updated = getStoredItems(cartItemsKey).filter((item) => {
+                const idToCompare = item.id_livre ? String(item.id_livre) : item.id;
+                return idToCompare !== cartId;
+            });
+            saveStoredItems(cartItemsKey, updated);
+
             row.remove();
             updatePanier();
+
+            // Sync silencieux
+            syncCartToDb().catch(() => {});
         }
     });
 
@@ -308,6 +428,7 @@ if (panierItems && panierTotal && panierEmpty && panierConfirmLink) {
 
     updatePanier();
 }
+
 
 if (panierProfileBtn) {
     // Rediriger vers le profil ou la connexion depuis le panier
@@ -758,10 +879,46 @@ const modalCloseBtn = modalOverlay.querySelector('.product-modal-close');
 const modalCartBtn = modalOverlay.querySelector('.product-modal-cart');
 let selectedProduct = null;
  
-modalCartBtn.addEventListener('click', function() {
+modalCartBtn.addEventListener('click', async function() {
+    if (selectedProduct) {
+        const cartItems = getStoredItems(cartItemsKey);
+        const existingItem = cartItems.find((item) =>
+            item.title === selectedProduct.title &&
+            item.author === selectedProduct.author &&
+            item.price === selectedProduct.price
+        );
+
+        if (existingItem) {
+            existingItem.quantity = (existingItem.quantity || 1) + 1;
+        } else {
+            // Tentative de mapping id_livre via DB
+            let id_livre = null;
+            try {
+                const livres = await loadLivresDb();
+                id_livre = findLivreIdInDb(livres, selectedProduct.title, selectedProduct.author, selectedProduct.price);
+            } catch (e) {
+                id_livre = null;
+            }
+
+            cartItems.push({
+                id: Date.now().toString(),
+                id_livre: id_livre,
+                title: selectedProduct.title,
+                author: selectedProduct.author,
+                category: selectedProduct.category,
+                price: selectedProduct.price,
+                quantity: 1
+            });
+        }
+
+        saveStoredItems(cartItemsKey, cartItems);
+        // Si user connecté et page panier ouverte plus tard, la sync se fera automatiquement.
+    }
+
     modalOverlay.classList.remove('active');
     showConfirmationMessage('Livre ajoute au panier avec succes');
 });
+
 
 if (panierConfirmLink) {
     panierConfirmLink.addEventListener('click', function() {
@@ -777,19 +934,16 @@ function openProductModal(bookElement) {
  
     if (!img || !p) return;
  
-    const parts = p.innerHTML.split('<br>');
+    // Utilisation de innerText pour ignorer les balises HTML (ex: <strong>)
+    const lines = p.innerText.split('\n').map(l => l.trim()).filter(l => l !== '');
  
-    let title = '';
-    let author = '';
+    let title = lines[0] || '';
+    let author = lines[1] || '';
     let price = 'X DA';
  
     if (bookElement.classList.contains('produit-book')) {
-        title = parts[0] ? parts[0].trim() : '';
-        author = parts[1] ? parts[1].replace('Auteur:', '').trim() : '';
-        price = parts[2] ? parts[2].replace('Prix:', '').trim() : 'X DA';
-    } else {
-        title = parts[0] ? parts[0].trim() : '';
-        author = parts[1] ? parts[1].trim() : '';
+        author = (lines[1] || '').replace('Auteur:', '').trim();
+        price = (lines[2] || '').replace('Prix:', '').trim();
     }
  
     modalImg.src = img.src;
@@ -801,7 +955,7 @@ function openProductModal(bookElement) {
     selectedProduct = {
         title: title,
         author: author,
-        category: 'X',
+        category: bookElement.dataset.category || 'X',
         price: price
     };
     modalOverlay.classList.add('active');
@@ -830,43 +984,6 @@ modalOverlay.addEventListener('click', function(e) {
         modalOverlay.classList.remove('active');
     }
 });
-
-modalCartBtn.addEventListener('click', function() {
-    if (selectedProduct) {
-        const cartItems = getStoredItems(cartItemsKey);
-        const existingItem = cartItems.find((item) =>
-            item.title === selectedProduct.title &&
-            item.author === selectedProduct.author &&
-            item.price === selectedProduct.price
-        );
-
-        if (existingItem) {
-            existingItem.quantity = (existingItem.quantity || 1) + 1;
-        } else {
-            cartItems.push({
-                id: Date.now().toString(),
-                title: selectedProduct.title,
-                author: selectedProduct.author,
-                category: selectedProduct.category,
-                price: selectedProduct.price,
-                quantity: 1
-            });
-        }
-
-        saveStoredItems(cartItemsKey, cartItems);
-    }
-
-    modalOverlay.classList.remove('active');
-    showConfirmationMessage('Livre ajoute au panier avec succes');
-});
-
-if (panierConfirmLink) {
-    panierConfirmLink.addEventListener('click', function() {
-        if (!panierConfirmLink.classList.contains('disabled')) {
-            sessionStorage.setItem(confirmationMessageKey, 'Vous pouvez maintenant confirmer votre commande');
-        }
-    });
-}
 
 const loginForm = document.getElementById('loginForm');
 const signupForm = document.getElementById('signupForm');
@@ -952,10 +1069,31 @@ if (orderForm) {
             status: 'En attente'
         });
 
-        saveStoredItems(adminOrdersKey, existingOrders);
-        saveStoredItems(cartItemsKey, []);
-        showConfirmationMessage('Commande confirmée avec succès');
-        orderForm.reset();
+        // Envoi vers la base de données via l'API Flask
+        const formData = new FormData(orderForm);
+        // Si le champ s'appelle autrement que 'wilaya', on tente de mapper l'input adresse (index 2)
+        if (!formData.has('wilaya') && inputs[2]) {
+            formData.append('wilaya', inputs[2].value.trim());
+        }
+
+        fetch('/commander', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.ok) {
+                saveStoredItems(adminOrdersKey, existingOrders);
+                saveStoredItems(cartItemsKey, []);
+                showConfirmationMessage('Commande confirmée et enregistrée !');
+                orderForm.reset();
+            } else {
+                showConfirmationMessage('Erreur lors de la commande : ' + (data.error || 'Serveur'));
+            }
+        })
+        .catch(() => {
+            showConfirmationMessage('Erreur de connexion avec le serveur');
+        });
     });
 }
 
