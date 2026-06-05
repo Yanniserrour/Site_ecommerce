@@ -136,6 +136,7 @@ def panier():
         return redirect(url_for('auth'))
     return render_template('panier.html')
 
+
 # Administration
 @app.route('/admin')
 @app.route('/admin.html')
@@ -275,7 +276,6 @@ def deconnxion():
     session.clear()
     return redirect(url_for('index'))
 
-
 # Route pour le profil et avatar: 
 @app.route('/profile/update_avatar', methods=['POST'])
 def update_avatar():
@@ -379,7 +379,6 @@ def ajouter_produit():
                 pass
     
     return redirect(url_for('admin'))
-
 
 # ROUTES: API JSON (livres, panier, commandes)
 # Liste des livres
