@@ -120,17 +120,16 @@ DINAMICITÉ DU SITE:
  -sauvgarder la commande de livre dans la DB (terminé)
  -sauvgarder l'avatar dans la BD (termine)
  -charger les informations profile pour chaque connexion (Terminé)
- -suppression du livre a partir de admin et la BD (terminé)
- -la possibilité de modifier les information de la personne sur profile 
- -ajouter les livres depuis admin vers acceuil 
+ -suppression du livre a partir de admin et la BD (terminé) 
+ -ajouter les livres depuis admin vers acceuil (terminé)
  -ajouter aux panier et la BD (terminé)
- -supprimer un livre de panier et la BD (terminé)  
- -charger l'historique (commande) pour chaque connexion 
- -charger le panier pour chaque connexion 
+ -supprimer un livre de panier et la BD (terminé)
+ -charger le panier pour chaque connexion (terminé)
+ -la possibilité de modifier les information de la personne sur profile
+ -changer les attributs entre nom et prenom  
  -passer la commande, sauvgarder la commande dans la BD, 
-        et l'afficher dans admin, et l'afficher dans l'historique de l'utilisateurs
- -ajouter tout les livres a partir de admin 
- -ajouter l'attribut quantité_livre, et tout ce qui va avec
+        et l'afficher dans admin, et l'afficher dans l'historique de l'utilisateurs. 
+ -charger l'historique (commande) pour chaque connexion.
 
 
 
