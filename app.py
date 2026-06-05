@@ -24,7 +24,7 @@ ENV = 'DEVELOPPEMENT'
 if ENV == "DEVELOPPEMENT":
     DB_HOST     = "localhost"
     DB_USER     = "root"
-    DB_PASSWORD = "admin123"
+    DB_PASSWORD = "Yani2003@"
     DB_NAME     = "adlis"
 else: 
     DB_HOST     = "serveur_debergement"  #a changer
@@ -693,6 +693,7 @@ def api_cart_sync():
             cursor.close()
         if connexion:
             connexion.close()
+
 
 # Finaliser la commande
 @app.route('/commander', methods=['POST'])
