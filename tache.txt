@@ -117,15 +117,20 @@ DINAMICITÉ DU SITE:
  -ajouter la possibilité de connexion et déconnexion du site (terminé)
  -connexion vers la page admin (terminé)
  -sauvgarder les livres ajouter dans la DB (terminé)
+ -ajouter tout les livres a partir de admin 
+ -ajouter les livres aux panier
  -sauvgarder le panier de l'utilisateur dans la BD  
- -ajouter l'attribut quantité_livre
+ -ajouter l'attribut quantité_livre, et tout ce qui va avec 
  -sauvgarder la commande de livre dans la DB (terminé)
  -sauvgarder l'avatar dans la BD (termine)
  -charger l'historique pour chaque connexion
  -charger le panier pour chaque connexion
- -charger les informations profile pour chaque connexion
+ -charger les informations profile pour chaque connexion (Terminé)
  -une suppression du panier le supprime aussi de la BD.
+ -suppression du livre a partir de admin et la BD (terminé)
  -la possibilité de modifier les information de la personne sur profile 
+ -se deconnecté apres suppresion de l'englet 
+
 
 
  LES CONTROLES: 
@@ -138,10 +143,11 @@ DINAMICITÉ DU SITE:
  -police
  -ajouter un footer (terminé)
  -ajouter les liens avec flask (terminé)
- -pdf de conception
+ -pdf de conception.
  -ajouter des citations.
- -ajouter les chemains vers les resaux dans auth
+ -ajouter les chemains vers les resaux dans auth (terminé)
  -netoyer le message d'authentification (terminé)
+ -amener admin vers admin
 
 
 

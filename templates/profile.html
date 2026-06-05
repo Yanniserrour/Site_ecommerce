@@ -21,7 +21,7 @@
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-pic-container">
-                <img src="{{ url_for('static', filename='img/' + (user.avatar.decode('utf-8') if user.avatar is mapping and false else (user.avatar|string))) }}" alt="Photo de profil" class="profile-pic">
+                <img id="profileAvatar" src="{{ url_for('static', filename='img/profil-de-lutilisateur.png') }}" alt="Photo de profil" class="profile-pic">
                 <div class="add-avatar-btn" id="toggleAvatarBox" title="Choisir un avatar">
                     <i class="fa-solid fa-plus"></i>
                 </div>
@@ -54,31 +54,31 @@
         <div class="profile-info">
             <h3>Informations personnelles</h3>
             <div class="info-row">
-                <p><strong>Nom :</strong> {{ user.nom }}</p>
+                <p><strong>Nom :</strong> <span id="profileNom">Chargement...</span></p>
                 <i class="fa-solid fa-pen edit-icon"></i>
             </div>
             <div class="info-row">
-                <p><strong>Prénom :</strong> {{ user.prenom }}</p>
+                <p><strong>Prenom :</strong> <span id="profilePrenom">Chargement...</span></p>
                 <i class="fa-solid fa-pen edit-icon"></i>
             </div>
             <div class="info-row">
-                <p><strong>Âge :</strong> <span id="profileAge">{{ user.age }}</span> ans</p>
+                <p><strong>Âge :</strong> <span id="profileAge">Chargement...</span> ans</p>
                 <i class="fa-solid fa-pen edit-icon"></i>
             </div>
             <div class="info-row">
-                <p><strong>Date de naissance :</strong> <span id="profileBirthDate">{{ user.birth_date or 'Non défini' }}</span></p>
+                <p><strong>Date de naissance :</strong> <span id="profileBirthDate">Chargement...</span></p>
                 <i class="fa-solid fa-pen edit-icon"></i>
             </div>
             <div class="info-row">
-                <p><strong>Email :</strong> {{ user.email }}</p>
+                <p><strong>Email :</strong> <span id="profileEmail">Chargement...</span></p>
                 <i class="fa-solid fa-pen edit-icon"></i>
             </div>
             <div class="info-row">
-                <p><strong>Téléphone :</strong> {{ user.telephone }}</p>
+                <p><strong>Téléphone :</strong> <span id="profileTelephone">Chargement...</span></p>
                 <i class="fa-solid fa-pen edit-icon"></i>
             </div>
             <div class="info-row">
-                <p><strong>Ville :</strong> {{ user.ville }}</p>
+                <p><strong>Ville :</strong> <span id="profileVille">Chargement...</span></p>
                 <i class="fa-solid fa-pen edit-icon"></i>
             </div>
         </div>
@@ -94,19 +94,10 @@
                         <th>Statut</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {% for item in purchase_history %}
+                <tbody id="purchaseHistoryBody">
                     <tr>
-                        <td>{{ item.date }}</td>
-                        <td>{{ item.produit }}</td>
-                        <td>{{ item.prix }}</td>
-                        <td><span class="status {{ item.status_class }}">{{ item.status }}</span></td>
+                        <td colspan="4">Chargement de l'historique...</td>
                     </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="4">Aucun achat enregistré.</td>
-                    </tr>
-                    {% endfor %}
                 </tbody>
             </table>
         </div>

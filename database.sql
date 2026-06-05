@@ -11,7 +11,8 @@ CREATE TABLE utilisateur(
     date_naissance DATE,
     mot_de_passe VARCHAR(255) NOT NULL,
     num_telephone BIGINT,
-    avatar VARCHAR(255) DEFAULT NULL 
+    avatar VARCHAR(255) DEFAULT NULL,
+    ville VARCHAR(100) DEFAULT 'Non renseigné'
 );
 
 CREATE TABLE livre(
@@ -27,7 +28,8 @@ CREATE TABLE livre(
 CREATE TABLE commande(
     id_commande INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL, 
-    date_achat DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL, 
+    date_commande DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    prix_total DECIMAL(10,2) DEFAULT 0,
     wilaya_livraison VARCHAR(50) NOT NULL,
     statue VARCHAR(20) NOT NULL, 
     CONSTRAINT fk_commande_user FOREIGN KEY (email) REFERENCES utilisateur(email) ON DELETE CASCADE
