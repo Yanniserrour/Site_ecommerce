@@ -13,7 +13,7 @@
         <input type="text" placeholder="Nom" required>
         <input type="text" placeholder="Prénom">
         <input type="text" placeholder="Adresse précise">
-        <input type="text" placeholder="Numéro de téléphone">
+        <input type="text" placeholder="Numéro de téléphone" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
 
         <select id="wilaya" name="wilaya" required>
             <option value="" disabled selected>Sélectionnez votre Wilaya</option>
@@ -80,11 +80,12 @@
         <select id="lieu-livraison" name="lieu-livraison">
             <option value="" disabled selected>Lieux de livraison</option>
             <option>Domicile</option>
-            <option>bureau de livraision</option>
+            <option>Bureau de livraision</option>
         </select>
 
         <button class="btn-commande" id="Commande" type="submit">Commander !</button>
     </form>
+
     <script src="{{ url_for('static', filename='js/scripte.js') }}"></script>
 </body>
 </html>

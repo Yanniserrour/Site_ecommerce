@@ -248,25 +248,12 @@ if (searchInput && searchBtn) {
         var query = searchInput.value.trim();
 
         if (!document.querySelector('.produit-grid')) {
-            window.location.href = 'produit.html?search=' + encodeURIComponent(query);
+            window.location.href = '/produit?search=' + encodeURIComponent(query);        
         } else {
             currentSearch = query;
             applyFilters();
         }
     });
-}
-
-
-// Charger la recherche depuis l URL (produit)
-if (document.querySelector('.produit-grid')) {
-    var urlParams = new URLSearchParams(window.location.search);
-    var searchParam = urlParams.get('search');
-
-    if (searchParam && searchInput) {
-        searchInput.value = searchParam;
-        currentSearch = searchParam;
-        applyFilters();
-    }
 }
 
 // Index, video de bienvenue:
@@ -370,6 +357,17 @@ async function renderDynamicBooks() {
             }, 'index-book'));
         });
     });
+    
+    if (document.querySelector('.produit-grid')) {
+        var urlParams = new URLSearchParams(window.location.search);
+        var searchParam = urlParams.get('search');
+
+        if (searchParam && typeof searchInput !== 'undefined') {
+            searchInput.value = searchParam;
+            currentSearch = searchParam;
+            applyFilters();
+        }
+    }
 }
 
 renderDynamicBooks();

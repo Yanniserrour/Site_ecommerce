@@ -117,7 +117,7 @@ def panier():
 @app.route('/admin.html')
 def admin():
     if not session.get('logged_in') or not session.get('is_admin'):
-        flash("Acces refuse. Cette zone est reservee aux administrateurs.", "error")
+        flash("Acces refusé. Cette zone est reservée aux administrateurs.", "error")
         return redirect(url_for('index'))
     return render_template('admin.html')
 
@@ -149,7 +149,7 @@ def inscription():
         return redirect(url_for('auth'))
 
     if len(mdp) < 8: 
-        flash("Mot de passe trop court (8 caracteres minimum)", "error")
+        flash("Mot de passe trop court (8 caractéres minimum)", "error")
         return redirect(url_for('auth'))
     
     connexion = None
@@ -162,7 +162,7 @@ def inscription():
         compte_existant = cursor.fetchone()
         
         if compte_existant:
-            flash("Compte existant, veuillez vous connecter", "error")
+            flash("Compte existant, veuillez vous connecter.", "error")
             return redirect(url_for('auth'))
         else:
             mdp_hashed = generate_password_hash(mdp)
@@ -270,7 +270,7 @@ def update_avatar():
 
     nom_avatar = request.form.get('avatar_choice')
     if not nom_avatar:
-        flash("Aucun avatar selectionne.", "error")
+        flash("Aucun avatar selectionné.", "error")
         return redirect(url_for('profile'))
 
     connexion = None
@@ -364,6 +364,14 @@ def api_update_profile():
     prenom = data.get('prenom')
     date_naissance = data.get('date_naissance')
     num_telephone = data.get('num_telephone')
+
+    if num_telephone:
+        num_telephone = num_telephone.strip()
+    if num_telephone in ("", "0", "Non renseigne", "Non defini"):
+        num_telephone = None
+    else:
+        num_telephone = None
+
     ville = data.get('ville')
 
     connexion = None

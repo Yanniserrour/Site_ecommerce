@@ -10,7 +10,7 @@ CREATE TABLE utilisateur(
     prenom VARCHAR(50), 
     date_naissance DATE,
     mot_de_passe VARCHAR(255) NOT NULL,
-    num_telephone BIGINT,
+    num_telephone BIGINT NULL,
     avatar VARCHAR(255) DEFAULT NULL,
     ville VARCHAR(100) DEFAULT 'Non renseigné'
 );
