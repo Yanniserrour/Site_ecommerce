@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_englet.png') }}"> 
+    <title>Authentification - Adlis</title>
+</head>
+<body class = "auth-body">
+    <!--tout le contenaire-->
+    <div class="container" id="container">
+        <!--le contenaire d'inscription-->
+        <div class="form-container sign-up">
+            <form action="/inscription" method="POST" id="signupForm">
+                <h1>Creer un compte</h1>
+                <div class="social-icons">
+                    <a href="https://accounts.google.com/signin" class="icon"><i class="fa-brands fa-google"></i></a>
+                    <a href="https://www.facebook.com/login/" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="https://github.com/login" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://www.linkedin.com/login" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <span>Ou utilisez votre email</span>
+                <input type="text" name="prenom" placeholder="Prenom" required>
+                <input type="email" name="email" placeholder="Mail" required>
+                <input type="password" name="mot_de_passe" placeholder="Mot de passe" required>
+
+                <button>Inscription</button>
+            </form>
+        </div>
+
+        <!--le contenaire de connexion-->
+        <div class="form-container sign-in">
+            <form action="/connexion" method="POST" id="loginForm">
+                <h1>Connectez-vous</h1>
+                <div class="social-icons">
+                    <a href="https://accounts.google.com/signin" class="icon"><i class="fa-brands fa-google"></i></a>
+                    <a href="https://www.facebook.com/login/" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="https://github.com/login" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://www.linkedin.com/login" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+                <span>Ou utilisez votre email</span>
+                <input type="email" name="email" placeholder="Mail" required>
+                <input type="password" name="mot_de_passe" placeholder="Mot de passe" required>
+                <a href="#">Mot de passe oublié?</a>
+                <button type="submit">Conexion</button>
+            </form>
+        </div>
+
+        <!--le Toggle-->
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Bienvenue</h1>
+                    <p>Utilisez vos informations personnelles</p>
+                    <button class="hidden" id="login">se connecter</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>De retour!</h1>
+                    <p>Entrez vos informations personnelles</p>
+                    <button class="hidden" id="register">S'inscrire</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages auth-flash-footer">
+                {% for category, message in messages %}
+                    <p class="flash-message flash-{{ category | default('error') }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!--l'appelle du JS-->
+    <script src="{{ url_for('static', filename='js/scripte.js') }}"></script>
+</body>
+</html>

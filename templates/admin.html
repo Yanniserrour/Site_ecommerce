@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Administrateur</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_englet.png') }}"> 
+</head>
+<body class="admin-body">
+    <div class="index-header admin-header">
+        <div class="index-brand">
+            <a href="{{ url_for('index') }}" class="brand-link">
+                <img src="{{ url_for('static', filename='img/LOGO_site.png') }}" alt="Adlis Logo" class="brand-logo">
+                <span class="brand-name">ADLIS</span>
+            </a>
+        </div>
+
+        <div class="index-account admin-account">
+            <a href="{{ url_for('deconnxion') }}">
+                <button class="admin-logout-btn" id="adminLogoutBtn" type="button">SE DECONNECTER</button>
+            </a>
+        </div>
+    </div>
+
+    <hr>
+
+    <center><h2>Page Administrateur</h2></center>
+    <center><p>G&eacute;rer les produits et les commandes :</p></center>
+
+    <center>
+        <h3>Ajouter un produit</h3>
+
+        <form action="/admin/ajouter_produit" method="POST" enctype="multipart/form-data">
+            <fieldset>
+                <legend class = "alegend">Informations produit</legend>
+
+                <label class = "alabel">Nom :</label><br>
+                <input type="text" id="adminProductName" name="nom" required><br><br>
+
+                <label class = "alabel">Auteur :</label><br>
+                <input type="text" id="adminProductAuthor" name="auteur" required><br><br>
+
+                <label class = "alabel">Prix :</label><br>
+                <input type="number" id="adminProductPrice" name="prix" min="0" required><br><br>
+
+                <label class = "alabel">Cat&eacute;gorie :</label><br>
+                <div class = "aradio-group">
+                    <label><input type="radio" name="categorie" value="Action" required> Action</label>
+                    <label><input type="radio" name="categorie" value="Business"> Business</label>
+                    <label><input type="radio" name="categorie" value="Drama"> Drama</label>
+                    <label><input type="radio" name="categorie" value="Fiction"> Fiction</label>
+                    <label><input type="radio" name="categorie" value="Roman"> Roman</label><br><br>
+                </div>
+
+                <label class = "alabel">Langue :</label><br>
+                <div class = "aradio-group">
+                    <label><input type="radio" name="langue" value="Français" required> Fran&ccedil;ais</label>
+                    <label><input type="radio" name="langue" value="Anglais"> Anglais</label>
+                    <label><input type="radio" name="langue" value="Arabe"> Arabe</label>
+                    <label><input type="radio" name="langue" value="Tamazight"> Tamazight</label>
+                    <label><input type="radio" name="langue" value="Espagnol"> Espagnol</label><br><br>
+                </div>
+
+                <label class = "alabel">Image :</label><br>
+                <input type="file" id="image_fichier" name="image_fichier"><br><br>
+
+                <input type="submit" value="Ajouter">
+                <input type="reset" value="R&eacute;initialiser">
+            </fieldset>
+        </form>
+    </center>
+
+    <center>
+        <h3>Liste des produits</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Cat&eacute;gorie</th>
+                    <th>Prix</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="adminProductsList">
+                <tr>
+                    <td>......</td>
+                    <td>......</td>
+                    <td>...... DA</td>
+                    <td><button class="admin-delete-product" type="button">Supprimer</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </center>
+
+
+    <center>
+        <h3>Liste des commandes</h3>
+
+        <table class="admin-orders-table">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>T&eacute;l&eacute;phone</th>
+                    <th>Produit</th>
+                    <th>Montant</th>
+                    <th>&Eacute;tat</th>
+                </tr>
+            </thead>
+ 
+            <tbody id="adminOrdersList">
+                <tr>
+                    <td>......</td>
+                    <td>......</td>
+                    <td>......</td>
+                    <td>...... DA</td>
+                    <td><button class="admin-order-status" type="button">En attente</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="admin-orders-total">
+            Prix total des commandes : <strong id="adminOrdersTotal">0 DA</strong>
+        </p>
+    </center>
+
+    <script src="{{ url_for('static', filename='js/scripte.js') }}"></script>
+</body>
+</html>

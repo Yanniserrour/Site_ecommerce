@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_englet.png') }}"> 
+    <title>Mon Profil - Adlis</title>
+</head>
+<body class = "profile-body">
+    <div class="index-header">
+            <div class="index-brand">
+                <a href="{{ url_for('index') }}" class="brand-link">
+                    <img src = "{{ url_for('static', filename='img/LOGO_site.png') }}"  alt="Adlis Logo" class="brand-logo">
+                <span class="brand-name">ADLIS</span>
+                </a>
+            </div>
+            <a href="{{ url_for('deconnxion') }}" class="admin-logout-btn">SE DÉCONNECTER</a>
+            </div>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-pic-container">
+                <img id="profileAvatar" src="{{ url_for('static', filename='img/profil-de-lutilisateur.png') }}" alt="Photo de profil" class="profile-pic">
+                <div class="add-avatar-btn" id="toggleAvatarBox" title="Choisir un avatar">
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <div class="avatar-box" id="avatarBox">
+                    <p>Choisir un avatar :</p>
+                    <form action="{{ url_for('update_avatar') }}" method="POST">
+                        <div class="avatar-options">
+                            <button type="submit" name="avatar_choice" value="profil-de-lutilisateur.png" class="avatar-option">
+                                <img src="{{ url_for('static', filename='img/profil-de-lutilisateur.png') }}" alt="Avatar 1">
+                            </button>
+                            <button type="submit" name="avatar_choice" value="avatar1.png" class="avatar-option">
+                                <img src="{{ url_for('static', filename='img/avatar1.png') }}" alt="Avatar 2">
+                            </button>
+                            <button type="submit" name="avatar_choice" value="avatar2.png" class="avatar-option">
+                                <img src="{{ url_for('static', filename='img/avatar2.png') }}" alt="Avatar 3">
+                            </button>
+                            <button type="submit" name="avatar_choice" value="avatar3.png" class="avatar-option">
+                                <img src="{{ url_for('static', filename='img/avatar3.png') }}" alt="Avatar 4">
+                            </button>
+                            <button type="submit" name="avatar_choice" value="avatar4.png" class="avatar-option">
+                                <img src="{{ url_for('static', filename='img/avatar4.png') }}" alt="Avatar 5">
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>  
+            <h1>Mon Profil</h1>
+        </div>
+
+        <div class="profile-info">
+            <h3>Informations personnelles</h3>
+            <div class="info-row">
+                <p><strong>Nom :</strong> <span id="profileNom" class="editable-field">Chargement...</span></p>
+                <i class="fa-solid fa-pen edit-icon" data-field="profileNom"></i>
+            </div>
+            <div class="info-row">
+                <p><strong>Prenom :</strong> <span id="profilePrenom" class="editable-field">Chargement...</span></p>
+                <i class="fa-solid fa-pen edit-icon" data-field="profilePrenom"></i>
+            </div>
+            <div class="info-row">
+               <p><strong>Age :</strong> <span id="profileAge">Chargement...</span> ans</p>
+            </div>
+            <div class="info-row">
+                <p><strong>Date de naissance :</strong> <span id="profileBirthDate" class="editable-field">Chargement...</span></p>
+                <i class="fa-solid fa-pen edit-icon" data-field="profileBirthDate"></i>
+            </div>
+            <div class="info-row">
+                <p><strong>Email :</strong> <span id="profileEmail">Chargement...</span></p>
+            </div>
+            <div class="info-row">
+                <p><strong>Telephone :</strong> <span id="profileTelephone" class="editable-field">Chargement...</span></p>
+                <i class="fa-solid fa-pen edit-icon" data-field="profileTelephone"></i>
+            </div>
+            <div class="info-row">
+                <p><strong>Ville :</strong> <span id="profileVille" class="editable-field">Chargement...</span></p>
+                <i class="fa-solid fa-pen edit-icon" data-field="profileVille"></i>
+            </div>
+            <button id="saveProfileBtn" class="save-profile-btn" style="display:none;">Sauvegarder</button>
+        </div>
+
+        <div class="purchase-history">
+            <h3>Historique d'achats</h3>
+            <table>                
+                <thead>
+                    <tr>                        
+                        <th>Date</th>
+                        <th>Livre</th>
+                        <th>Prix</th>
+                        <th>Wilaya</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody id="purchaseHistoryBody">
+                    <tr>
+                        <td colspan="5">Chargement de l'historique...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/scripte.js') }}"></script>
+</body> 
+</html>

@@ -1,3 +1,4 @@
+##FRONT-END:
 LES PAGES HTML :  
 #auth      :    (terminé) Yani
 #formulaire:    (terminé) Yani
@@ -71,14 +72,87 @@ FINISHED TASKS:
 - ajouter le README. 
 
 
-DINAMICITÉ DU SITE: 
- -liens conditionnel
- -ajout du livre a travers la page admin 
-
-
 IDENTITÉ VISUEL: 
 identité globale : violet / bleu / blanc
 police unique : DMSerifDisplay
 fallback : sans-serif, Raleway
 accents : #5c6bc0, #3f1d8c, #667eea, #764ba2
 neutres : #fff, #eee, #f9f9f9, #fafafa, #333
+
+
+
+##BACK-END:
+    " 3 choses fondamentale a faire: la dinamicité,
+        les intérogations DB, les controles"
+
+DINAMICITÉ DU SITE: 
+-liens conditionnel (terminé) 
+ -possibilité de deconnexion (terminé)
+ -ajout du livre a travers la page admin, et la la db. (sans la db pour l'instant)
+ -ajouter le livre au panier en cas de commande (termine)
+ -filtrer les livre selon la catégorie (termine)
+ -ajouter le livre au panier en cas de commande (termine)
+ -filtrer les livre selon la catégorie (termine)
+ -liens conditionnel (terminé)
+ -afficher la photo de l'utilisateur en cas de connexion.(terminé)
+ -ajouter une quantité de commande.(terminé)
+ -afficher les information sur le profile (terminé)
+ -calculer l'age de la personne (terminé)
+ -en cas d'achat, ajouter le livre dans l'historique d'achat avec le controle
+        suivant : en cours par defaut, et livré deux jours plus tard.( terminé)
+ -afficher l'avatard de l'utilisateur(terminé)
+ -ajouter l'enmplacement du livre dans acceuil (ajouter recement par défaut)(terminé)
+ -ajouter long dans la page admin pour chaque livre.(terminé)
+ -ajouter les commande dans la page admin. (terminé)
+ -ajouter le choix d'avatar dans le profile(une fois ajouter il ce deplace en bd) (terminé)
+ -afficher le prix total dans panier.(terminée)
+ -afficher aussi le prix total dans admin.(terminé)
+ -colorier la catégorie choisi.(terminé)
+ -ajouter des disigne de confirmation(ajouter au panier, commander) (terminé)
+ -suprimer l'anciens livre ajouter si il n'ya plus de place (terminé)
+
+ DB: 
+ -iscription/connexion (terminé)
+ -jouter la table panier. (terminé)
+ -ajouter la possibilité de connexion et déconnexion du site (terminé)
+ -connexion vers la page admin (terminé)
+ -sauvgarder les livres ajouter dans la DB (terminé)
+ -sauvgarder la commande de livre dans la DB (terminé)
+ -sauvgarder l'avatar dans la BD (termine)
+ -charger les informations profile pour chaque connexion (Terminé)
+ -suppression du livre a partir de admin et la BD (terminé) 
+ -ajouter les livres depuis admin vers acceuil (terminé)
+ -ajouter aux panier et la BD (terminé)
+ -supprimer un livre de panier et la BD (terminé)
+ -charger le panier pour chaque connexion (terminé)
+ -la possibilité de modifier les information de la personne sur profile
+ -changer les attributs entre nom et prenom  
+ -passer la commande, sauvgarder la commande dans la BD, 
+        et l'afficher dans admin, et l'afficher dans l'historique de l'utilisateurs. (terminé) 
+ -charger l'historique (commande) pour chaque connexion. (terminé)
+
+
+
+ LES CONTROLES: 
+ -controles de connexion : compte existant, mdp ou email inccorrect (terminé)
+ -aficher automatiquement les donnée de l'utilisateurs l'ors de l'achat.
+ -en cours et livré 
+
+
+ RETOUCHE: 
+ -police
+ -ajouter un footer (terminé)
+ -ajouter les liens avec flask (terminé)
+ -pdf de conception. (terminé)
+ -ajouter des citations.
+ -ajouter les chemains vers les resaux dans auth (terminé)
+ -netoyer le message d'authentification (terminé)
+ -amener admin vers admin (terminé)
+ -rendre la quantité livre dans panier fixe (terminé)
+ -enlever le non rensegner des commandes admin
+ -corrigé l'attribut nom et prenom
+
+
+
+
+ 

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Accueil - Adlis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo_englet.png') }}"> 
+</head> 
+
+<body class="index-body">
+	<div class="index-header">
+		<div class="index-brand">
+			<a href="{{ url_for('index') }}" class="brand-link">
+				<img src="{{ url_for('static', filename='img/LOGO_site.png') }}" alt="Adlis Logo" class="brand-logo">
+				<span class="brand-name">ADLIS</span>
+			</a>
+		</div>
+
+		<div class="search-wrapper">
+			<input type="text" class="search-input" placeholder="Chercher par titre...">
+			<button type="submit" class="search-btn">
+				<img src="{{ url_for('static', filename='img/chercher.png') }}"  alt="Rechercher">
+			</button>
+		</div>
+
+		<button class="burger-menu-btn" id="burgerMenuBtn">
+			<img src="{{ url_for('static', filename='img/menus.png') }}"   alt="Menu">
+		</button>
+	</div>
+
+	<div class="sidebar-menu" id="sidebarMenu">
+		<div class="sidebar-content">
+			<nav class="sidebar-nav">
+				<a href="{{ url_for('produit') }}" class="sidebar-link">
+    				<span>PRODUITS</span>
+				</a>
+				<a href="{{ url_for('panier') }}" class="sidebar-link" id="linkPanier">
+	   			 <span>PANIER</span>
+				</a>
+				<a href="{{ url_for('profile_router') }}" class="sidebar-link" id="linkProfil">
+					<span id="account-nom">{{ session.get('user_name') or session.get('nom') or 'PROFIL' }}</span>
+				</a>
+			</nav> 
+
+			<div class="sidebar-account">
+				{% if session.get('logged_in') %}
+				<a href="{{ url_for('deconnxion') }}" class="account-btn" id="accountBtn">
+					<img src="{{ url_for('static', filename='img/profil-de-lutilisateur.png') }}" alt="Profil" class="account-icon">
+					<span id="accountText">SE DÉCONNECTER</span>
+				</a>
+				{% else %}
+				<a href="{{ url_for('auth') }}" class="account-btn" id="accountBtn">
+					<img src="{{ url_for('static', filename='img/profil-de-lutilisateur.png') }}" alt="Profil" class="account-icon">
+					<span id="accountText">SE CONNECTER</span>
+				</a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	<p id="index-welcome">
+		Bienvenue chez Adlis!<br>
+		Des milliers de livres, en plusieurs langues, livrés chez vous.
+	</p>
+
+	<div class="index-gallery">
+	<div class="index-video-wrapper">
+		<video id="welcomeVideo" class="welcome-video is-hidden" autoplay muted playsinline preload="auto">
+			<source src="{{ url_for('static', filename='video/bienvenue.mp4') }}" type="video/mp4">
+		</video>
+	</div>
+	</div>
+
+	<p class="index-text">Action :</p>
+	<div class="index-autre-gallery" id="indexAction"></div>
+
+	<p class="index-text">Business :</p>
+	<div class="index-autre-gallery" id="indexBusiness"></div>
+
+	<p class="index-text">Drama :</p>
+	<div class="index-autre-gallery" id="indexDrama"></div>
+
+	<p class="index-text">Fiction :</p>
+	<div class="index-autre-gallery" id="indexFiction"></div>
+
+	<p class="index-text">Roman :</p>
+	<div class="index-autre-gallery" id="indexRoman"></div>
+
+    <script src="{{ url_for('static', filename='js/scripte.js') }}"></script>
+</body>
+</html>
