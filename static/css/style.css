@@ -1193,69 +1193,6 @@ body {
     gap: 4px;
 }
 
-/* footer */
-.site-footer {
-    background: linear-gradient(135deg, #512da8 0%, #311b92 100%);
-    color: rgba(255, 255, 255, 0.9);
-    padding: 40px 20px 15px 20px;
-    margin-top: 40px;
-    font-family: 'DMSerifDisplay', sans-serif;
-}
-
-.footer-content {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    max-width: 1000px;
-    margin: 0 auto;
-    gap: 30px;
-}
-
-.footer-section {
-    flex: 1;
-    min-width: 180px;
-}
-
-.footer-section h4 {
-    font-size: 16px;
-    margin-bottom: 12px;
-    color: white;
-}
-
-.footer-section a {
-    display: block;
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    margin-bottom: 6px;
-    font-size: 14px;
-    transition: color 0.3s ease;
-}
-
-.footer-section a:hover {
-    color: white;
-}
-
-.footer-section p {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.7);
-    margin: 0 0 6px 0;
-    line-height: 1.5;
-}
-
-.footer-bottom {
-    text-align: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    margin-top: 25px;
-    padding-top: 15px;
-}
-
-.footer-bottom p {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.5);
-    margin: 0;
-}
-
-
 /* partie index */
 .index-body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
