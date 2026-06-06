@@ -25,7 +25,8 @@ L'application permet également au propriétaire du site, à travers un espace d
 
 - Gérer les livres mis en vente.
 - Suivre les commandes effectuées par les clients.
-- Consulter les informations nécessaires au bon fonctionnement de la plateforme.
+
+> **📖 Pour plus de détails concernant la conception, la réalisation et le fonctionnement du projet, consultez le fichier _« Conception »_ disponible dans ce dépôt GitHub. Il contient notamment une présentation détaillée du projet ainsi qu'un guide complet permettant de tester l'ensemble des fonctionnalités du site étape par étape.**
 
 L'objectif principal est de concevoir une application web robuste, optimisée et fluide, en appliquant les concepts fondamentaux de la gestion des données et du développement full-stack.
 
@@ -42,8 +43,6 @@ Le développement de cette plateforme repose sur l'intégration transversale de 
 ---
 
 ## 🛠️ Stack Technique
-
-> 💡 *Note : Les fonctionnalités de recherche, de gestion du catalogue et de traitement des commandes sont conçues de manière à garantir une bonne efficacité et une expérience utilisateur fluide.*
 
 ### Frontend
 - HTML5
