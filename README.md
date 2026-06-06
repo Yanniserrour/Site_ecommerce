@@ -67,7 +67,7 @@ Projet réalisé par un groupe de 3 étudiants en Licence 2 Informatique :
 
 - **Serrour Yanni** — Groupe 4
 - **Sadouki Nadjib** — Groupe 9
-- **Mofrej Salim** — Groupe 6
+- **Mofredj Salim** — Groupe 6
 
 ---
 
