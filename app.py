@@ -265,7 +265,8 @@ def update_avatar():
     finally:
         if cursor: cursor.close()
         if connexion: connexion.close()
-   return redirect(url_for('profile_router'))
+        
+    return redirect(url_for('profile_router'))
 
 
 # API profil
@@ -321,7 +322,7 @@ def api_update_profile():
     prenom         = data.get('prenom')
     date_naissance = data.get('date_naissance')
     num_telephone = data.get('num_telephone')
-    
+
     if num_telephone:
         num_telephone = num_telephone.strip()
     if num_telephone in ("", "0", "Non renseigne", "Non defini", None):
