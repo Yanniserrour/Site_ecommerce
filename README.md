@@ -72,5 +72,5 @@ Projet réalisé par un groupe de 3 étudiants en Licence 2 Informatique :
 ---
 
 <p align="center">
-Fait avec 💻 dans le cadre de la L2 Informatique — UMMTO
+Fait dans le cadre de la L2 Informatique — UMMTO
 </p>
