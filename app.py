@@ -247,7 +247,7 @@ def update_avatar():
     nom_avatar = request.form.get('avatar_choice')
     if not nom_avatar:
         flash("Aucun avatar selectionné.", "error")
-        return redirect(url_for('profile'))
+        return redirect(url_for('profile_router'))
     connexion = None
     cursor = None
     try:
@@ -265,7 +265,7 @@ def update_avatar():
     finally:
         if cursor: cursor.close()
         if connexion: connexion.close()
-    return redirect(url_for('profile'))
+   return redirect(url_for('profile_router'))
 
 
 # API profil
