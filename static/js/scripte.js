@@ -359,7 +359,7 @@ async function renderDynamicBooks() {
     });
     
     if (document.querySelector('.produit-grid')) {
-        var urlParams = new URLSearchParams(window.location.search);
+        var urlParams = new URLSearchParams(winfdow.location.search);
         var searchParam = urlParams.get('search');
 
         if (searchParam && typeof searchInput !== 'undefined') {
@@ -910,7 +910,7 @@ function chargerDonneesProfil() {
                 document.getElementById('profileAge').textContent = data.user.age || 'Non défini';
                 document.getElementById('profileBirthDate').textContent = data.user.date_naissance || 'Non défini';
                 document.getElementById('profileEmail').textContent = data.user.email || 'Non défini';
-                document.getElementById('profileTelephone').textContent = data.user.num_telephone || 'Non défini';
+                document.getElementById('profileTelephone').textContent = (data.user.num_telephone && data.user.num_telephone !== '0') ? data.user.num_telephone : 'Non défini';
                 document.getElementById('profileVille').textContent = data.user.ville || 'Non défini';
                 
                 // Mettre à jour l'avatar

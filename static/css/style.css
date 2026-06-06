@@ -1798,8 +1798,8 @@ footer p {
     width: 100%;
     object-fit: cover;
     border-radius: 12px;
-    min-height: 400px;
-    max-height: 400px;
+    min-height: 500px;
+    max-height: 500px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
     border: 2px solid rgba(255, 255, 255, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;

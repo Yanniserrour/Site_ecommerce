@@ -32,7 +32,7 @@ def obtenir_connexion():
         return psycopg2.connect(
             host="localhost",
             user="postgres",
-            password="Yani2003@",
+            password="admin123",
             database="adlis"
         )
     else:
@@ -156,9 +156,9 @@ def inscription():
         else:
             mdp_hashed = generate_password_hash(mdp)
             cursor.execute("""
-                INSERT INTO utilisateur(email, nom, prenom, date_naissance, mot_de_passe, num_telephone)
-                VALUES(%s, %s, %s, %s, %s, %s)
-            """, (email, nom, prenom, date_naiss, mdp_hashed, num_tel))
+                INSERT INTO utilisateur(email, nom, prenom, date_naissance, mot_de_passe, num_telephone, ville)
+                VALUES(%s, %s, %s, %s, %s, %s, %s)
+            """, (email, nom, prenom, date_naiss, mdp_hashed, num_tel, 'Alger'))
             connexion.commit()
             flash("Inscription reussie ! Veuillez vous connecter.", "success")
             return redirect(url_for('auth'))
@@ -294,8 +294,10 @@ def api_user_profile():
                 user['avatar'] = 'profil-de-lutilisateur.png'
             if user.get('date_naissance'):
                 user['date_naissance'] = str(user['date_naissance'])
-            if user.get('num_telephone'):
+            if user.get('num_telephone') is not None:
                 user['num_telephone'] = str(user['num_telephone'])
+            else:
+                user['num_telephone'] = ''
             if not user.get('ville'):
                 user['ville'] = 'Non renseigné'
             return jsonify({"ok": True, "user": user})
@@ -318,13 +320,18 @@ def api_update_profile():
     nom            = data.get('nom')
     prenom         = data.get('prenom')
     date_naissance = data.get('date_naissance')
-    num_telephone  = data.get('num_telephone')
+    num_telephone = data.get('num_telephone')
+    
     if num_telephone:
         num_telephone = num_telephone.strip()
-    if num_telephone in ("", "0", "Non renseigne", "Non defini"):
-        num_telephone = None
+    if num_telephone in ("", "0", "Non renseigne", "Non defini", None):
+        num_telephone = 0
     else:
-        num_telephone = None
+        try:
+            num_telephone = int(num_telephone)
+        except (ValueError, TypeError):
+            num_telephone = 0
+
     ville = data.get('ville')
     connexion = None
     cursor = None
