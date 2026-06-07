@@ -359,7 +359,7 @@ async function renderDynamicBooks() {
     });
     
     if (document.querySelector('.produit-grid')) {
-        var urlParams = new URLSearchParams(winfdow.location.search);
+        var urlParams = new URLSearchParams(window.location.search);
         var searchParam = urlParams.get('search');
 
         if (searchParam && typeof searchInput !== 'undefined') {
@@ -368,6 +368,8 @@ async function renderDynamicBooks() {
             applyFilters();
         }
     }
+
+    applyFilters();
 }
 
 renderDynamicBooks();
